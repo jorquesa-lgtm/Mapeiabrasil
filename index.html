@@ -1671,6 +1671,7 @@ codeApplyBtn.addEventListener('click', async () => {
       validatedCode = code;
       codeFeedback.textContent = `Codigo valido${data.label ? ' — ' + data.label : ''}. Acesso liberado!`;
       codeFeedback.className = 'lm-code-feedback valid';
+      submitBtn.disabled = false;
       submitBtn.innerHTML = 'Acessar com código &rarr;';
     } else {
       validatedCode = null;
@@ -1799,7 +1800,11 @@ form.addEventListener('submit', async (e) => {
   }
 
   submitBtn.disabled = false;
-  submitBtn.innerHTML = 'Quero meu diagnóstico &rarr;';
+  if (validatedCode && (currentPlan === 'premium' || currentPlan === 'subscription')) {
+    submitBtn.innerHTML = 'Acessar com código &rarr;';
+  } else {
+    submitBtn.innerHTML = 'Quero meu diagnóstico &rarr;';
+  }
 
   if (!ok) {
     showError('Não foi possível enviar agora. Tente novamente em instantes.');
