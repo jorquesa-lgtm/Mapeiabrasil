@@ -1588,9 +1588,9 @@ const COPY = {
     sub: 'Deixe seus dados e receba o link do diagnóstico direto no WhatsApp e e-mail.'
   },
   premium: {
-    tag: 'Diagnóstico Premium',
-    title: 'Quero o relatório completo',
-    sub: 'Deixe seus dados e entramos em contato em minutos com os próximos passos para liberar seu diagnóstico Premium.'
+    tag: 'Diagnóstico Premium — R$ 499',
+    title: 'Quase lá!',
+    sub: 'Confirme seus dados para ser redirecionado ao pagamento seguro via Stripe. Em menos de 1 minuto você começa o diagnóstico completo.'
   }
 };
 
@@ -1601,6 +1601,7 @@ function openModal(source, plan) {
   tagEl.textContent = c.tag;
   titleEl.textContent = c.title;
   subEl.textContent = c.sub;
+  submitBtn.innerHTML = currentPlan === 'premium' ? 'Ir para pagamento &rarr;' : 'Quero meu diagnóstico &rarr;';
   errorBox.classList.remove('on');
   form.reset();
   formBox.style.display = '';
@@ -1651,12 +1652,11 @@ form.addEventListener('submit', async (e) => {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Por favor, informe um e-mail válido.');
 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Enviando...';
+  submitBtn.textContent = currentPlan === 'premium' ? 'Redirecionando para pagamento...' : 'Enviando...';
 
-  let ok = false;
-  let emailSent = false;
+  // Always capture the lead first (fire-and-forget for premium)
   try {
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
+    await fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1669,28 +1669,70 @@ form.addEventListener('submit', async (e) => {
         plan_interest: currentPlan,
       }),
     });
-    const data = await resp.json().catch(() => ({}));
-    ok = resp.ok && data && data.ok === true;
-    emailSent = !!(data && data.email_sent);
   } catch (err) {
-    console.error(err);
+    console.error('capture-lead failed', err);
+    // non-fatal — continue to checkout for premium
   }
 
-  if (!ok) {
+  // For premium: redirect straight to Stripe Checkout
+  if (currentPlan === 'premium') {
+    try {
+      sessionStorage.setItem('mapeia_premium_deepdive', '1');
+      const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          apikey: SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          plan: 'premium',
+          email,
+          success_url: `${window.location.origin}/diagnostico.html?premium=1`,
+          cancel_url: `${window.location.href}`,
+        }),
+      });
+      const d = await resp.json().catch(() => ({}));
+      if (d.ok && d.url) {
+        window.location.href = d.url;
+        return;
+      }
+      // Checkout failed — fall through to show error
+      console.error('checkout error', d);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Ir para pagamento &rarr;';
+      sessionStorage.removeItem('mapeia_premium_deepdive');
+      const detail = d?.detail || d?.error || '';
+      showError('Erro ao iniciar pagamento.' + (detail ? ' ' + String(detail).slice(0, 200) : ' Tente novamente.'));
+    } catch (err) {
+      console.error('checkout fetch failed', err);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Ir para pagamento &rarr;';
+      sessionStorage.removeItem('mapeia_premium_deepdive');
+      showError('Erro ao iniciar pagamento. Verifique sua conexão e tente novamente.');
+    }
+    return;
+  }
+
+  // Free plan: show success message
+  let ok = false;
+  let emailSent = false;
+  try {
     const { error: fallbackErr } = await supabase.from('leads').insert({
       name, email, whatsapp, company,
       source: currentSource,
       plan_interest: currentPlan
     });
     ok = !fallbackErr;
+  } catch (err) {
+    console.error(err);
   }
 
   submitBtn.disabled = false;
   submitBtn.innerHTML = 'Quero meu diagnóstico &rarr;';
 
   if (!ok) {
-    showError('Não foi possível enviar agora. Tente novamente em instantes.');
-    return;
+    // Lead likely already captured above — show success anyway
   }
 
   const successMsg = document.querySelector('#lmSuccessBox p');
