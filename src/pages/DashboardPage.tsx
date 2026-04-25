@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 import { LogOut, FileText, Star, Clock, ChevronRight, Download, RefreshCw, Target, Plus, Trash2, Check, Calendar, Flag } from "lucide-react";
+import AtivarSection from "../components/ativar/AtivarSection";
 
 interface UserProfile {
   name: string;
@@ -246,8 +247,11 @@ export default function DashboardPage({ user }: { user: User }) {
                 report={selectedReport}
                 onDownload={handleDownloadPdf}
                 isEvolucao={isEvolucao}
+                isPremium={isPremium}
                 allReports={reports}
                 userId={user.id}
+                userEmail={user.email ?? ""}
+                clientName={profile?.name ?? ""}
               />
             )}
           </div>
@@ -317,12 +321,20 @@ function ActionCard({ onRefresh, refreshing }: { onRefresh: () => void; refreshi
   );
 }
 
-function ReportDetail({ report, onDownload, isEvolucao, allReports, userId }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string }) {
+function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, userId, userEmail, clientName }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string }) {
   const ai = report.ai_data || {};
   const diag = report.diagnostic_responses;
   const score = diag?.global_score ?? 0;
   const scoreColor = score >= 61 ? "#00c896" : score >= 41 ? "#f5c842" : "#ff4055";
   const maturity = MATURITY[diag?.maturity_level ?? 0] || "";
+
+  // Derive top 3 gap areas (lowest scores first) for AtivarSection
+  const topGaps: string[] = diag?.area_scores
+    ? Object.entries(diag.area_scores)
+        .sort(([, a], [, b]) => a - b)
+        .slice(0, 3)
+        .map(([k]) => k)
+    : [];
 
   return (
     <div className="fade-in" style={{ background: "#0d1d35", border: "1px solid #1e3a5f", borderRadius: 14, overflow: "hidden" }}>
@@ -435,6 +447,18 @@ function ReportDetail({ report, onDownload, isEvolucao, allReports, userId }: { 
           <div style={{ marginTop: 16, padding: "16px 20px", background: "rgba(0,229,200,.04)", border: "1px dashed rgba(0,229,200,.2)", borderRadius: 10, textAlign: "center" }}>
             <div style={{ fontSize: 13, color: "#7a9ec8", marginBottom: 8 }}>Auditoria de Processos e Gaps disponível no plano <strong style={{ color: "#00e5c8" }}>Evolução</strong></div>
           </div>
+        )}
+
+        {/* Ativar: show solution cards for top gaps — Premium users only */}
+        {isPremium && topGaps.length > 0 && (
+          <AtivarSection
+            topGaps={topGaps}
+            diagnosticId={report.id}
+            clientEmail={userEmail ?? ""}
+            clientName={clientName ?? ""}
+            sector={diag?.sector ?? ""}
+            diagnosticScore={score}
+          />
         )}
       </div>
     </div>

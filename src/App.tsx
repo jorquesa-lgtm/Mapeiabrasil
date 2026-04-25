@@ -3,6 +3,7 @@ import type { Session } from "@supabase/supabase-js";
 import { supabase } from "./lib/supabase";
 import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
+import AdminAtivar from "./pages/AdminAtivar";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -27,6 +28,10 @@ export default function App() {
         <div className="w-10 h-10 border-2 border-[#1e3a5f] border-t-[#00e5c8] rounded-full animate-spin" />
       </div>
     );
+  }
+
+  if (window.location.pathname === "/admin/ativar") {
+    return <AdminAtivar />;
   }
 
   return session ? <DashboardPage user={session.user} /> : <AuthPage />;
