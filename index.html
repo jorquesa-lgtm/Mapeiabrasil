@@ -1811,12 +1811,13 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  // For paid plans with a valid access code, skip Stripe
+  // For paid plans with a valid access code, skip Stripe and go straight to the quiz
   if (validatedCode && (currentPlan === 'premium' || currentPlan === 'subscription')) {
-    const successMsg = document.querySelector('#lmSuccessBox p');
-    if (successMsg) successMsg.textContent = 'Acesso liberado com seu código! Em instantes você receberá o link para iniciar o diagnóstico.';
-    formBox.style.display = 'none';
-    successBox.style.display = '';
+    sessionStorage.setItem('mapeia_access_code', validatedCode);
+    sessionStorage.setItem('mapeia_is_premium', '1');
+    submitBtn.textContent = 'Abrindo diagnóstico...';
+    submitBtn.disabled = true;
+    window.location.href = '/diagnostico.html?premium=1';
     return;
   }
 
