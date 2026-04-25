@@ -142,15 +142,6 @@ Deno.serve(async (req: Request) => {
       // verify-premium (called client-side after the quiz) will link and unlock
       // the row once it exists.
 
-      // Handle Ativar tool activation: mark the pending record as active
-      const ativarActivationId: string | null = session.metadata?.ativar_activation_id || null;
-      if (ativarActivationId) {
-        await supabase
-          .from("ativar_activations")
-          .update({ status: "active", stripe_subscription_id: subscriptionId || sessionId })
-          .eq("id", ativarActivationId);
-      }
-
       // Trigger report generation only when the purchase is linked to a real
       // diagnostic row with AI data already generated.
       if (matchedRow) {

@@ -41,43 +41,8 @@ Deno.serve(async (req: Request) => {
     const email: string | undefined = body.email;
     const diagId: string | undefined = body.diag_id;
     const score: number | undefined = body.score;
-    // Allow callers to merge extra metadata (e.g. ativar_activation_id)
-    const extraMeta: Record<string, string> = body.metadata && typeof body.metadata === "object"
-      ? Object.fromEntries(Object.entries(body.metadata as Record<string, unknown>).map(([k, v]) => [k, String(v)]))
-      : {};
 
     const priceId = PRICE_IDS[plan] ?? PRICE_IDS.premium;
-
-    // Enforce 1-diagnostic limit for one-time premium: block checkout if
-    // this email already has an unlocked premium diagnostic.
-    if (plan === "premium" && email) {
-      const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-      const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-      if (SUPABASE_URL && SERVICE_ROLE) {
-        const { createClient } = await import("npm:@supabase/supabase-js@2");
-        const supabase = createClient(SUPABASE_URL, SERVICE_ROLE, {
-          auth: { persistSession: false, autoRefreshToken: false },
-        });
-        const { data: existing } = await supabase
-          .from("diagnostic_responses")
-          .select("id")
-          .eq("email", email.toLowerCase())
-          .eq("plan_tier", "premium")
-          .eq("unlocked", true)
-          .limit(1)
-          .maybeSingle();
-
-        if (existing) {
-          return new Response(
-            JSON.stringify({
-              error: "already_used",
-              message: "Este e-mail já possui um diagnóstico Premium ativo. Para realizar diagnósticos adicionais, assine o plano Evolução.",
-            }),
-            { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-          );
-        }
-      }
-    }
 
     const sep = successUrl.includes("?") ? "&" : "?";
     const params: Record<string, unknown> = {
@@ -90,14 +55,12 @@ Deno.serve(async (req: Request) => {
 
     if (email) params.customer_email = email;
 
-    const metaBase = {
-      ...(diagId ? { diag_id: diagId } : {}),
-      ...(score !== undefined ? { score: String(score) } : {}),
-      plan,
-      ...extraMeta,
-    };
-    if (Object.keys(metaBase).length > 0) {
-      params.metadata = metaBase;
+    if (diagId || score !== undefined) {
+      params.metadata = {
+        ...(diagId ? { diag_id: diagId } : {}),
+        ...(score !== undefined ? { score: String(score) } : {}),
+        plan,
+      };
     }
 
     const formBody = Object.entries(flattenParams(params))

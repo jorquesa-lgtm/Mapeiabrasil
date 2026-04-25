@@ -252,9 +252,6 @@ export default function DashboardPage({ user }: { user: User }) {
                 userId={user.id}
                 userEmail={user.email ?? ""}
                 clientName={profile?.name ?? ""}
-                activationSuccessId={new URLSearchParams(window.location.search).get("ativar_success") === "1"
-                  ? new URLSearchParams(window.location.search).get("activation_id")
-                  : null}
               />
             )}
           </div>
@@ -324,7 +321,7 @@ function ActionCard({ onRefresh, refreshing }: { onRefresh: () => void; refreshi
   );
 }
 
-function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, userId, userEmail, clientName, activationSuccessId }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string; activationSuccessId?: string | null }) {
+function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, userId, userEmail, clientName }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string }) {
   const ai = report.ai_data || {};
   const diag = report.diagnostic_responses;
   const score = diag?.global_score ?? 0;
@@ -441,9 +438,15 @@ function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, u
           />
         )}
 
-        {/* Process audit — available to all premium users */}
-        {isPremium && Boolean((ai as { process_audit?: unknown }).process_audit) && (
+        {/* Evolucao-only: process audit */}
+        {isEvolucao && Boolean((ai as { process_audit?: unknown }).process_audit) && (
           <ProcessAuditSection audit={(ai as { process_audit: { process_name: string; current_state: string; automation_potential: number; hours_saved_week: number; money_saved_month: string; steps: Array<{ label: string; status: string; fix: string }> } }).process_audit} />
+        )}
+
+        {!isEvolucao && (
+          <div style={{ marginTop: 16, padding: "16px 20px", background: "rgba(0,229,200,.04)", border: "1px dashed rgba(0,229,200,.2)", borderRadius: 10, textAlign: "center" }}>
+            <div style={{ fontSize: 13, color: "#7a9ec8", marginBottom: 8 }}>Auditoria de Processos e Gaps disponível no plano <strong style={{ color: "#00e5c8" }}>Evolução</strong></div>
+          </div>
         )}
 
         {/* Ativar: show solution cards for top gaps — Premium users only */}
@@ -455,7 +458,6 @@ function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, u
             clientName={clientName ?? ""}
             sector={diag?.sector ?? ""}
             diagnosticScore={score}
-            activationSuccessId={activationSuccessId}
           />
         )}
       </div>
