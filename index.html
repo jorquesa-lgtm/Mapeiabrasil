@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MapeIA Brasil — Diagnóstico de IA & Automação para PMEs</title>
 <meta name="description" content="Diagnóstico de IA e automação para PMEs brasileiras. Responda 18 perguntas e receba seu plano de ação em 5 minutos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 /* RESET & BASE */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -1571,13 +1575,11 @@ footer {
   </div>
 </div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+<script>
+const SUPABASE_URL = 'https://vaekdvwevooqrlubctoj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZWtkdndldm9vcXJsdWJjdG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTYzNjMsImV4cCI6MjA5MjI3MjM2M30.nUb-mqkPn0LYBoZqxR4ElFxmJ_MUpKGNaMdrCwkda44';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const modal = document.getElementById('leadModal');
 const closeBtn = document.getElementById('lmClose');

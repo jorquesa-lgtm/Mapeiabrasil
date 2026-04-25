@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico MapeIA - Sua empresa está pronta para IA?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
@@ -544,13 +548,11 @@
 
 </main>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
-
+<script>
 const SUPABASE_URL = 'https://vaekdvwevooqrlubctoj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZWtkdndldm9vcXJsdWJjdG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTYzNjMsImV4cCI6MjA5MjI3MjM2M30.nUb-mqkPn0LYBoZqxR4ElFxmJ_MUpKGNaMdrCwkda44';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ---------------------------------------------------------------------------
 // Data: 18 base questions + 15 premium conditional questions
