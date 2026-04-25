@@ -48,6 +48,37 @@ Deno.serve(async (req: Request) => {
 
     const priceId = PRICE_IDS[plan] ?? PRICE_IDS.premium;
 
+    // Enforce 1-diagnostic limit for one-time premium: block checkout if
+    // this email already has an unlocked premium diagnostic.
+    if (plan === "premium" && email) {
+      const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+      const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+      if (SUPABASE_URL && SERVICE_ROLE) {
+        const { createClient } = await import("npm:@supabase/supabase-js@2");
+        const supabase = createClient(SUPABASE_URL, SERVICE_ROLE, {
+          auth: { persistSession: false, autoRefreshToken: false },
+        });
+        const { data: existing } = await supabase
+          .from("diagnostic_responses")
+          .select("id")
+          .eq("email", email.toLowerCase())
+          .eq("plan_tier", "premium")
+          .eq("unlocked", true)
+          .limit(1)
+          .maybeSingle();
+
+        if (existing) {
+          return new Response(
+            JSON.stringify({
+              error: "already_used",
+              message: "Este e-mail já possui um diagnóstico Premium ativo. Para realizar diagnósticos adicionais, assine o plano Evolução.",
+            }),
+            { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
+      }
+    }
+
     const sep = successUrl.includes("?") ? "&" : "?";
     const params: Record<string, unknown> = {
       mode: plan === "subscription" ? "subscription" : "payment",

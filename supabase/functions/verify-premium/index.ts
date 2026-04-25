@@ -149,6 +149,30 @@ Deno.serve(async (req: Request) => {
     }
 
     if (targetRow) {
+      // Enforce 1-diagnostic limit for one-time premium payments.
+      // If the target row's email already has a DIFFERENT unlocked premium
+      // diagnostic, block the unlock (subscription plan has no such limit).
+      const rowEmail = (targetRow.email || email || "").toLowerCase();
+      if (rowEmail) {
+        const { data: existingPremium } = await supabase
+          .from("diagnostic_responses")
+          .select("id")
+          .eq("email", rowEmail)
+          .eq("plan_tier", "premium")
+          .eq("unlocked", true)
+          .neq("id", targetRow.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (existingPremium) {
+          return json({
+            ok: false,
+            error: "already_used",
+            message: "Este e-mail já possui um diagnóstico Premium ativo. Para realizar diagnósticos adicionais, assine o plano Evolução.",
+          }, 200);
+        }
+      }
+
       const updatePayload: Record<string, unknown> = {
         unlocked: true,
         plan_tier: "premium",

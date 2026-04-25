@@ -1634,6 +1634,27 @@ gateForm.addEventListener('submit', async (e) => {
         }),
       });
       const v = await verifyRes.json().catch(() => ({}));
+      if (v && v.error === 'already_used') {
+        // User already consumed their one premium diagnostic — show upgrade prompt
+        if (gateBtn) { gateBtn.disabled = false; gateBtn.textContent = 'Ver meu diagnóstico'; }
+        showScreen('gate');
+        const gateHl = document.getElementById('gateHl');
+        if (gateHl) {
+          gateHl.style.color = '#f5c842';
+          gateHl.textContent = 'Este e-mail já possui um Diagnóstico Premium ativo. Para realizar novos diagnósticos mensais, conheça o plano Evolução.';
+        }
+        const upsellBtn = document.querySelector('.upsell-btn');
+        if (upsellBtn) {
+          upsellBtn.textContent = 'Ver plano Evolução →';
+          upsellBtn.onclick = () => { window.location.href = '/#planos'; };
+        }
+        // Clear premium flags so a retry doesn't loop
+        sessionStorage.removeItem('mapeia_is_premium');
+        sessionStorage.removeItem('mapeia_stripe_session_id');
+        sessionStorage.removeItem('mapeia_access_code');
+        state.isPremium = false;
+        return;
+      }
       state.premiumVerified = !!(v && v.ok && v.paid);
     } catch (err) {
       console.error('verify-premium failed', err);
