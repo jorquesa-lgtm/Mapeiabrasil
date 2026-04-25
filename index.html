@@ -1382,6 +1382,7 @@ footer {
 
         <button type="button" class="btn-price btn-price-primary" data-lead-trigger data-source="pricing_premium" data-plan="premium">Obter diagnóstico Premium &rarr;</button>
         <div class="price-fine">Resultado gerado na hora após o pagamento</div>
+        <div class="price-fine" style="margin-top:8px;color:var(--muted);font-size:11px;">1 diagnóstico completo &middot; Para múltiplos diagnósticos, veja o plano Evolução abaixo</div>
       </div>
 
       <div class="price-card reveal reveal-delay-2">
@@ -1547,6 +1548,18 @@ footer {
         </div>
         <button type="submit" class="lm-submit" id="lmSubmit">Quero meu diagnóstico &rarr;</button>
         <div class="lm-fine">&#128274; Seus dados estão seguros. Em conformidade com a LGPD.</div>
+
+        <!-- Access code section — shown only for premium plan -->
+        <div id="lmAccessCodeSection" style="display:none;margin-top:16px;border-top:1px solid var(--rim);padding-top:14px;">
+          <button type="button" id="lmAccessCodeToggle" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline;text-underline-offset:3px;">Tenho um código de acesso</button>
+          <div id="lmAccessCodePanel" style="display:none;margin-top:10px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input id="lmAccessCodeInput" type="text" placeholder="CÓDIGO" maxlength="20" style="flex:1;background:var(--panel);border:1px solid var(--rim);border-radius:8px;padding:10px 14px;color:var(--bright);font-size:14px;font-family:inherit;text-transform:uppercase;letter-spacing:.1em;" />
+              <button type="button" id="lmAccessCodeApply" style="background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Aplicar</button>
+            </div>
+            <div id="lmAccessCodeMsg" style="font-size:12px;color:var(--muted);margin-top:6px;min-height:16px;"></div>
+          </div>
+        </div>
       </form>
     </div>
     <div class="lm-success" id="lmSuccessBox" style="display:none;">
@@ -1602,6 +1615,16 @@ function openModal(source, plan) {
   titleEl.textContent = c.title;
   subEl.textContent = c.sub;
   submitBtn.innerHTML = currentPlan === 'premium' ? 'Ir para pagamento &rarr;' : 'Quero meu diagnóstico &rarr;';
+  // Show access code section only for premium plan
+  const accessSection = document.getElementById('lmAccessCodeSection');
+  if (accessSection) accessSection.style.display = currentPlan === 'premium' ? '' : 'none';
+  // Reset access code panel state
+  const panel = document.getElementById('lmAccessCodePanel');
+  const msg = document.getElementById('lmAccessCodeMsg');
+  const input = document.getElementById('lmAccessCodeInput');
+  if (panel) panel.style.display = 'none';
+  if (msg) msg.textContent = '';
+  if (input) input.value = '';
   errorBox.classList.remove('on');
   form.reset();
   formBox.style.display = '';
@@ -1745,6 +1768,70 @@ form.addEventListener('submit', async (e) => {
   formBox.style.display = 'none';
   successBox.style.display = '';
 });
+
+// Access code toggle
+const lmAccessCodeToggle = document.getElementById('lmAccessCodeToggle');
+const lmAccessCodePanel = document.getElementById('lmAccessCodePanel');
+const lmAccessCodeInput = document.getElementById('lmAccessCodeInput');
+const lmAccessCodeApply = document.getElementById('lmAccessCodeApply');
+const lmAccessCodeMsg = document.getElementById('lmAccessCodeMsg');
+
+if (lmAccessCodeToggle) {
+  lmAccessCodeToggle.addEventListener('click', () => {
+    const open = lmAccessCodePanel.style.display !== 'none';
+    lmAccessCodePanel.style.display = open ? 'none' : 'block';
+    if (!open) setTimeout(() => lmAccessCodeInput?.focus(), 50);
+  });
+}
+
+if (lmAccessCodeInput) {
+  lmAccessCodeInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  });
+  lmAccessCodeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); lmAccessCodeApply?.click(); }
+  });
+}
+
+if (lmAccessCodeApply) {
+  lmAccessCodeApply.addEventListener('click', async () => {
+    const code = lmAccessCodeInput?.value?.trim().toUpperCase();
+    if (!code) { lmAccessCodeMsg.textContent = 'Digite um código.'; lmAccessCodeMsg.style.color = 'var(--red, #ff4055)'; return; }
+
+    lmAccessCodeApply.disabled = true;
+    lmAccessCodeApply.textContent = '...';
+    lmAccessCodeMsg.textContent = '';
+
+    try {
+      const resp = await fetch(`${SUPABASE_URL}/functions/v1/verify-premium`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_ANON_KEY}`, apikey: SUPABASE_ANON_KEY },
+        body: JSON.stringify({ access_code: code }),
+      });
+      const d = await resp.json().catch(() => ({}));
+
+      if (d.ok && d.paid) {
+        lmAccessCodeMsg.style.color = '#00e5c8';
+        lmAccessCodeMsg.textContent = 'Código válido! Redirecionando para o diagnóstico…';
+        sessionStorage.setItem('mapeia_access_code', code);
+        sessionStorage.setItem('mapeia_is_premium', '1');
+        setTimeout(() => { window.location.href = '/diagnostico.html'; }, 800);
+      } else {
+        const errMap = { code_not_found: 'Código não encontrado.', code_inactive: 'Código inativo.', code_expired: 'Código expirado.', code_exhausted: 'Código já foi utilizado o número máximo de vezes.' };
+        lmAccessCodeMsg.style.color = '#ff4055';
+        lmAccessCodeMsg.textContent = errMap[d.error] || 'Código inválido. Verifique e tente novamente.';
+        lmAccessCodeApply.disabled = false;
+        lmAccessCodeApply.textContent = 'Aplicar';
+      }
+    } catch (err) {
+      console.error('access code check failed', err);
+      lmAccessCodeMsg.style.color = '#ff4055';
+      lmAccessCodeMsg.textContent = 'Erro ao verificar o código. Tente novamente.';
+      lmAccessCodeApply.disabled = false;
+      lmAccessCodeApply.textContent = 'Aplicar';
+    }
+  });
+}
 </script>
 
 <script>
