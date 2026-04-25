@@ -23,9 +23,8 @@ interface CompanyIntel {
 
 interface DiagInput {
   sector: string;
-  company_size: string;
-  revenue: string;
-  budget: string;
+  role?: string;
+  stage?: string;
   answers: Record<string, unknown>;
   answer_labels: Record<string, string>;
   area_scores: Record<string, number>;
@@ -104,16 +103,18 @@ function buildPrompt(input: DiagInput): string {
       .map(([k, v]) => `- ${k}: ${v}`)
       .join("\n");
     premiumBlock = `
-## Respostas do aprofundamento Premium (15 perguntas condicionais)
+## Respostas do aprofundamento Premium (perguntas condicionais)
 ${premiumLines}
 
 IMPORTANTE: Use estas respostas para tornar o diagnostico MUITO MAIS PRECISO e personalizado.
-- Priorize o processo identificado em ap03_biggest_waste como foco do process_audit.
-- Adapte as recomendacoes de automacao com base nas barreiras reveladas em ap06_past_failures e ap07_team_adoption.
-- Use o volume de contatos (ap12_contact_volume) e repeticao (ap13_repeat_questions) para calibrar ROI de chatbot.
-- Quantifique o custo oculto de horas manuais (ap01_hidden_cost, ap10_report_hours) nos gaps identificados.
-- Identifique o dado prioritario que a empresa mais precisa (ap09_missing_data) como primeira recomendacao de dashboard.
-- Se ap14_funnel_loss ou ap15_champion_channel indicarem gaps, priorize CRM e atribuicao de marketing no roadmap.
+- Priorize o processo identificado em ap04_biggest_waste como foco do process_audit.
+- Use horas manuais (ap01_manual_hours, ap10_report_hours) para quantificar custo oculto nos gaps.
+- Adapte recomendacoes de automacao com base nas barreiras em ap07_past_failures e ap08_team_adoption.
+- Use volume de contatos (ap12_contact_volume) e canal principal (ap13_main_channel) para calibrar ROI de chatbot.
+- Identifique o dado prioritario (ap09_missing_data) como primeira recomendacao de dashboard no roadmap.
+- Use taxa de conversao (ap14_conversion_rate) e melhor canal (ap15_best_channel) para priorizar CRM e atribuicao no roadmap.
+- Use ap02_integration e ap03_data_incident para avaliar riscos de infraestrutura e priorizar integracao.
+- Calibre resistencia a mudanca com ap08_team_adoption para incluir gestao de mudanca no plano.
 `;
   }
 
@@ -149,9 +150,8 @@ Com base nas respostas do diagnostico de maturidade abaixo, gere um relatorio pe
 ## Dados do diagnostico
 - Empresa: ${input.company_name || "nao informado"}
 - Setor: ${input.sector || "nao informado"}
-- Tamanho: ${input.company_size || "nao informado"}
-- Faturamento mensal: ${input.revenue || "nao informado"}
-- Orcamento mensal para ferramentas: R$${input.budget || "0"}
+- Respondente: ${input.role || "nao informado"}
+- Estagio da empresa: ${input.stage || "nao informado"}
 - Score global: ${input.global_score}/100 (${globalDiffStr} do setor)
 - Nivel de maturidade: ${input.maturity_level}/5
 
@@ -259,11 +259,9 @@ Responda EXCLUSIVAMENTE em JSON valido, sem markdown, sem code blocks, com esta 
 }
 
 Regras:
-- Gere EXATAMENTE 3 quick_wins ordenados por impacto.
+- Gere EXATAMENTE 3 quick_wins ordenados por impacto (maior ROI primeiro).
 - O primeiro quick win deve ser da area com MENOR score.
 - Gere EXATAMENTE 3 acoes por fase no roadmap.
-- Todas as ferramentas devem caber no orcamento de R$${input.budget || "0"}/mes.
-- Se o orcamento e 0, use SOMENTE ferramentas gratuitas.
 - Os gaps devem ser de 2 a 4 items.
 - O process_audit deve ter 3 steps.
 - Nao use acentos, cedilhas ou caracteres especiais alem de pontuacao basica.
