@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MapeIA — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --ink: #040812;
+  --panel: #0d1d35;
+  --card: #102240;
+  --line: #1e3a5f;
+  --muted: #4a6fa0;
+  --soft: #7a9ec8;
+  --text: #c8daf0;
+  --bright: #e8f2ff;
+  --accent: #1a7ff0;
+  --accent2: #4da6ff;
+  --green: #00c896;
+  --red: #ff4055;
+  --gold: #c8a84b;
+}
+html, body { height: 100%; }
+body {
+  background: radial-gradient(circle at 20% 0%, #0a1730 0%, var(--ink) 60%);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+}
+.shell { max-width: 1200px; margin: 0 auto; padding: 28px 20px 64px; }
+.top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--bright); letter-spacing: .02em; font-size: 18px; }
+.brand-dot { width: 10px; height: 10px; border-radius: 3px; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+.brand small { color: var(--muted); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin-left: 6px; }
+.me { font-size: 13px; color: var(--soft); }
+.btn { font-family: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--bright); padding: 9px 14px; border-radius: 10px; font-weight: 600; font-size: 13px; transition: all .2s; }
+.btn:hover { background: #143056; border-color: #2a4e80; }
+.btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: white; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; }
+.login-card { width: 100%; max-width: 420px; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 32px; box-shadow: 0 30px 80px rgba(0,0,0,.4); }
+.login-card h1 { color: var(--bright); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.login-card p { color: var(--soft); font-size: 13px; margin-bottom: 22px; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.field input { background: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; color: var(--bright); font-family: inherit; font-size: 14px; transition: border-color .2s; }
+.field input:focus { outline: none; border-color: var(--accent); }
+.err { background: rgba(255,64,85,.1); border: 1px solid rgba(255,64,85,.3); color: #ffb3bd; padding: 10px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none; }
+.err.on { display: block; }
+.login-btn { width: 100%; padding: 12px; font-size: 14px; }
+.mini-hint { margin-top: 14px; font-size: 12px; color: var(--muted); text-align: center; line-height: 1.5; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.stat-val { font-size: 28px; font-weight: 700; color: var(--bright); line-height: 1; }
+.stat-val.gold { color: var(--gold); }
+.stat-val.green { color: var(--green); }
+
+.toolbar { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+.toolbar .left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.search { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; color: var(--bright); font-family: inherit; font-size: 13px; min-width: 240px; }
+.search:focus { outline: none; border-color: var(--accent); }
+.select { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; color: var(--bright); font-family: inherit; font-size: 13px; cursor: pointer; }
+
+.table-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
+th { background: #0a1a33; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; position: sticky; top: 0; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(26,127,240,.04); }
+td.email, td.name { color: var(--bright); font-weight: 500; }
+td.muted { color: var(--muted); }
+.pill { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .03em; }
+.pill.free { background: rgba(0,200,150,.15); color: var(--green); }
+.pill.premium { background: rgba(200,168,75,.15); color: var(--gold); }
+
+.empty { padding: 60px 20px; text-align: center; color: var(--muted); }
+.empty h3 { color: var(--bright); font-size: 16px; margin-bottom: 6px; font-weight: 600; }
+.loading { padding: 60px 20px; text-align: center; color: var(--muted); }
+.count-row { color: var(--muted); font-size: 12px; margin-top: 10px; }
+
+@media (max-width: 640px) {
+  .shell { padding: 20px 14px 48px; }
+  .top { flex-direction: column; gap: 14px; align-items: flex-start; }
+  .search { min-width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      MapeIA
+      <small>Admin</small>
+    </div>
+    <div id="meBox" class="me" style="display:none;">
+      <span id="meEmail"></span>
+      &nbsp;&middot;&nbsp;
+      <button class="btn ghost" id="logoutBtn" style="padding:6px 10px;font-size:12px;">Sair</button>
+    </div>
+  </div>
+
+  <div id="loginWrap" class="login-wrap" style="display:none;">
+    <div class="login-card">
+      <h1>Acesso administrativo</h1>
+      <p>Entre com sua conta autorizada para visualizar os leads capturados.</p>
+      <div id="loginErr" class="err"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label for="liEmail">E-mail</label>
+          <input type="email" id="liEmail" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="liPass">Senha</label>
+          <input type="password" id="liPass" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn primary login-btn" id="loginBtn">Entrar</button>
+      </form>
+      <div class="mini-hint">
+        Precisa de acesso? Crie um usuário no Supabase Auth e adicione seu e-mail na tabela <code>admins</code>.
+      </div>
+    </div>
+  </div>
+
+  <div id="dashWrap" style="display:none;">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Total de leads</div>
+        <div class="stat-val" id="statTotal">&mdash;</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Hoje</div>
+        <div class="stat-val green" id="statToday">&mdash;</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">7 dias</div>
+        <div class="stat-val" id="statWeek">&mdash;</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Premium</div>
+        <div class="stat-val gold" id="statPremium">&mdash;</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="left">
+        <input type="text" id="search" class="search" placeholder="Buscar por nome, e-mail ou empresa...">
+        <select id="planFilter" class="select">
+          <option value="all">Todos os planos</option>
+          <option value="free">Free</option>
+          <option value="premium">Premium</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn" id="refreshBtn">Atualizar</button>
+        <button class="btn primary" id="exportBtn">Exportar CSV</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table id="leadsTable">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>WhatsApp</th>
+              <th>Empresa</th>
+              <th>Origem</th>
+              <th>Plano</th>
+            </tr>
+          </thead>
+          <tbody id="leadsBody">
+            <tr><td colspan="7"><div class="loading">Carregando leads...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="count-row" id="countRow"></div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+
+const SUPABASE_URL = 'https://vaekdvwevooqrlubctoj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZWtkdndldm9vcXJsdWJjdG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTYzNjMsImV4cCI6MjA5MjI3MjM2M30.nUb-mqkPn0LYBoZqxR4ElFxmJ_MUpKGNaMdrCwkda44';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true },
+});
+
+const loginWrap = document.getElementById('loginWrap');
+const dashWrap = document.getElementById('dashWrap');
+const meBox = document.getElementById('meBox');
+const meEmail = document.getElementById('meEmail');
+const loginForm = document.getElementById('loginForm');
+const loginErr = document.getElementById('loginErr');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const leadsBody = document.getElementById('leadsBody');
+const countRow = document.getElementById('countRow');
+const searchInput = document.getElementById('search');
+const planFilter = document.getElementById('planFilter');
+const refreshBtn = document.getElementById('refreshBtn');
+const exportBtn = document.getElementById('exportBtn');
+
+let allLeads = [];
+
+function showLogin() {
+  loginWrap.style.display = '';
+  dashWrap.style.display = 'none';
+  meBox.style.display = 'none';
+}
+function showDash(email) {
+  loginWrap.style.display = 'none';
+  dashWrap.style.display = '';
+  meBox.style.display = '';
+  meEmail.textContent = email;
+}
+function showErr(msg) {
+  loginErr.textContent = msg;
+  loginErr.classList.add('on');
+}
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  loginErr.classList.remove('on');
+  const email = document.getElementById('liEmail').value.trim();
+  const password = document.getElementById('liPass').value;
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Entrando...';
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  loginBtn.disabled = false;
+  loginBtn.textContent = 'Entrar';
+  if (error) { showErr(error.message || 'Falha ao entrar.'); return; }
+  const ok = await verifyAdmin(data.user?.email || email);
+  if (!ok) {
+    await supabase.auth.signOut();
+    showErr('Este usuário não tem acesso de admin.');
+    return;
+  }
+  showDash(data.user.email);
+  loadLeads();
+});
+
+logoutBtn.addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  showLogin();
+});
+
+async function verifyAdmin(email) {
+  const { data, error } = await supabase
+    .from('admins')
+    .select('email')
+    .eq('email', (email || '').toLowerCase())
+    .maybeSingle();
+  if (error) { console.error(error); return false; }
+  return !!data;
+}
+
+async function loadLeads() {
+  leadsBody.innerHTML = '<tr><td colspan="7"><div class="loading">Carregando leads...</div></td></tr>';
+  const { data, error } = await supabase
+    .from('leads')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) {
+    leadsBody.innerHTML = `<tr><td colspan="7"><div class="empty"><h3>Não foi possível carregar</h3><p>${escape(error.message)}</p></div></td></tr>`;
+    return;
+  }
+  allLeads = data || [];
+  render();
+}
+
+function render() {
+  const q = (searchInput.value || '').toLowerCase().trim();
+  const plan = planFilter.value;
+  const filtered = allLeads.filter(l => {
+    if (plan !== 'all' && l.plan_interest !== plan) return false;
+    if (!q) return true;
+    const hay = [l.name, l.email, l.company, l.whatsapp].filter(Boolean).join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+
+  updateStats(allLeads);
+
+  if (filtered.length === 0) {
+    leadsBody.innerHTML = `<tr><td colspan="7"><div class="empty"><h3>Nenhum lead encontrado</h3><p>${allLeads.length === 0 ? 'Ainda não há leads capturados.' : 'Ajuste a busca ou o filtro.'}</p></div></td></tr>`;
+    countRow.textContent = '';
+    return;
+  }
+
+  leadsBody.innerHTML = filtered.map(l => {
+    const d = new Date(l.created_at);
+    const date = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const planPill = l.plan_interest === 'premium'
+      ? '<span class="pill premium">Premium</span>'
+      : '<span class="pill free">Free</span>';
+    return `<tr>
+      <td class="muted">${escape(date)}</td>
+      <td class="name">${escape(l.name || '')}</td>
+      <td class="email">${escape(l.email || '')}</td>
+      <td>${escape(l.whatsapp || '-')}</td>
+      <td>${escape(l.company || '-')}</td>
+      <td class="muted">${escape(l.source || '-')}</td>
+      <td>${planPill}</td>
+    </tr>`;
+  }).join('');
+  countRow.textContent = `Mostrando ${filtered.length} de ${allLeads.length} leads`;
+}
+
+function updateStats(rows) {
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const today = rows.filter(r => (now - new Date(r.created_at).getTime()) < oneDay).length;
+  const week = rows.filter(r => (now - new Date(r.created_at).getTime()) < 7 * oneDay).length;
+  const premium = rows.filter(r => r.plan_interest === 'premium').length;
+  document.getElementById('statTotal').textContent = rows.length;
+  document.getElementById('statToday').textContent = today;
+  document.getElementById('statWeek').textContent = week;
+  document.getElementById('statPremium').textContent = premium;
+}
+
+function escape(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+searchInput.addEventListener('input', render);
+planFilter.addEventListener('change', render);
+refreshBtn.addEventListener('click', loadLeads);
+
+exportBtn.addEventListener('click', () => {
+  const rows = allLeads;
+  if (rows.length === 0) return;
+  const header = ['created_at','name','email','whatsapp','company','sector','source','plan_interest'];
+  const csv = [header.join(',')].concat(
+    rows.map(r => header.map(k => csvCell(r[k])).join(','))
+  ).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `leads-mapeia-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+function csvCell(v) {
+  if (v === null || v === undefined) return '';
+  const s = String(v);
+  if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+(async function init() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user?.email) {
+    const ok = await verifyAdmin(session.user.email);
+    if (ok) {
+      showDash(session.user.email);
+      loadLeads();
+      return;
+    }
+    await supabase.auth.signOut();
+  }
+  showLogin();
+})();
+</script>
+</body>
+</html>

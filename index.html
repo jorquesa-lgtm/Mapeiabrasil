@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MapeIA Brasil — Diagnóstico de IA & Automação para PMEs</title>
+<meta name="description" content="Diagnóstico de IA e automação para PMEs brasileiras. Responda 18 perguntas e receba seu plano de ação em 5 minutos.">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+/* RESET & BASE */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --ink:    #040812;
+  --deep:   #060c1a;
+  --navy:   #0a1628;
+  --panel:  #0d1d35;
+  --card:   #102240;
+  --rim:    #1a3355;
+  --line:   #1e3a5f;
+  --muted:  #4a6fa0;
+  --soft:   #7a9ec8;
+  --text:   #c8daf0;
+  --bright: #e8f2ff;
+  --white:  #f4f8ff;
+  --gold:   #c8a84b;
+  --gold2:  #e8c96a;
+  --teal:   #00b8d4;
+  --teal2:  #00e5c8;
+  --accent: #1a7ff0;
+  --accent2:#4da6ff;
+  --red:    #ff4055;
+  --green:  #00c896;
+  --r:      16px;
+  --r2:     12px;
+  --r3:     8px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* TYPOGRAPHY */
+h1, h2, h3, h4 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  line-height: 1.15;
+  color: var(--white);
+}
+h1 { font-size: clamp(36px, 5.5vw, 68px); letter-spacing: -0.02em; }
+h2 { font-size: clamp(28px, 3.8vw, 48px); letter-spacing: -0.015em; }
+h3 { font-size: clamp(20px, 2.4vw, 28px); }
+h4 { font-size: clamp(16px, 1.8vw, 20px); }
+
+em { font-style: italic; color: var(--teal2); }
+strong { font-weight: 600; color: var(--bright); }
+
+p { color: var(--text); }
+
+/* LAYOUT */
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.section { padding: clamp(64px, 8vw, 120px) 0; }
+
+/* AMBIENT BACKGROUND */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(26,127,240,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(0,184,212,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(10,22,40,.8) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(26,127,240,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,127,240,.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(4,8,18,.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 1120px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: #fff;
+  font-family: 'DM Sans', sans-serif;
+}
+.logo-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--bright); letter-spacing: -0.01em;
+}
+.logo-text span { color: var(--teal2); }
+.nav-links {
+  display: flex; align-items: center; gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: var(--soft);
+  text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover { color: var(--bright); }
+.nav-cta {
+  background: var(--accent); color: #fff !important;
+  padding: 8px 20px; border-radius: 8px;
+  font-weight: 600 !important; font-size: 14px !important;
+  transition: background .2s, transform .2s !important;
+}
+.nav-cta:hover { background: var(--accent2) !important; transform: translateY(-1px); }
+
+/* LANGUAGE SELECTOR */
+.nav-actions {
+  display: flex; align-items: center; gap: 10px;
+}
+.lang-selector {
+  position: relative;
+  display: flex; align-items: center;
+}
+.lang-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--soft);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+  transition: all .2s;
+}
+.lang-btn:hover {
+  color: var(--bright);
+  border-color: var(--soft);
+}
+.lang-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  margin-top: 8px;
+  min-width: 140px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 2000;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+}
+.lang-selector.active .lang-menu {
+  display: flex;
+}
+.lang-option {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--soft);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  text-align: left;
+  transition: all .2s;
+}
+.lang-option:hover {
+  background: var(--card);
+  color: var(--bright);
+}
+.lang-option.active {
+  background: rgba(26,127,240,.2);
+  color: var(--accent2);
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  padding: 100px 24px 80px;
+  position: relative; z-index: 1;
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,127,240,.1);
+  border: 1px solid rgba(26,127,240,.25);
+  color: var(--accent2);
+  font-size: 12px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; padding: 6px 16px; border-radius: 100px;
+  margin-bottom: 28px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal2); animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+
+.hero h1 { max-width: 860px; margin: 0 auto 20px; }
+.hero h1 em { color: var(--teal2); font-style: italic; }
+
+.hero-sub {
+  font-size: clamp(17px, 2vw, 21px);
+  color: var(--soft); max-width: 560px; margin: 0 auto 40px;
+  font-weight: 300; line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; flex-wrap: wrap; margin-bottom: 64px;
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 600;
+  padding: 16px 32px; border-radius: var(--r2);
+  text-decoration: none; border: none; cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 4px 24px rgba(26,127,240,.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(26,127,240,.4);
+}
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--soft);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 500;
+  padding: 15px 28px; border-radius: var(--r2);
+  text-decoration: none; border: 1.5px solid var(--line);
+  cursor: pointer; transition: all .2s;
+}
+.btn-secondary:hover { border-color: var(--muted); color: var(--bright); }
+
+.hero-stats {
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; flex-wrap: wrap;
+}
+.hstat {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.hstat-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 32px; color: var(--bright); line-height: 1;
+}
+.hstat-num em { color: var(--teal2); font-style: normal; }
+.hstat-lbl { font-size: 12px; color: var(--muted); font-weight: 500; }
+.hstat-div { width: 1px; height: 40px; background: var(--line); }
+
+/* DEMO EMBED */
+.demo-section {
+  position: relative; z-index: 1;
+  padding: 0 0 clamp(64px, 8vw, 120px);
+}
+.demo-label {
+  text-align: center; margin-bottom: 20px;
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.demo-frame-wrap {
+  border-radius: 20px; overflow: hidden;
+  border: 1px solid var(--rim);
+  box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(26,127,240,.08);
+  position: relative;
+}
+.demo-glow {
+  position: absolute; inset: -1px;
+  border-radius: 21px;
+  background: linear-gradient(135deg, rgba(26,127,240,.15), rgba(0,184,212,.1), transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+.demo-iframe-wrap {
+  width: 100%;
+  height: clamp(720px, 110vh, 1200px);
+  overflow: hidden;
+  border-radius: 20px;
+}
+.demo-iframe-wrap iframe {
+  width: 100%; height: 100%;
+  border: none; border-radius: 20px;
+  display: block;
+  pointer-events: auto;
+}
+
+/* SECTION HEADER */
+.sec-header { text-align: center; margin-bottom: clamp(40px, 5vw, 64px); }
+.sec-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--teal2);
+  margin-bottom: 14px;
+}
+.sec-header h2 { margin-bottom: 16px; }
+.sec-header p {
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: var(--soft); max-width: 540px; margin: 0 auto;
+  font-weight: 300;
+}
+
+/* HOW IT WORKS */
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2px;
+  background: var(--line);
+  border-radius: var(--r); overflow: hidden;
+}
+.how-step {
+  background: var(--panel);
+  padding: clamp(28px, 3.5vw, 40px);
+  position: relative;
+  transition: background .2s;
+}
+.how-step:hover { background: var(--card); }
+.how-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 52px; line-height: 1;
+  color: rgba(26,127,240,.15);
+  margin-bottom: 16px; display: block;
+}
+.how-icon {
+  font-size: 28px; margin-bottom: 14px; display: block;
+}
+.how-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 600;
+  color: var(--bright); margin-bottom: 8px;
+}
+.how-desc { font-size: 14px; color: var(--soft); line-height: 1.6; }
+
+/* SECTORS */
+.sectors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+.sector-chip {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--r2); padding: 20px 16px;
+  text-align: center; transition: all .2s; cursor: default;
+}
+.sector-chip:hover {
+  border-color: var(--accent); background: var(--card);
+  transform: translateY(-2px);
+}
+.sc-ico { font-size: 26px; margin-bottom: 8px; display: block; }
+.sc-lbl { font-size: 13px; font-weight: 500; color: var(--soft); }
+
+/* WHAT YOU GET */
+.gets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+.get-card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--r); padding: clamp(24px, 3vw, 32px);
+  position: relative; overflow: hidden;
+  transition: border-color .2s, transform .2s;
+}
+.get-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  opacity: 0; transition: opacity .2s;
+}
+.get-card:hover { border-color: var(--rim); transform: translateY(-3px); }
+.get-card:hover::before { opacity: 1; }
+.get-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+.get-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px; font-weight: 600;
+  color: var(--bright); margin-bottom: 8px;
+}
+.get-desc { font-size: 14px; color: var(--soft); line-height: 1.65; }
+.get-tag {
+  display: inline-block; margin-top: 14px;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 100px;
+}
+.get-tag.free { background: rgba(0,200,150,.1); color: var(--green); }
+.get-tag.prem { background: rgba(200,168,75,.1); color: var(--gold2); }
+
+/* AREAS */
+.areas-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px; align-items: center;
+}
+@media(max-width:768px){ .areas-wrap{ grid-template-columns:1fr; } }
+.areas-list { display: flex; flex-direction: column; gap: 10px; }
+.area-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--r3); padding: 14px 16px;
+  transition: all .2s;
+}
+.area-row:hover { border-color: var(--accent); background: var(--card); }
+.area-sem { font-size: 14px; flex-shrink: 0; }
+.area-name { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+.area-bar-wrap { width: 80px; height: 3px; background: var(--line); border-radius: 10px; overflow: hidden; }
+.area-bar { height: 100%; border-radius: 10px; }
+.area-pct { font-size: 11px; color: var(--muted); width: 28px; text-align: right; }
+
+.areas-visual {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--r); padding: clamp(24px, 3vw, 36px);
+}
+.av-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 20px;
+}
+.score-ring-demo {
+  display: flex; align-items: center; gap: 20px; margin-bottom: 24px;
+}
+.ring-svg { flex-shrink: 0; }
+.ring-info { flex: 1; }
+.ring-score {
+  font-family: 'Instrument Serif', serif;
+  font-size: 42px; color: var(--gold2); line-height: 1;
+}
+.ring-level { font-size: 12px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; margin-top: 4px; }
+.ring-desc { font-size: 13px; color: var(--soft); margin-top: 6px; line-height: 1.5; }
+
+/* TESTIMONIALS */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.testi-card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--r); padding: clamp(22px, 2.8vw, 30px);
+}
+.testi-stars { color: var(--gold2); font-size: 14px; margin-bottom: 12px; letter-spacing: 2px; }
+.testi-text { font-size: 15px; color: var(--text); line-height: 1.65; margin-bottom: 18px; font-style: italic; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.testi-name { font-size: 14px; font-weight: 600; color: var(--bright); }
+.testi-role { font-size: 12px; color: var(--muted); }
+
+/* PRICING */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px; align-items: stretch; max-width: 1240px; margin: 0 auto;
+}
+@media (min-width: 1100px) {
+  .pricing-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.price-card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--r); padding: clamp(28px, 3.5vw, 40px);
+  display: flex; flex-direction: column; gap: 0;
+  position: relative; overflow: hidden;
+  transition: transform .2s, border-color .2s;
+}
+.price-card:hover { transform: translateY(-4px); }
+
+.price-card.featured {
+  border-color: var(--accent);
+  background: linear-gradient(160deg, var(--card), var(--panel));
+}
+.price-card.featured::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--teal2));
+}
+
+.price-tag-wrap {
+  position: absolute; top: 20px; right: 20px;
+}
+.price-tag {
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  color: #fff; font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 100px;
+}
+
+.price-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+.price-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 6px;
+}
+.price-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(22px, 2.5vw, 28px);
+  color: var(--white); margin-bottom: 8px;
+}
+.price-sub { font-size: 14px; color: var(--soft); margin-bottom: 28px; line-height: 1.5; }
+
+.price-amount {
+  display: flex; align-items: flex-end; gap: 6px;
+  margin-bottom: 6px;
+}
+.price-cur { font-size: 20px; color: var(--soft); margin-bottom: 8px; font-weight: 500; }
+.price-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(44px, 5vw, 56px); line-height: 1;
+  color: var(--white);
+}
+.price-num.featured-price { color: var(--teal2); }
+.price-period { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.price-note { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+.price-divider { height: 1px; background: var(--line); margin: 24px 0; }
+
+.price-features { display: flex; flex-direction: column; gap: 10px; flex: 1; margin-bottom: 28px; }
+.pf-item { display: flex; align-items: flex-start; gap: 10px; }
+.pf-check { color: var(--green); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.pf-check.gold { color: var(--gold2); }
+.pf-text { font-size: 14px; color: var(--text); line-height: 1.45; }
+.pf-text strong { color: var(--bright); }
+
+.btn-price {
+  display: block; width: 100%; text-align: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 600;
+  padding: 15px; border-radius: var(--r2);
+  text-decoration: none; border: none; cursor: pointer;
+  transition: all .2s; margin-top: auto;
+}
+.btn-price-primary {
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(26,127,240,.3);
+}
+.btn-price-primary:hover {
+  box-shadow: 0 6px 28px rgba(26,127,240,.45);
+  transform: translateY(-1px);
+}
+.btn-price-outline {
+  background: transparent; color: var(--soft);
+  border: 1.5px solid var(--line);
+}
+.btn-price-outline:hover { border-color: var(--muted); color: var(--bright); }
+
+.price-fine { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+/* FAQ */
+.faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 2px; }
+.faq-item {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--r3); overflow: hidden;
+}
+.faq-q {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px; background: none; border: none; cursor: pointer;
+  text-align: left; color: var(--bright);
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+  transition: color .2s;
+}
+.faq-q:hover { color: var(--white); }
+.faq-arrow { color: var(--muted); font-size: 18px; transition: transform .3s; flex-shrink: 0; }
+.faq-item.open .faq-arrow { transform: rotate(45deg); color: var(--teal2); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s ease, padding .35s ease;
+  font-size: 14px; color: var(--soft); line-height: 1.7;
+  padding: 0 24px;
+}
+.faq-item.open .faq-a { max-height: 300px; padding: 0 24px 20px; }
+
+/* FINAL CTA */
+.final-cta {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: clamp(64px, 8vw, 120px) 24px;
+  overflow: hidden;
+}
+.final-cta::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse, rgba(26,127,240,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.final-cta h2 { margin-bottom: 16px; }
+.final-cta p { font-size: 18px; color: var(--soft); max-width: 480px; margin: 0 auto 40px; font-weight: 300; }
+.cta-actions { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+
+/* FOOTER */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--line);
+  padding: 40px 24px;
+}
+.footer-inner {
+  max-width: 1120px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo { font-size: 15px; font-weight: 600; color: var(--soft); }
+.footer-logo span { color: var(--teal2); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--soft); }
+.footer-copy { font-size: 13px; color: var(--muted); }
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
+/* RESPONSIVE */
+@media(max-width: 768px) {
+  .nav-links { display: none; }
+  .hero-stats { gap: 20px; }
+  .hstat-div { display: none; }
+}
+
+/* LEAD MODAL */
+.lm-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(4, 8, 18, 0.82);
+  backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; transition: opacity .25s ease;
+}
+.lm-overlay.on { display: flex; opacity: 1; }
+.lm-card {
+  background: var(--panel);
+  border: 1px solid var(--rim);
+  border-radius: var(--r);
+  padding: clamp(28px, 4vw, 44px);
+  width: 100%; max-width: 460px;
+  position: relative;
+  box-shadow: 0 40px 100px rgba(0,0,0,.6);
+  transform: translateY(12px);
+  transition: transform .25s ease;
+}
+.lm-overlay.on .lm-card { transform: translateY(0); }
+.lm-close {
+  position: absolute; top: 16px; right: 16px;
+  background: transparent; border: none; color: var(--muted);
+  font-size: 22px; cursor: pointer; line-height: 1;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.lm-close:hover { background: var(--card); color: var(--bright); }
+.lm-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--teal2);
+  margin-bottom: 10px;
+}
+.lm-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(22px, 3vw, 28px);
+  color: var(--white); line-height: 1.2;
+  margin-bottom: 8px;
+}
+.lm-sub {
+  font-size: 14px; color: var(--soft);
+  line-height: 1.55; margin-bottom: 24px;
+}
+.lm-field { margin-bottom: 14px; }
+.lm-label {
+  display: block;
+  font-size: 12px; font-weight: 600;
+  color: var(--soft); margin-bottom: 6px;
+}
+.lm-input {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r3);
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--bright);
+  transition: border-color .2s;
+}
+.lm-input:focus { outline: none; border-color: var(--accent); }
+.lm-input::placeholder { color: var(--muted); }
+.lm-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 600;
+  padding: 14px; border-radius: var(--r2);
+  border: none; cursor: pointer; margin-top: 6px;
+  transition: all .2s;
+  box-shadow: 0 4px 20px rgba(26,127,240,.3);
+}
+.lm-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(26,127,240,.45);
+}
+.lm-submit:disabled { opacity: .6; cursor: not-allowed; }
+.lm-fine {
+  font-size: 12px; color: var(--muted);
+  text-align: center; margin-top: 12px; line-height: 1.5;
+}
+.lm-error {
+  background: rgba(255,64,85,.1);
+  border: 1px solid rgba(255,64,85,.25);
+  color: #ff6b7a;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: var(--r3);
+  margin-bottom: 14px;
+  display: none;
+}
+.lm-error.on { display: block; }
+.lm-success {
+  text-align: center; padding: 10px 0;
+}
+.lm-success-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(0,200,150,.15);
+  color: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 18px;
+}
+.lm-success h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px; color: var(--white);
+  margin-bottom: 10px;
+}
+.lm-success p {
+  font-size: 14px; color: var(--soft);
+  line-height: 1.6; margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="/image.png" alt="MapeIA Logo" style="width: 40px; height: 40px; border-radius: 8px;">
+      <div class="logo-text">MapeIA <span>Brasil</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#como-funciona" data-i18n-text="como-funciona">Como funciona</a></li>
+      <li><a href="#o-que-voce-recebe" data-i18n-text="o-que-voce-recebe">O que você recebe</a></li>
+      <li><a href="#ferramenta" data-i18n-text="a-ferramenta">A ferramenta</a></li>
+      <li><a href="#planos" data-i18n-text="planos">Planos</a></li>
+      <li><a href="#faq" data-i18n-text="faq">FAQ</a></li>
+      <li><a href="#planos" class="nav-cta" data-i18n-text="iniciar-diagnostico">Iniciar diagnóstico</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="lang-selector" id="langSelector">
+        <button class="lang-btn" aria-label="Selecionar idioma">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span id="langDisplay">PT</span>
+          <span style="font-size: 10px;">▼</span>
+        </button>
+        <div class="lang-menu">
+          <button class="lang-option active" data-lang="pt">Português</button>
+          <button class="lang-option" data-lang="en">English</button>
+          <button class="lang-option" data-lang="es">Español</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="hero-eyebrow" data-i18n="hero-eyebrow">Diagnóstico de IA & Automação para PMEs</div>
+
+    <h1 class="reveal" data-i18n="hero-title">
+      Descubra em 5 minutos onde sua empresa<br>
+      <em>perde tempo e oportunidades</em><br>
+      por falta de automação
+    </h1>
+
+    <p class="hero-sub reveal reveal-delay-1" data-i18n="hero-subtitle">
+      Responda o questionário e receba um diagnóstico personalizado com seu nível de maturidade, quick wins e um plano de ação para os próximos 90 dias.
+    </p>
+
+    <div class="hero-actions reveal reveal-delay-2">
+      <a href="/diagnostico.html" class="btn-primary" data-source="hero_cta" style="text-decoration:none;">
+        Iniciar Diagnóstico Gratuito &rarr;
+      </a>
+      <a href="#demo" class="btn-secondary">
+        &#9654; Ver como funciona
+      </a>
+    </div>
+
+    <div class="hero-stats reveal reveal-delay-3">
+      <div class="hstat">
+        <div class="hstat-num">6<em>+</em></div>
+        <div class="hstat-lbl">Blocos de análise</div>
+      </div>
+      <div class="hstat-div"></div>
+      <div class="hstat">
+        <div class="hstat-num">18</div>
+        <div class="hstat-lbl">Perguntas estruturadas</div>
+      </div>
+      <div class="hstat-div"></div>
+      <div class="hstat">
+        <div class="hstat-num">7</div>
+        <div class="hstat-lbl">Áreas diagnosticadas</div>
+      </div>
+      <div class="hstat-div"></div>
+      <div class="hstat">
+        <div class="hstat-num"><em>5</em>min</div>
+        <div class="hstat-lbl">Para o resultado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="container">
+    <div class="demo-label reveal">&#9654; Demo interativo &mdash; veja o fluxo completo</div>
+    <div class="demo-frame-wrap reveal">
+      <div class="demo-glow"></div>
+      <div class="demo-iframe-wrap">
+        <iframe
+          src="/audit-demo-v4.html"
+          title="MapeIA Brasil - Demo"
+          loading="lazy"
+          allow="autoplay"
+        ></iframe>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted);">
+      Clique em &#9654; para assistir ao demo completo &middot; Use os controles para pausar ou avançar
+    </p>
+  </div>
+</section>
+
+<section class="section" id="como-funciona" style="position:relative;z-index:1;">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Como funciona</div>
+      <h2>Do questionário ao<br>plano de ação em minutos</h2>
+      <p>Sem necessidade de consultor, sem burocracia, sem espera.</p>
+    </div>
+
+    <div class="how-grid reveal">
+      <div class="how-step">
+        <span class="how-num">01</span>
+        <span class="how-icon">&#128203;</span>
+        <div class="how-title">Responda 18 perguntas</div>
+        <div class="how-desc">Sobre seu setor, tamanho, ferramentas atuais, processos e uso de IA. Leva menos de 5 minutos.</div>
+      </div>
+      <div class="how-step">
+        <span class="how-num">02</span>
+        <span class="how-icon">&#129302;</span>
+        <div class="how-title">IA analisa suas respostas</div>
+        <div class="how-desc">O sistema calcula seu score de maturidade em 7 áreas e identifica os gaps de maior impacto para o seu setor.</div>
+      </div>
+      <div class="how-step">
+        <span class="how-num">03</span>
+        <span class="how-icon">&#128202;</span>
+        <div class="how-title">Receba o diagnóstico</div>
+        <div class="how-desc">Radar de maturidade, quick wins priorizados, ferramentas recomendadas para o seu orçamento e plano 30/60/90 dias.</div>
+      </div>
+      <div class="how-step">
+        <span class="how-num">04</span>
+        <span class="how-icon">&#128640;</span>
+        <div class="how-title">Execute com clareza</div>
+        <div class="how-desc">Saia com um roadmap concreto &mdash; ou opte pela sessão de implementação para colocar tudo em prática com suporte especializado.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="position:relative;z-index:1;padding-bottom:clamp(64px,8vw,120px);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Setores atendidos</div>
+      <h2>Diagnóstico personalizado<br>para o seu mercado</h2>
+      <p>Benchmarks, ferramentas e recomendações específicas para cada setor.</p>
+    </div>
+    <div class="sectors-grid reveal">
+      <div class="sector-chip"><span class="sc-ico">&#127978;</span><div class="sc-lbl">Varejo</div></div>
+      <div class="sector-chip"><span class="sc-ico">&#127869;</span><div class="sc-lbl">Alimentação</div></div>
+      <div class="sector-chip"><span class="sc-ico">&#127973;</span><div class="sc-lbl">Saúde</div></div>
+      <div class="sector-chip"><span class="sc-ico">&#9878;</span><div class="sc-lbl">Serviços Prof.</div></div>
+      <div class="sector-chip"><span class="sc-ico">&#127891;</span><div class="sc-lbl">Educação</div></div>
+      <div class="sector-chip"><span class="sc-ico">&#127959;</span><div class="sc-lbl">Construção</div></div>
+      <div class="sector-chip"><span class="sc-ico">&#128241;</span><div class="sc-lbl">Marketing</div></div>
+      <div class="sector-chip"><span class="sc-ico">&#128187;</span><div class="sc-lbl">Tecnologia</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="o-que-voce-recebe" style="position:relative;z-index:1;background:var(--deep);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">O que você recebe</div>
+      <h2>Um diagnóstico completo,<br>não mais um relatório genérico</h2>
+      <p>Cada resultado é gerado pela IA com base no seu perfil &mdash; setor, tamanho e orçamento.</p>
+    </div>
+
+    <div class="gets-grid">
+      <div class="get-card reveal">
+        <span class="get-icon">&#128200;</span>
+        <div class="get-title">Score Global + Nível</div>
+        <div class="get-desc">Seu score de maturidade digital (0 a 100%) e o nível da sua empresa na escala de 1 a 5, com descrição do estágio atual e do que vem pela frente.</div>
+        <span class="get-tag free">Incluído no gratuito</span>
+      </div>
+      <div class="get-card reveal reveal-delay-1">
+        <span class="get-icon">&#9889;</span>
+        <div class="get-title">Quick Win Prioritário</div>
+        <div class="get-desc">A ação de maior impacto e menor esforço para você começar hoje &mdash; com a ferramenta certa e o prazo realista de implementação.</div>
+        <span class="get-tag free">Incluído no gratuito</span>
+      </div>
+      <div class="get-card reveal reveal-delay-2">
+        <span class="get-icon">&#128225;</span>
+        <div class="get-title">Radar das 7 Áreas</div>
+        <div class="get-desc">Score visual com semáforo por área &mdash; infraestrutura, processos, IA, dados, financeiro, vendas e atendimento. Visão completa da operação.</div>
+        <span class="get-tag prem">Diagnóstico Premium</span>
+      </div>
+      <div class="get-card reveal">
+        <span class="get-icon">&#128736;</span>
+        <div class="get-title">Top 3 Quick Wins + Ferramentas</div>
+        <div class="get-desc">As três ações priorizadas com as ferramentas recomendadas por área, filtradas pelo seu orçamento e setor. Só o que faz sentido para a sua realidade.</div>
+        <span class="get-tag prem">Diagnóstico Premium</span>
+      </div>
+      <div class="get-card reveal">
+        <span class="get-icon">&#128197;</span>
+        <div class="get-title">Plano 30/60/90 Dias</div>
+        <div class="get-desc">Roadmap detalhado com ações sequenciadas, ferramentas por fase e custo estimado. Do gratuito ao pago, na ordem certa.</div>
+        <span class="get-tag prem">Diagnóstico Premium</span>
+      </div>
+      <div class="get-card reveal reveal-delay-1">
+        <span class="get-icon">&#9881;</span>
+        <div class="get-title">Processo Auditado</div>
+        <div class="get-desc">Um processo crítico da sua operação analisado em detalhe &mdash; como está hoje, como automatizar e o impacto esperado em tempo e resultado.</div>
+        <span class="get-tag prem">Diagnóstico Premium</span>
+      </div>
+      <div class="get-card reveal reveal-delay-2">
+        <span class="get-icon">&#128196;</span>
+        <div class="get-title">Relatório PDF Exportável</div>
+        <div class="get-desc">Documento completo com marca da sua empresa para compartilhar com sócios, equipe ou investidores. Pronto para usar em reuniões.</div>
+        <span class="get-tag prem">Diagnóstico Premium</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="position:relative;z-index:1;">
+  <div class="container">
+    <div class="areas-wrap">
+      <div>
+        <div class="sec-tag reveal">7 áreas analisadas</div>
+        <h2 class="reveal" style="margin-bottom:16px;">Diagnóstico granular<br>por área funcional</h2>
+        <p class="reveal" style="color:var(--soft);margin-bottom:32px;font-size:16px;font-weight:300;">Cada área recebe um score independente. Sua empresa pode ser avançada em financeiro e crítica em atendimento &mdash; o diagnóstico mostra exatamente isso.</p>
+        <div class="areas-list reveal">
+          <div class="area-row"><span class="area-sem">&#127959;</span><span class="area-name">Infraestrutura & Ferramentas</span><div class="area-bar-wrap"><div class="area-bar" style="width:65%;background:var(--gold)"></div></div><span class="area-pct">65%</span></div>
+          <div class="area-row"><span class="area-sem">&#9881;</span><span class="area-name">Processos Internos</span><div class="area-bar-wrap"><div class="area-bar" style="width:45%;background:var(--gold)"></div></div><span class="area-pct">45%</span></div>
+          <div class="area-row"><span class="area-sem">&#129302;</span><span class="area-name">IA & Automação</span><div class="area-bar-wrap"><div class="area-bar" style="width:20%;background:var(--red)"></div></div><span class="area-pct">20%</span></div>
+          <div class="area-row"><span class="area-sem">&#128202;</span><span class="area-name">Dados & Inteligência</span><div class="area-bar-wrap"><div class="area-bar" style="width:15%;background:var(--red)"></div></div><span class="area-pct">15%</span></div>
+          <div class="area-row"><span class="area-sem">&#128176;</span><span class="area-name">Financeiro</span><div class="area-bar-wrap"><div class="area-bar" style="width:72%;background:var(--green)"></div></div><span class="area-pct">72%</span></div>
+          <div class="area-row"><span class="area-sem">&#129309;</span><span class="area-name">Vendas & Conversão</span><div class="area-bar-wrap"><div class="area-bar" style="width:35%;background:var(--red)"></div></div><span class="area-pct">35%</span></div>
+          <div class="area-row"><span class="area-sem">&#128172;</span><span class="area-name">Atendimento ao Cliente</span><div class="area-bar-wrap"><div class="area-bar" style="width:18%;background:var(--red)"></div></div><span class="area-pct">18%</span></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="areas-visual">
+          <div class="av-title">Exemplo de resultado</div>
+          <div class="score-ring-demo">
+            <svg class="ring-svg" width="90" height="90" viewBox="0 0 90 90">
+              <circle fill="none" stroke="var(--line)" stroke-width="7" cx="45" cy="45" r="38"/>
+              <circle fill="none" stroke="var(--gold2)" stroke-width="7" cx="45" cy="45" r="38"
+                stroke-dasharray="238.8" stroke-dashoffset="95.5"
+                stroke-linecap="round" transform="rotate(-90 45 45)"/>
+            </svg>
+            <div class="ring-info">
+              <div class="ring-score">60<span style="font-size:24px;color:var(--muted)">%</span></div>
+              <div class="ring-level">Nível 3 &mdash; Em Transição</div>
+              <div class="ring-desc">Base digital existe. Falta integrar e automatizar os processos certos.</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);border-radius:8px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">&#9889; Quick Win #1</div>
+              <div style="font-size:13px;color:var(--text);font-weight:500;">CRM + follow-up automático</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;">HubSpot Free + Make &middot; Implementação em 30 dias</div>
+            </div>
+            <div style="background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);border-radius:8px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">&#9889; Quick Win #2</div>
+              <div style="font-size:13px;color:var(--text);font-weight:500;">Chatbot WhatsApp 24h</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;">Typebot &middot; Gratuito &middot; Resposta em &lt;2 minutos</div>
+            </div>
+            <div style="background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);border-radius:8px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">&#9889; Quick Win #3</div>
+              <div style="font-size:13px;color:var(--text);font-weight:500;">Dashboard de KPIs em tempo real</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;">Looker Studio &middot; Gratuito &middot; Decisões baseadas em dados</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="position:relative;z-index:1;background:var(--deep);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Resultados reais</div>
+      <h2>O que dizem quem já<br>fez o diagnóstico</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="testi-text">"Em 5 minutos descobri que estava perdendo 40% dos leads por falta de follow-up. O plano de ação foi cirúrgico &mdash; implementei o CRM na primeira semana."</div>
+        <div class="testi-author">
+          <div class="testi-avatar">MR</div>
+          <div>
+            <div class="testi-name">Marcos Ribeiro</div>
+            <div class="testi-role">Sócio &middot; Escritório de Advocacia &middot; São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="testi-text">"O radar de maturidade mostrou exatamente onde estavam os buracos. Implementei o chatbot no WhatsApp em 2 dias e reduzi 60% das perguntas repetitivas."</div>
+        <div class="testi-author">
+          <div class="testi-avatar">AC</div>
+          <div>
+            <div class="testi-name">Ana Carolina</div>
+            <div class="testi-role">Diretora &middot; Clínica de Estética &middot; Campinas</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="testi-text">"Pensei que minha empresa estava bem digitalizada. O diagnóstico mostrou que estava operando no nível 2 em dados e tomando decisões sem KPIs reais. Revelador."</div>
+        <div class="testi-author">
+          <div class="testi-avatar">PT</div>
+          <div>
+            <div class="testi-name">Paulo Teixeira</div>
+            <div class="testi-role">CEO &middot; Distribuidora &middot; Porto Alegre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.auto-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 32px;
+}
+@media (min-width: 780px) {
+  .auto-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1080px) {
+  .auto-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.auto-card {
+  background: linear-gradient(180deg, var(--panel) 0%, var(--navy) 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.auto-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 20px 60px rgba(26,127,240,.15);
+}
+.auto-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--teal2));
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.auto-card:hover::before { opacity: 1; }
+.auto-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(26,127,240,.15), rgba(0,229,200,.1));
+  border: 1px solid rgba(26,127,240,.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  color: var(--accent2);
+}
+.auto-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-bottom: 12px;
+}
+.auto-tag-auto {
+  background: rgba(0,229,200,.08);
+  border: 1px solid rgba(0,229,200,.2);
+  color: var(--teal2);
+}
+.auto-tag-evo {
+  background: rgba(26,127,240,.08);
+  border: 1px solid rgba(26,127,240,.2);
+  color: var(--accent2);
+}
+.auto-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.auto-desc {
+  font-size: 14px;
+  color: var(--soft);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.auto-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: .05em;
+}
+.auto-meta span {
+  background: rgba(26,127,240,.05);
+  border: 1px solid var(--rim);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.auto-banner {
+  margin-top: 48px;
+  background: linear-gradient(135deg, rgba(26,127,240,.08), rgba(0,229,200,.04));
+  border: 1px solid rgba(26,127,240,.2);
+  border-radius: var(--r);
+  padding: 28px;
+  text-align: center;
+}
+.auto-banner-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(20px, 2.5vw, 26px);
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.auto-banner-sub {
+  font-size: 14px;
+  color: var(--soft);
+  max-width: 620px;
+  margin: 0 auto;
+}
+</style>
+
+<section class="section" id="ferramenta" style="position:relative;z-index:1;background:var(--deep);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">A Ferramenta</div>
+      <h2>Tudo automatizado,<br>do diagnóstico ao acompanhamento</h2>
+      <p>Você não recebe só um PDF estático. A plataforma opera continuamente, gerando análises, alertas e atualizações sem você precisar pedir.</p>
+    </div>
+
+    <div class="auto-grid reveal">
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-auto">Automático</span>
+        <h3 class="auto-title">Benchmark do Setor em Tempo Real</h3>
+        <p class="auto-desc">A IA compara seus scores contra a média de PMEs brasileiras do seu setor. Você vê exatamente onde está acima ou abaixo da concorrência, em cada uma das 6 áreas.</p>
+        <div class="auto-meta"><span>10 setores cobertos</span><span>Por area</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-auto">Automático</span>
+        <h3 class="auto-title">Radar das 7 Áreas com Semáforo</h3>
+        <p class="auto-desc">Visualize seu perfil completo em uma única tela. Cada área ganha um score de 0-100 e uma cor de semáforo para priorização imediata do que atacar primeiro.</p>
+        <div class="auto-meta"><span>Infra, Processos, IA</span><span>Dados, Vendas, Atendimento</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-auto">Automático</span>
+        <h3 class="auto-title">Relatório PDF Gerado na Hora</h3>
+        <p class="auto-desc">Após pagar, o PDF completo chega por email em segundos: score, benchmark, quick wins, roadmap 30/60/90, auditoria de processos e gaps críticos. Todo formatado para apresentar ao time.</p>
+        <div class="auto-meta"><span>Entrega em até 2min</span><span>PDF + Email HTML</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-evo">Evolução</span>
+        <h3 class="auto-title">Gráfico de Evolução do Score</h3>
+        <p class="auto-desc">Cada novo diagnóstico entra em um gráfico de evolução no seu painel. Você vê objetivamente o impacto das ações implementadas e quanto seu score subiu mês a mês.</p>
+        <div class="auto-meta"><span>Histórico ilimitado</span><span>Por área e global</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-evo">Evolução</span>
+        <h3 class="auto-title">Checklist Interativo do Roadmap</h3>
+        <p class="auto-desc">Marque cada ação do plano 30/60/90 como concluída diretamente no painel. A barra de progresso mostra em tempo real o quanto falta para escalar no próximo nível de maturidade.</p>
+        <div class="auto-meta"><span>9 ações acompanhadas</span><span>Progresso salvo</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-evo">Evolução</span>
+        <h3 class="auto-title">Biblioteca de Playbooks por Setor</h3>
+        <p class="auto-desc">Tutoriais passo a passo com ferramenta, tempo de implementação e impacto esperado. Filtrados automaticamente pelo setor do seu negócio — nada genérico.</p>
+        <div class="auto-meta"><span>10+ playbooks</span><span>Passo a passo</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-evo">Evolução</span>
+        <h3 class="auto-title">Alertas Mensais de Ferramentas</h3>
+        <p class="auto-desc">Todo mês você recebe 3 novas ferramentas de IA selecionadas para o seu setor, com descrição, custo e categoria. Curadoria automática enviada para sua caixa de entrada.</p>
+        <div class="auto-meta"><span>1 email / mês</span><span>Curadoria por setor</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-evo">Evolução</span>
+        <h3 class="auto-title">Diagnóstico Refeito Mensalmente</h3>
+        <p class="auto-desc">Lembrete automático todo mês para refazer o diagnóstico. O sistema compara scores antigos com novos, mostrando evolução por área e validando se suas ações deram resultado.</p>
+        <div class="auto-meta"><span>Comparativo mês-a-mês</span><span>ROI validado</span></div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <span class="auto-tag auto-tag-auto">Automático</span>
+        <h3 class="auto-title">Auditoria de Processo Crítico</h3>
+        <p class="auto-desc">A IA identifica o processo mais custoso do seu negócio, calcula o potencial de automação e estima horas salvas e economia mensal. Tudo em minutos, sem consultoria.</p>
+        <div class="auto-meta"><span>Horas/semana</span><span>Economia em R$</span></div>
+      </div>
+
+    </div>
+
+    <div class="auto-banner reveal">
+      <div class="auto-banner-title">A plataforma trabalha por você, todos os dias</div>
+      <p class="auto-banner-sub">Você faz o diagnóstico uma vez. A IA gera, envia, acompanha, compara, alerta e atualiza — tudo sozinha, em segundo plano. Você só precisa executar as ações.</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="planos" style="position:relative;z-index:1;">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Planos</div>
+      <h2>Escolha o nível<br>certo para você</h2>
+      <p>Comece pelo diagnóstico gratuito. Aprofunde quando estiver pronto.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <div class="price-card reveal">
+        <span class="price-icon">&#128269;</span>
+        <div class="price-name">Camada 1 &middot; Express</div>
+        <div class="price-title">Diagnóstico Gratuito</div>
+        <div class="price-sub">Primeiro contato: entenda em minutos onde sua empresa está na jornada digital.</div>
+
+        <div class="price-amount">
+          <span class="price-cur">R$</span>
+          <span class="price-num">0</span>
+        </div>
+        <div class="price-period">acesso imediato</div>
+        <div class="price-note">Sem cartão. Sem cadastro prévio.</div>
+
+        <div class="price-divider"></div>
+
+        <div class="price-features">
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text">Questionário de <strong>18 perguntas</strong></span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>Score global</strong> de maturidade digital</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>Nível (1 a 5)</strong> com descrição do estágio</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>1 quick win</strong> prioritário para começar hoje</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text">Resultado entregue por e-mail</span></div>
+        </div>
+
+        <a href="/diagnostico.html" class="btn-price btn-price-outline" data-source="pricing_free" style="text-decoration:none;text-align:center;">Iniciar diagnóstico grátis &rarr;</a>
+        <div class="price-fine">Leva menos de 5 minutos</div>
+      </div>
+
+      <div class="price-card featured reveal reveal-delay-1">
+        <div class="price-tag-wrap"><div class="price-tag">Mais completo</div></div>
+        <span class="price-icon">&#128202;</span>
+        <div class="price-name">Camada 2 &middot; Premium</div>
+        <div class="price-title">Diagnóstico Completo</div>
+        <div class="price-sub">Para o dono/gestor que quer um plano acionável e começar sozinho, com tudo nas mãos.</div>
+
+        <div class="price-amount">
+          <span class="price-cur">R$</span>
+          <span class="price-num featured-price">499</span>
+        </div>
+        <div class="price-period">pagamento único</div>
+        <div class="price-note">Parcelamento disponível</div>
+
+        <div class="price-divider"></div>
+
+        <div class="price-features">
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text"><strong>Tudo do Express</strong>, mais:</span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text"><strong>Radar completo das 7 áreas</strong> com semáforo</span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text"><strong>Top 3 quick wins</strong> priorizados</span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text">Lista de <strong>ferramentas recomendadas</strong> por área</span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text">Plano de ação <strong>30/60/90 dias</strong> detalhado</span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text">Análise de <strong>1 processo crítico</strong> com impacto estimado</span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text">Score detalhado por <strong>subárea</strong></span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text"><strong>Benchmark do setor</strong></span></div>
+          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text"><strong>PDF exportável</strong> com marca da empresa</span></div>
+        </div>
+
+        <button type="button" class="btn-price btn-price-primary" data-lead-trigger data-source="pricing_premium" data-plan="premium">Obter diagnóstico Premium &rarr;</button>
+        <div class="price-fine">Resultado gerado na hora após o pagamento</div>
+      </div>
+
+      <div class="price-card reveal reveal-delay-2">
+        <span class="price-icon">&#128260;</span>
+        <div class="price-name">Camada 3 &middot; Evolução</div>
+        <div class="price-title">Assinatura Mensal</div>
+        <div class="price-sub">Para a empresa em transformação que quer acompanhar progresso ao longo do tempo.</div>
+
+        <div class="price-amount">
+          <span class="price-cur">R$</span>
+          <span class="price-num">250</span>
+        </div>
+        <div class="price-period">por mês &middot; ou R$ 2.500/ano</div>
+        <div class="price-note">Anual: 2 meses grátis</div>
+
+        <div class="price-divider"></div>
+
+        <div class="price-features">
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>Tudo do Premium</strong>, mais:</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text">Diagnóstico <strong>refeito mensalmente</strong> com evolução do score</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>Dashboard de progresso</strong> com metas</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text">Biblioteca de <strong>playbooks por setor</strong></span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text">Alertas mensais de novas ferramentas</span></div>
+        </div>
+
+        <button type="button" class="btn-price btn-price-outline" data-lead-trigger data-source="pricing_subscription" data-plan="subscription">Assinar Evolução &rarr;</button>
+        <div class="price-fine">Cancele quando quiser</div>
+      </div>
+
+      <div class="price-card reveal reveal-delay-3">
+        <span class="price-icon">&#127919;</span>
+        <div class="price-name">Camada 4 &middot; Advisory</div>
+        <div class="price-title">Personalizado</div>
+        <div class="price-sub">Para empresas que querem suporte especializado e acompanhamento na implementação.</div>
+
+        <div class="price-amount">
+          <span class="price-num" style="font-size:clamp(28px,3vw,36px);">Sob consulta</span>
+        </div>
+        <div class="price-period">escopo definido caso a caso</div>
+        <div class="price-note">Pontual ou recorrente</div>
+
+        <div class="price-divider"></div>
+
+        <div class="price-features">
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>Auditoria aprofundada</strong> do negócio</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>Roadmap customizado</strong> por prioridade</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text"><strong>Acompanhamento executivo</strong> dedicado</span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text">Modelo <strong>pontual ou recorrente</strong></span></div>
+          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text">Suporte direto do time MapeIA</span></div>
+        </div>
+
+        <a href="https://wa.me/5512996790859?text=Ola!%20Quero%20saber%20mais%20sobre%20o%20Advisory%20personalizado%20do%20MapeIA%20Brasil" target="_blank" class="btn-price btn-price-outline" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">Falar com especialista &rarr;</a>
+        <div class="price-fine">Resposta em até 24h</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="faq" style="position:relative;z-index:1;background:var(--deep);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">FAQ</div>
+      <h2>Perguntas frequentes</h2>
+    </div>
+
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Preciso ser especialista em tecnologia para fazer o diagnóstico?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Não. O questionário foi criado para donos de negócio e gestores sem background técnico. As perguntas são em linguagem simples e o resultado explica tudo de forma prática e acionável.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O diagnóstico gratuito já vale a pena ou preciso do Premium?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">O Express (gratuito) entrega o score global, o nível de maturidade de 1 a 5 e um quick win prioritário &mdash; já dá pra saber onde você está e por onde começar. O Premium (R$499) entrega o pacote acionável completo: radar das 7 áreas com semáforo, top 3 quick wins priorizados, ferramentas recomendadas, plano 30/60/90 dias, análise de processo crítico, benchmark do setor e PDF com a sua marca. Se você quer sair com um plano concreto para executar, vai direto no Premium.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O resultado é realmente personalizado ou é genérico?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">É gerado por IA com base nas suas respostas específicas &mdash; setor, tamanho, ferramentas atuais e orçamento. Dois empresários do mesmo setor que respondem diferente recebem diagnósticos completamente distintos.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Quanto tempo leva para implementar as recomendações?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Os quick wins foram selecionados para ter impacto em até 30 dias, sem precisar de dev ou grande orçamento. O plano completo é estruturado em 90 dias, mas a maioria dos resultados iniciais aparece nas primeiras 2-3 semanas.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O que acontece com os meus dados?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Seus dados são usados exclusivamente para gerar o diagnóstico e enviar o relatório. Nunca são compartilhados com terceiros ou usados para fins de publicidade. A plataforma está em conformidade com a LGPD.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Posso refazer o diagnóstico depois de implementar melhorias?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">No plano Premium sim &mdash; você tem acesso por 90 dias e pode refazer o diagnóstico para ver a evolução do score após implementar as recomendações. É uma forma concreta de medir o progresso da transformação digital.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" style="position:relative;z-index:1;">
+  <div class="container">
+    <h2 class="reveal">Pronto para saber<br>onde sua empresa está?</h2>
+    <p class="reveal">5 minutos. Resultado na hora. Sem compromisso.</p>
+    <div class="cta-actions reveal">
+      <a href="/diagnostico.html" class="btn-primary" data-source="final_cta" style="text-decoration:none;">Iniciar Diagnóstico Gratuito &rarr;</a>
+      <a href="https://wa.me/5512996790859?text=Ol%C3%A1!%20Tenho%20d%C3%BAvidas%20sobre%20o%20MapeIA%20Brasil" target="_blank" class="btn-secondary">&#128172; Falar com especialista</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">MapeIA <span>Brasil</span></div>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos de Uso</a>
+      <a href="#">LGPD</a>
+      <a href="https://wa.me/5512996790859" target="_blank">Contato</a>
+    </div>
+    <div class="footer-copy">&copy; 2025 MapeIA Brasil. Todos os direitos reservados.</div>
+  </div>
+</footer>
+
+<div class="lm-overlay" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="lmTitle">
+  <div class="lm-card">
+    <button type="button" class="lm-close" id="lmClose" aria-label="Fechar">&times;</button>
+    <div id="lmFormBox">
+      <div class="lm-tag" id="lmTag">Diagnóstico gratuito</div>
+      <div class="lm-title" id="lmTitle">Vamos começar?</div>
+      <div class="lm-sub" id="lmSub">Deixe seus dados e receba o link do diagnóstico direto no WhatsApp e e-mail.</div>
+      <div class="lm-error" id="lmError"></div>
+      <form id="leadForm" novalidate>
+        <div class="lm-field">
+          <label class="lm-label" for="lmName">Nome</label>
+          <input class="lm-input" type="text" id="lmName" name="name" placeholder="Seu nome completo" required maxlength="200">
+        </div>
+        <div class="lm-field">
+          <label class="lm-label" for="lmEmail">E-mail</label>
+          <input class="lm-input" type="email" id="lmEmail" name="email" placeholder="voce@empresa.com.br" required maxlength="319">
+        </div>
+        <div class="lm-field">
+          <label class="lm-label" for="lmWpp">WhatsApp</label>
+          <input class="lm-input" type="tel" id="lmWpp" name="whatsapp" placeholder="(11) 98765-4321" maxlength="39">
+        </div>
+        <div class="lm-field">
+          <label class="lm-label" for="lmCompany">Empresa <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
+          <input class="lm-input" type="text" id="lmCompany" name="company" placeholder="Nome da sua empresa" maxlength="200">
+        </div>
+        <button type="submit" class="lm-submit" id="lmSubmit">Quero meu diagnóstico &rarr;</button>
+        <div class="lm-fine">&#128274; Seus dados estão seguros. Em conformidade com a LGPD.</div>
+      </form>
+    </div>
+    <div class="lm-success" id="lmSuccessBox" style="display:none;">
+      <div class="lm-success-icon">&#10003;</div>
+      <h3>Pronto!</h3>
+      <p>Recebemos seus dados. Em instantes você receberá no e-mail o link para iniciar o diagnóstico.</p>
+      <button type="button" class="lm-submit" id="lmCloseSuccess">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const modal = document.getElementById('leadModal');
+const closeBtn = document.getElementById('lmClose');
+const form = document.getElementById('leadForm');
+const errorBox = document.getElementById('lmError');
+const submitBtn = document.getElementById('lmSubmit');
+const formBox = document.getElementById('lmFormBox');
+const successBox = document.getElementById('lmSuccessBox');
+const closeSuccess = document.getElementById('lmCloseSuccess');
+const titleEl = document.getElementById('lmTitle');
+const subEl = document.getElementById('lmSub');
+const tagEl = document.getElementById('lmTag');
+
+let currentSource = 'unknown';
+let currentPlan = 'free';
+
+const COPY = {
+  free: {
+    tag: 'Diagnóstico gratuito',
+    title: 'Vamos começar?',
+    sub: 'Deixe seus dados e receba o link do diagnóstico direto no WhatsApp e e-mail.'
+  },
+  premium: {
+    tag: 'Diagnóstico Premium',
+    title: 'Quero o relatório completo',
+    sub: 'Deixe seus dados e entramos em contato em minutos com os próximos passos para liberar seu diagnóstico Premium.'
+  }
+};
+
+function openModal(source, plan) {
+  currentSource = source || 'unknown';
+  currentPlan = plan || 'free';
+  const c = COPY[currentPlan] || COPY.free;
+  tagEl.textContent = c.tag;
+  titleEl.textContent = c.title;
+  subEl.textContent = c.sub;
+  errorBox.classList.remove('on');
+  form.reset();
+  formBox.style.display = '';
+  successBox.style.display = 'none';
+  modal.classList.add('on');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('lmName').focus(), 80);
+}
+
+function closeModal() {
+  modal.classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('[data-lead-trigger]').forEach(el => {
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    openModal(el.dataset.source, el.dataset.plan);
+  });
+});
+
+const qp = new URLSearchParams(window.location.search);
+const planParam = qp.get('plan');
+if (planParam === 'premium' || planParam === 'subscription' || planParam === 'advisory') {
+  setTimeout(() => openModal('diagnostic_upsell', planParam), 600);
+}
+
+closeBtn.addEventListener('click', closeModal);
+closeSuccess.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('on')) closeModal(); });
+
+function showError(msg) {
+  errorBox.textContent = msg;
+  errorBox.classList.add('on');
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorBox.classList.remove('on');
+
+  const name = document.getElementById('lmName').value.trim();
+  const email = document.getElementById('lmEmail').value.trim();
+  const whatsapp = document.getElementById('lmWpp').value.trim();
+  const company = document.getElementById('lmCompany').value.trim();
+
+  if (!name) return showError('Por favor, informe seu nome.');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Por favor, informe um e-mail válido.');
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Enviando...';
+
+  let ok = false;
+  let emailSent = false;
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({
+        name, email, whatsapp, company,
+        source: currentSource,
+        plan_interest: currentPlan,
+      }),
+    });
+    const data = await resp.json().catch(() => ({}));
+    ok = resp.ok && data && data.ok === true;
+    emailSent = !!(data && data.email_sent);
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (!ok) {
+    const { error: fallbackErr } = await supabase.from('leads').insert({
+      name, email, whatsapp, company,
+      source: currentSource,
+      plan_interest: currentPlan
+    });
+    ok = !fallbackErr;
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.innerHTML = 'Quero meu diagnóstico &rarr;';
+
+  if (!ok) {
+    showError('Não foi possível enviar agora. Tente novamente em instantes.');
+    return;
+  }
+
+  const successMsg = document.querySelector('#lmSuccessBox p');
+  if (successMsg) {
+    successMsg.textContent = emailSent
+      ? 'Recebemos seus dados e enviamos uma confirmação no seu e-mail. Em instantes você receberá o link para iniciar o diagnóstico.'
+      : 'Recebemos seus dados. Em instantes nosso time entra em contato pelo e-mail ou WhatsApp para liberar seu diagnóstico.';
+  }
+
+  formBox.style.display = 'none';
+  successBox.style.display = '';
+});
+</script>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Translation Dictionary
+const translations = {
+  pt: {
+    'como-funciona': 'Como funciona',
+    'o-que-voce-recebe': 'O que você recebe',
+    'a-ferramenta': 'A ferramenta',
+    'planos': 'Planos',
+    'faq': 'FAQ',
+    'iniciar-diagnostico': 'Iniciar diagnóstico',
+    'hero-eyebrow': 'Diagnóstico de IA & Automação para PMEs',
+    'hero-title': 'Descubra em 5 minutos onde sua empresa<br><em>perde tempo e oportunidades</em><br>por falta de automação',
+    'hero-subtitle': 'Responda o questionário e receba um diagnóstico personalizado com seu nível de maturidade, quick wins e um plano de ação para os próximos 90 dias.'
+  },
+  en: {
+    'como-funciona': 'How it works',
+    'o-que-voce-recebe': 'What you get',
+    'a-ferramenta': 'The tool',
+    'planos': 'Plans',
+    'faq': 'FAQ',
+    'iniciar-diagnostico': 'Start diagnostic',
+    'hero-eyebrow': 'AI & Automation Diagnostic for SMBs',
+    'hero-title': 'Discover in 5 minutes where your company<br><em>wastes time and opportunities</em><br>due to lack of automation',
+    'hero-subtitle': 'Answer the questionnaire and receive a personalized diagnostic with your maturity level, quick wins and an action plan for the next 90 days.'
+  },
+  es: {
+    'como-funciona': 'Como funciona',
+    'o-que-voce-recebe': 'Que recibes',
+    'a-ferramenta': 'La herramienta',
+    'planos': 'Planes',
+    'faq': 'Preguntas frecuentes',
+    'iniciar-diagnostico': 'Iniciar diagnóstico',
+    'hero-eyebrow': 'Diagnóstico de IA y Automatización para PYMEs',
+    'hero-title': 'Descubre en 5 minutos dónde tu empresa<br><em>pierde tiempo y oportunidades</em><br>por falta de automatización',
+    'hero-subtitle': 'Responde el cuestionario y recibe un diagnóstico personalizado con tu nivel de madurez, victorias rápidas y un plan de acción para los próximos 90 días.'
+  }
+};
+
+// Language Switcher
+document.addEventListener('DOMContentLoaded', function() {
+  const langSelector = document.getElementById('langSelector');
+  const langBtn = langSelector.querySelector('.lang-btn');
+  const langOptions = document.querySelectorAll('.lang-option');
+  const langDisplay = document.getElementById('langDisplay');
+
+  // Get current language from URL or localStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  let currentLang = urlParams.get('lang') || localStorage.getItem('selectedLanguage') || 'pt';
+
+  // Initialize page with saved language
+  updatePageLanguage(currentLang);
+  updateLanguageUI(currentLang);
+
+  function updatePageLanguage(lang) {
+    // Update all elements with data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+      const key = element.dataset.i18n;
+      if (translations[lang] && translations[lang][key]) {
+        element.innerHTML = translations[lang][key];
+      }
+    });
+
+    // Update nav links
+    document.querySelectorAll('a[data-i18n-text]').forEach(link => {
+      const key = link.dataset.i18nText;
+      if (translations[lang] && translations[lang][key]) {
+        link.textContent = translations[lang][key];
+      }
+    });
+  }
+
+  function updateLanguageUI(lang) {
+    const langNames = { pt: 'PT', en: 'EN', es: 'ES' };
+    langDisplay.textContent = langNames[lang];
+
+    langOptions.forEach(opt => {
+      opt.classList.remove('active');
+      if (opt.dataset.lang === lang) {
+        opt.classList.add('active');
+      }
+    });
+  }
+
+  // Toggle dropdown
+  langBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    langSelector.classList.toggle('active');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function() {
+    langSelector.classList.remove('active');
+  });
+
+  // Language change
+  langOptions.forEach(option => {
+    option.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const lang = this.dataset.lang;
+
+      currentLang = lang;
+      updatePageLanguage(lang);
+      updateLanguageUI(lang);
+
+      // Save preference
+      localStorage.setItem('selectedLanguage', lang);
+
+      // Update URL without reload
+      window.history.replaceState({}, '', window.location.pathname + '?lang=' + lang);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MapeIA — Dev Test Console</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --ink: #040812;
+  --panel: #0d1d35;
+  --card: #102240;
+  --line: #1e3a5f;
+  --muted: #4a6fa0;
+  --soft: #7a9ec8;
+  --text: #c8daf0;
+  --bright: #e8f2ff;
+  --accent: #1a7ff0;
+  --accent2: #4da6ff;
+  --green: #00c896;
+  --red: #ff4055;
+  --gold: #c8a84b;
+}
+html, body { height: 100%; }
+body {
+  background: radial-gradient(circle at 20% 0%, #0a1730 0%, var(--ink) 60%);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+}
+.shell { max-width: 960px; margin: 0 auto; padding: 28px 20px 80px; }
+.top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--bright); font-size: 18px; }
+.brand-dot { width: 10px; height: 10px; border-radius: 3px; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+.brand small { color: var(--muted); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin-left: 6px; }
+.warn-badge { background: rgba(200,168,75,.14); color: var(--gold); border: 1px solid rgba(200,168,75,.3); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+.gate { max-width: 420px; margin: 120px auto 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 28px; }
+.gate h1 { font-size: 20px; color: var(--bright); margin-bottom: 6px; }
+.gate p { color: var(--soft); font-size: 13px; margin-bottom: 18px; line-height: 1.5; }
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin-bottom: 18px; }
+.card h2 { font-size: 15px; color: var(--bright); margin-bottom: 4px; letter-spacing: .01em; }
+.card .hint { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+
+.row { display: grid; gap: 10px; margin-bottom: 12px; }
+@media (min-width: 620px) { .row.cols-2 { grid-template-columns: 1fr 1fr; } .row.cols-3 { grid-template-columns: 1fr 1fr 1fr; } }
+
+label { display: block; font-size: 11px; color: var(--soft); margin-bottom: 5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+input, textarea { width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: var(--card); color: var(--bright); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; transition: border-color .15s; }
+input:focus, textarea:focus { outline: none; border-color: var(--accent2); }
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.btn { font-family: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--bright); padding: 9px 14px; border-radius: 10px; font-weight: 600; font-size: 13px; transition: all .18s; }
+.btn:hover { background: #143056; border-color: #2a4e80; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: var(--accent2); border-color: var(--accent2); }
+.btn.danger { color: var(--red); border-color: rgba(255,64,85,.3); }
+.btn.danger:hover { background: rgba(255,64,85,.1); border-color: var(--red); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+pre.output { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #06101f; border: 1px solid var(--line); border-radius: 8px; padding: 14px; color: var(--text); line-height: 1.55; max-height: 360px; overflow: auto; white-space: pre-wrap; word-break: break-word; margin-top: 12px; }
+pre.output.ok { border-color: rgba(0,200,150,.35); }
+pre.output.err { border-color: rgba(255,64,85,.35); }
+
+.helpers { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.helpers code { font-family: 'JetBrains Mono', monospace; background: var(--card); color: var(--accent2); padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+
+.kv { display: grid; grid-template-columns: 140px 1fr; gap: 6px 14px; font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-top: 10px; }
+.kv dt { color: var(--muted); }
+.kv dd { color: var(--bright); word-break: break-all; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.tag.on { background: rgba(0,200,150,.15); color: var(--green); }
+.tag.off { background: rgba(255,64,85,.15); color: var(--red); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div id="gateWrap" class="gate" style="display:none;">
+  <h1>Dev test console</h1>
+  <p>Acesso restrito. Informe o token para habilitar as ações de debug.</p>
+  <div class="row">
+    <input type="password" id="gateInput" placeholder="Token de acesso" autocomplete="off">
+  </div>
+  <button class="btn primary" id="gateBtn" style="width:100%;">Entrar</button>
+  <p id="gateErr" style="color:var(--red);font-size:12px;margin-top:10px;display:none;">Token inválido.</p>
+</div>
+
+<div id="app" style="display:none;">
+  <div class="top">
+    <div class="brand"><span class="brand-dot"></span>MapeIA <small>dev test</small></div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <span class="warn-badge">Sandbox</span>
+      <button class="btn" id="logoutBtn">Sair</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>1. Simular retorno do Stripe</h2>
+    <div class="hint">Abre <code>/diagnostico.html?session_id=…</code> como se o usuário tivesse voltado do checkout. O quiz inicia em modo premium.</div>
+    <div class="row">
+      <div>
+        <label>session_id</label>
+        <input id="simSession" placeholder="cs_test_...">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="simOpen">Abrir diagnostico.html com este session_id</button>
+      <button class="btn" id="simRandom">Gerar cs_test_ fake</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Verify premium (server-side)</h2>
+    <div class="hint">Chama a edge function <code>verify-premium</code> que consulta a Stripe, e (se pago) marca <code>unlocked=true</code> no diagnóstico. Use um <code>session_id</code> real de test mode.</div>
+    <div class="row cols-2">
+      <div>
+        <label>session_id (obrigatório)</label>
+        <input id="vpSession" placeholder="cs_test_...">
+      </div>
+      <div>
+        <label>diag_id (opcional)</label>
+        <input id="vpDiag" placeholder="uuid do diagnóstico">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="vpRun">Executar verify-premium</button>
+    </div>
+    <pre class="output" id="vpOut" style="display:none;"></pre>
+  </div>
+
+  <div class="card">
+    <h2>3. Inspecionar linhas de diagnóstico</h2>
+    <div class="hint">Busca via service role. Informe um dos campos. Se deixar todos em branco, retorna os 5 mais recentes.</div>
+    <div class="row cols-3">
+      <div>
+        <label>diag_id</label>
+        <input id="inspDiag" placeholder="uuid">
+      </div>
+      <div>
+        <label>session_id</label>
+        <input id="inspSession" placeholder="cs_test_...">
+      </div>
+      <div>
+        <label>email</label>
+        <input id="inspEmail" placeholder="user@exemplo.com">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="inspRun">Consultar</button>
+    </div>
+    <pre class="output" id="inspOut" style="display:none;"></pre>
+  </div>
+
+  <div class="card">
+    <h2>4. Seed / reset para teste</h2>
+    <div class="hint">Insere uma linha falsa de diagnóstico (premium, <code>unlocked=false</code>) para testar o fluxo de verificação sem rodar o quiz. Ou força um reset de uma linha existente.</div>
+    <div class="row cols-2">
+      <div>
+        <label>email do seed (opcional)</label>
+        <input id="seedEmail" placeholder="dev-test@mapeia.local">
+      </div>
+      <div>
+        <label>session_id do seed (opcional)</label>
+        <input id="seedSession" placeholder="cs_test_seed_...">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="seedRun">Inserir linha seed</button>
+      <button class="btn danger" id="resetRun">Reset unlocked=false (usa session_id ou diag_id do item 2)</button>
+    </div>
+    <pre class="output" id="seedOut" style="display:none;"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Referência rápida</h2>
+    <div class="hint">
+      Cartões de teste Stripe: <code>4242 4242 4242 4242</code> (sucesso), <code>4000 0000 0000 9995</code> (falha), <code>4000 0025 0000 3155</code> (3DS).<br>
+      Endpoints: <code>/functions/v1/verify-premium</code>, <code>/functions/v1/stripe-webhook</code>, <code>/functions/v1/dev-inspect</code>.
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const DEV_TOKEN = "mapeia-dev-7k3x9q2b";
+const STORAGE_KEY = "mapeia_dev_test_token";
+
+const SUPABASE_URL = 'https://vaekdvwevooqrlubctoj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZWtkdndldm9vcXJsdWJjdG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTYzNjMsImV4cCI6MjA5MjI3MjM2M30.nUb-mqkPn0LYBoZqxR4ElFxmJ_MUpKGNaMdrCwkda44';
+
+const gateWrap = document.getElementById("gateWrap");
+const app = document.getElementById("app");
+
+function showGate() {
+  gateWrap.style.display = "block";
+  app.style.display = "none";
+  setTimeout(() => document.getElementById("gateInput").focus(), 50);
+}
+function showApp() {
+  gateWrap.style.display = "none";
+  app.style.display = "block";
+}
+
+if (sessionStorage.getItem(STORAGE_KEY) === DEV_TOKEN) showApp();
+else showGate();
+
+document.getElementById("gateBtn").addEventListener("click", () => {
+  const val = document.getElementById("gateInput").value.trim();
+  if (val === DEV_TOKEN) {
+    sessionStorage.setItem(STORAGE_KEY, DEV_TOKEN);
+    showApp();
+  } else {
+    document.getElementById("gateErr").style.display = "block";
+  }
+});
+document.getElementById("gateInput")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") document.getElementById("gateBtn").click();
+});
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  sessionStorage.removeItem(STORAGE_KEY);
+  showGate();
+});
+
+// --- Helpers ---
+function render(el, payload, ok) {
+  el.style.display = "block";
+  el.className = "output " + (ok ? "ok" : "err");
+  el.textContent = typeof payload === "string" ? payload : JSON.stringify(payload, null, 2);
+}
+async function callFn(slug, body) {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/${slug}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      apikey: SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  let parsed; try { parsed = JSON.parse(text); } catch { parsed = text; }
+  return { ok: res.ok, status: res.status, body: parsed };
+}
+
+// --- Simulate Stripe return ---
+document.getElementById("simOpen").addEventListener("click", () => {
+  const sid = document.getElementById("simSession").value.trim();
+  if (!sid) return alert("Informe um session_id.");
+  const url = `/diagnostico.html?session_id=${encodeURIComponent(sid)}&premium=1`;
+  window.open(url, "_blank");
+});
+document.getElementById("simRandom").addEventListener("click", () => {
+  const rnd = Math.random().toString(36).slice(2, 12);
+  document.getElementById("simSession").value = `cs_test_seed_${Date.now()}_${rnd}`;
+});
+
+// --- Verify premium ---
+document.getElementById("vpRun").addEventListener("click", async () => {
+  const out = document.getElementById("vpOut");
+  const session_id = document.getElementById("vpSession").value.trim();
+  const diag_id = document.getElementById("vpDiag").value.trim() || undefined;
+  if (!session_id) { render(out, "Informe um session_id.", false); return; }
+  render(out, "Executando…", true);
+  const r = await callFn("verify-premium", { session_id, diag_id });
+  render(out, r, r.ok && r.body?.ok);
+});
+
+// --- Inspect rows ---
+document.getElementById("inspRun").addEventListener("click", async () => {
+  const out = document.getElementById("inspOut");
+  const diag_id = document.getElementById("inspDiag").value.trim() || undefined;
+  const session_id = document.getElementById("inspSession").value.trim() || undefined;
+  const email = document.getElementById("inspEmail").value.trim() || undefined;
+  render(out, "Consultando…", true);
+  const r = await callFn("dev-inspect", {
+    token: DEV_TOKEN,
+    action: "lookup",
+    diag_id, session_id, email,
+  });
+  render(out, r, r.ok && r.body?.ok);
+});
+
+// --- Seed / reset ---
+document.getElementById("seedRun").addEventListener("click", async () => {
+  const out = document.getElementById("seedOut");
+  const email = document.getElementById("seedEmail").value.trim() || undefined;
+  const session_id = document.getElementById("seedSession").value.trim() || undefined;
+  render(out, "Inserindo…", true);
+  const r = await callFn("dev-inspect", { token: DEV_TOKEN, action: "seed", email, session_id });
+  render(out, r, r.ok && r.body?.ok);
+});
+document.getElementById("resetRun").addEventListener("click", async () => {
+  const out = document.getElementById("seedOut");
+  const diag_id = document.getElementById("vpDiag").value.trim() || undefined;
+  const session_id = document.getElementById("vpSession").value.trim() || undefined;
+  if (!diag_id && !session_id) { render(out, "Informe diag_id ou session_id no bloco 2.", false); return; }
+  render(out, "Resetando…", true);
+  const r = await callFn("dev-inspect", { token: DEV_TOKEN, action: "reset", diag_id, session_id });
+  render(out, r, r.ok && r.body?.ok);
+});
+</script>
+</body>
+</html>
