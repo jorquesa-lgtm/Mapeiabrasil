@@ -441,15 +441,9 @@ function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, u
           />
         )}
 
-        {/* Evolucao-only: process audit */}
-        {isEvolucao && Boolean((ai as { process_audit?: unknown }).process_audit) && (
+        {/* Process audit — available to all premium users */}
+        {isPremium && Boolean((ai as { process_audit?: unknown }).process_audit) && (
           <ProcessAuditSection audit={(ai as { process_audit: { process_name: string; current_state: string; automation_potential: number; hours_saved_week: number; money_saved_month: string; steps: Array<{ label: string; status: string; fix: string }> } }).process_audit} />
-        )}
-
-        {!isEvolucao && (
-          <div style={{ marginTop: 16, padding: "16px 20px", background: "rgba(0,229,200,.04)", border: "1px dashed rgba(0,229,200,.2)", borderRadius: 10, textAlign: "center" }}>
-            <div style={{ fontSize: 13, color: "#7a9ec8", marginBottom: 8 }}>Auditoria de Processos e Gaps disponível no plano <strong style={{ color: "#00e5c8" }}>Evolução</strong></div>
-          </div>
         )}
 
         {/* Ativar: show solution cards for top gaps — Premium users only */}
