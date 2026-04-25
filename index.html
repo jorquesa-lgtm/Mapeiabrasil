@@ -736,6 +736,31 @@ footer {
   box-shadow: 0 6px 28px rgba(26,127,240,.45);
 }
 .lm-submit:disabled { opacity: .6; cursor: not-allowed; }
+.lm-access-toggle { text-align: center; margin: 4px 0 8px; }
+.lm-access-link {
+  background: none; border: none; padding: 0;
+  color: var(--accent); font-size: 13px; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+  opacity: .85; transition: opacity .15s;
+}
+.lm-access-link:hover { opacity: 1; }
+.lm-code-row { display: flex; gap: 8px; }
+.lm-code-row .lm-input { flex: 1; letter-spacing: .05em; }
+.lm-code-apply {
+  flex-shrink: 0; padding: 0 16px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 10px; font-size: 14px;
+  font-weight: 600; cursor: pointer; transition: background .15s, transform .1s;
+  white-space: nowrap;
+}
+.lm-code-apply:hover { background: #0f6edc; transform: translateY(-1px); }
+.lm-code-apply:disabled { opacity: .5; cursor: not-allowed; }
+.lm-code-feedback {
+  font-size: 12px; margin-top: 6px; min-height: 16px;
+  font-weight: 500; transition: color .2s;
+}
+.lm-code-feedback.valid { color: var(--teal); }
+.lm-code-feedback.invalid { color: #ff4055; }
 .lm-fine {
   font-size: 12px; color: var(--muted);
   text-align: center; margin-top: 12px; line-height: 1.5;
@@ -1545,6 +1570,17 @@ footer {
           <label class="lm-label" for="lmCompany">Empresa <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
           <input class="lm-input" type="text" id="lmCompany" name="company" placeholder="Nome da sua empresa" maxlength="200">
         </div>
+        <div class="lm-access-toggle" id="lmAccessToggleRow">
+          <button type="button" class="lm-access-link" id="lmAccessToggle">Tenho um código de acesso</button>
+        </div>
+        <div class="lm-field" id="lmAccessCodeField" style="display:none;">
+          <label class="lm-label" for="lmAccessCode">Código de acesso</label>
+          <div class="lm-code-row">
+            <input class="lm-input" type="text" id="lmAccessCode" name="access_code" placeholder="Ex: MAPEIA-2024" maxlength="50" autocomplete="off" style="text-transform:uppercase;">
+            <button type="button" class="lm-code-apply" id="lmCodeApply">Aplicar</button>
+          </div>
+          <div class="lm-code-feedback" id="lmCodeFeedback"></div>
+        </div>
         <button type="submit" class="lm-submit" id="lmSubmit">Quero meu diagnóstico &rarr;</button>
         <div class="lm-fine">&#128274; Seus dados estão seguros. Em conformidade com a LGPD.</div>
       </form>
@@ -1577,9 +1613,78 @@ const closeSuccess = document.getElementById('lmCloseSuccess');
 const titleEl = document.getElementById('lmTitle');
 const subEl = document.getElementById('lmSub');
 const tagEl = document.getElementById('lmTag');
+const accessToggle = document.getElementById('lmAccessToggle');
+const accessToggleRow = document.getElementById('lmAccessToggleRow');
+const accessCodeField = document.getElementById('lmAccessCodeField');
+const accessCodeInput = document.getElementById('lmAccessCode');
+const codeApplyBtn = document.getElementById('lmCodeApply');
+const codeFeedback = document.getElementById('lmCodeFeedback');
 
 let currentSource = 'unknown';
 let currentPlan = 'free';
+let validatedCode = null;
+
+accessToggle.addEventListener('click', () => {
+  const isOpen = accessCodeField.style.display !== 'none';
+  if (isOpen) {
+    accessCodeField.style.display = 'none';
+    accessToggle.textContent = 'Tenho um código de acesso';
+    accessCodeInput.value = '';
+    codeFeedback.textContent = '';
+    codeFeedback.className = 'lm-code-feedback';
+    validatedCode = null;
+  } else {
+    accessCodeField.style.display = '';
+    accessToggle.textContent = 'Cancelar código de acesso';
+    setTimeout(() => accessCodeInput.focus(), 60);
+  }
+});
+
+accessCodeInput.addEventListener('input', () => {
+  accessCodeInput.value = accessCodeInput.value.toUpperCase();
+  if (validatedCode) {
+    validatedCode = null;
+    codeFeedback.textContent = '';
+    codeFeedback.className = 'lm-code-feedback';
+  }
+});
+
+codeApplyBtn.addEventListener('click', async () => {
+  const code = accessCodeInput.value.trim().toUpperCase();
+  if (!code) return;
+  codeApplyBtn.disabled = true;
+  codeApplyBtn.textContent = '...';
+  codeFeedback.textContent = '';
+  codeFeedback.className = 'lm-code-feedback';
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/validate-access-code`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ code }),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (data && data.valid) {
+      validatedCode = code;
+      codeFeedback.textContent = `Codigo valido${data.label ? ' — ' + data.label : ''}. Acesso liberado!`;
+      codeFeedback.className = 'lm-code-feedback valid';
+      submitBtn.innerHTML = 'Acessar com código &rarr;';
+    } else {
+      validatedCode = null;
+      const msgs = { not_found: 'Código não encontrado.', inactive: 'Este código está inativo.', expired: 'Este código expirou.', exhausted: 'Este código já atingiu o limite de usos.' };
+      codeFeedback.textContent = msgs[data?.error] || 'Código inválido. Verifique e tente novamente.';
+      codeFeedback.className = 'lm-code-feedback invalid';
+    }
+  } catch (err) {
+    codeFeedback.textContent = 'Erro ao validar o código. Tente novamente.';
+    codeFeedback.className = 'lm-code-feedback invalid';
+  }
+  codeApplyBtn.disabled = false;
+  codeApplyBtn.textContent = 'Aplicar';
+});
 
 const COPY = {
   free: {
@@ -1603,6 +1708,14 @@ function openModal(source, plan) {
   subEl.textContent = c.sub;
   errorBox.classList.remove('on');
   form.reset();
+  accessCodeField.style.display = 'none';
+  accessToggle.textContent = 'Tenho um código de acesso';
+  codeFeedback.textContent = '';
+  codeFeedback.className = 'lm-code-feedback';
+  validatedCode = null;
+  submitBtn.innerHTML = 'Quero meu diagnóstico &rarr;';
+  // Only show access code toggle for paid plans
+  accessToggleRow.style.display = (plan === 'premium' || plan === 'subscription') ? '' : 'none';
   formBox.style.display = '';
   successBox.style.display = 'none';
   modal.classList.add('on');
@@ -1690,6 +1803,15 @@ form.addEventListener('submit', async (e) => {
 
   if (!ok) {
     showError('Não foi possível enviar agora. Tente novamente em instantes.');
+    return;
+  }
+
+  // For paid plans with a valid access code, skip Stripe
+  if (validatedCode && (currentPlan === 'premium' || currentPlan === 'subscription')) {
+    const successMsg = document.querySelector('#lmSuccessBox p');
+    if (successMsg) successMsg.textContent = 'Acesso liberado com seu código! Em instantes você receberá o link para iniciar o diagnóstico.';
+    formBox.style.display = 'none';
+    successBox.style.display = '';
     return;
   }
 
