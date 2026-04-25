@@ -1693,6 +1693,44 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
+  // For paid plans, redirect to Stripe checkout
+  if (currentPlan === 'premium' || currentPlan === 'subscription') {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Redirecionando para pagamento...';
+    try {
+      const checkoutResp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          apikey: SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          plan: currentPlan,
+          email,
+          success_url: 'https://mapeiabrasil.com/obrigado',
+          cancel_url: 'https://mapeiabrasil.com/',
+        }),
+      });
+      const checkoutData = await checkoutResp.json().catch(() => ({}));
+      if (checkoutData && checkoutData.url) {
+        window.location.href = checkoutData.url;
+        return;
+      } else {
+        showError('Não foi possível abrir o pagamento. Tente novamente em instantes.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Quero meu diagnóstico &rarr;';
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+      showError('Erro ao conectar com o pagamento. Tente novamente.');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Quero meu diagnóstico &rarr;';
+      return;
+    }
+  }
+
   const successMsg = document.querySelector('#lmSuccessBox p');
   if (successMsg) {
     successMsg.textContent = emailSent
