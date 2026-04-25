@@ -1,4 +1,5 @@
-import { Layers } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Layers, CheckCircle, X } from "lucide-react";
 import { getFirstToolForGap } from "../../config/ativarTools";
 import AtivarActiveCard from "./AtivarActiveCard";
 import AtivarComingSoonCard from "./AtivarComingSoonCard";
@@ -10,6 +11,8 @@ type AtivarSectionProps = {
   clientName: string;
   sector: string;
   diagnosticScore: number;
+  // Set when returning from Stripe with ?ativar_success=1&activation_id=xxx
+  activationSuccessId?: string | null;
 };
 
 const AREA_PT: Record<string, string> = {
@@ -29,7 +32,21 @@ export default function AtivarSection({
   clientName,
   sector,
   diagnosticScore,
+  activationSuccessId,
 }: AtivarSectionProps) {
+  const [successDismissed, setSuccessDismissed] = useState(false);
+
+  // Clean up URL params so a refresh doesn't re-show the banner
+  useEffect(() => {
+    if (activationSuccessId && !successDismissed) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("ativar_success");
+      url.searchParams.delete("ativar_cancel");
+      url.searchParams.delete("activation_id");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [activationSuccessId, successDismissed]);
+
   const gapTools = topGaps.slice(0, 3).map((gap) => ({
     gap,
     tool: getFirstToolForGap(gap),
@@ -40,6 +57,38 @@ export default function AtivarSection({
 
   return (
     <div style={{ marginTop: 32 }}>
+      {/* Post-payment success banner */}
+      {activationSuccessId && !successDismissed && (
+        <div style={{
+          marginBottom: 20,
+          padding: "16px 20px",
+          background: "rgba(0,200,150,.08)",
+          border: "1px solid rgba(0,200,150,.3)",
+          borderRadius: 12,
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 12,
+          animation: "fadeIn .3s ease",
+        }}>
+          <CheckCircle size={20} color="#00c896" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "#f4f8ff", marginBottom: 3 }}>
+              Pagamento confirmado! Sua ferramenta está sendo configurada.
+            </div>
+            <div style={{ fontSize: 13, color: "#7a9ec8", lineHeight: 1.5 }}>
+              Em até 24 horas você receberá uma mensagem no WhatsApp confirmando que está tudo pronto.
+              Nossa equipe cuidará de toda a integração técnica.
+            </div>
+          </div>
+          <button
+            onClick={() => setSuccessDismissed(true)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "#4a6fa0", padding: 2, flexShrink: 0 }}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
       {/* Section header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
         <div style={{ width: 32, height: 32, background: "rgba(26,127,240,.12)", border: "1px solid rgba(26,127,240,.25)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>

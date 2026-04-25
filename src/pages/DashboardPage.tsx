@@ -252,6 +252,9 @@ export default function DashboardPage({ user }: { user: User }) {
                 userId={user.id}
                 userEmail={user.email ?? ""}
                 clientName={profile?.name ?? ""}
+                activationSuccessId={new URLSearchParams(window.location.search).get("ativar_success") === "1"
+                  ? new URLSearchParams(window.location.search).get("activation_id")
+                  : null}
               />
             )}
           </div>
@@ -321,7 +324,7 @@ function ActionCard({ onRefresh, refreshing }: { onRefresh: () => void; refreshi
   );
 }
 
-function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, userId, userEmail, clientName }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string }) {
+function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, userId, userEmail, clientName, activationSuccessId }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string; activationSuccessId?: string | null }) {
   const ai = report.ai_data || {};
   const diag = report.diagnostic_responses;
   const score = diag?.global_score ?? 0;
@@ -458,6 +461,7 @@ function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, u
             clientName={clientName ?? ""}
             sector={diag?.sector ?? ""}
             diagnosticScore={score}
+            activationSuccessId={activationSuccessId}
           />
         )}
       </div>

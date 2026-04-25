@@ -41,6 +41,10 @@ Deno.serve(async (req: Request) => {
     const email: string | undefined = body.email;
     const diagId: string | undefined = body.diag_id;
     const score: number | undefined = body.score;
+    // Allow callers to merge extra metadata (e.g. ativar_activation_id)
+    const extraMeta: Record<string, string> = body.metadata && typeof body.metadata === "object"
+      ? Object.fromEntries(Object.entries(body.metadata as Record<string, unknown>).map(([k, v]) => [k, String(v)]))
+      : {};
 
     const priceId = PRICE_IDS[plan] ?? PRICE_IDS.premium;
 
@@ -55,12 +59,14 @@ Deno.serve(async (req: Request) => {
 
     if (email) params.customer_email = email;
 
-    if (diagId || score !== undefined) {
-      params.metadata = {
-        ...(diagId ? { diag_id: diagId } : {}),
-        ...(score !== undefined ? { score: String(score) } : {}),
-        plan,
-      };
+    const metaBase = {
+      ...(diagId ? { diag_id: diagId } : {}),
+      ...(score !== undefined ? { score: String(score) } : {}),
+      plan,
+      ...extraMeta,
+    };
+    if (Object.keys(metaBase).length > 0) {
+      params.metadata = metaBase;
     }
 
     const formBody = Object.entries(flattenParams(params))
