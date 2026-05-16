@@ -261,6 +261,36 @@ export default function DashboardPage({ user }: { user: User }) {
         {!isEvolucao && (
           <EvolucaoUpsell userEmail={user.email ?? ""} />
         )}
+
+        {/* Contact footer */}
+        <div style={{ marginTop: 48, borderTop: "1px solid #1e3a5f", paddingTop: 32, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#4a6fa0", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 6 }}>Precisa de ajuda?</div>
+            <div style={{ fontSize: 14, color: "#7a9ec8" }}>Nossa equipe está pronta para te atender.</div>
+          </div>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <a
+              href="mailto:servicoaocliente@mapeiabrasil.com"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#0d1d35", border: "1px solid #1e3a5f", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 600, color: "#c8daf0", textDecoration: "none", transition: "all .2s" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "#4da6ff"; (e.currentTarget as HTMLAnchorElement).style.color = "#4da6ff"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "#1e3a5f"; (e.currentTarget as HTMLAnchorElement).style.color = "#c8daf0"; }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              servicoaocliente@mapeiabrasil.com
+            </a>
+            <a
+              href="https://wa.me/5512996790859"
+              target="_blank"
+              rel="noopener"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#0d1d35", border: "1px solid #1e3a5f", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 600, color: "#c8daf0", textDecoration: "none", transition: "all .2s" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "#00c896"; (e.currentTarget as HTMLAnchorElement).style.color = "#00c896"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "#1e3a5f"; (e.currentTarget as HTMLAnchorElement).style.color = "#c8daf0"; }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              WhatsApp
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1689,7 +1719,7 @@ function buildPrintHtml(report: ReportItem, profile: UserProfile | null): string
     ${gapsHtml ? `<h2>Gaps Críticos Identificados</h2>${gapsHtml}` : ""}
     ${paHtml}
     <div style="margin-top:32px;padding-top:16px;border-top:1px solid #e0e7ef;text-align:center;font-size:11px;color:#aaa;">
-      Relatório gerado por MapeIA Brasil — mapeia.com.br &nbsp;|&nbsp; Confidencial para uso exclusivo do destinatário.
+      Relatório gerado por MapeIA Brasil — mapeiabrasil.com &nbsp;|&nbsp; Dúvidas: servicoaocliente@mapeiabrasil.com &nbsp;|&nbsp; Confidencial para uso exclusivo do destinatário.
     </div>
   </div>
   </body></html>`;
