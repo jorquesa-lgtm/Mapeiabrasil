@@ -46,6 +46,7 @@ const AREA_PT: Record<string, string> = {
   data: "Dados",
   sales: "Vendas",
   service: "Atendimento",
+  leadership: "Lideranca",
 };
 
 // Benchmarks por setor: media de score global e por area para PMEs brasileiras
