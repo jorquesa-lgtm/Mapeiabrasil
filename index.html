@@ -406,41 +406,88 @@ nav {
 .sc-ico { margin-bottom: 8px; display: flex; color: var(--soft); transition: color .2s; }
 .sc-lbl { font-size: 13px; font-weight: 500; color: var(--soft); }
 
-/* WHAT YOU GET */
-.gets-grid {
+/* COMPARISON TABLE — Section A */
+.cmp-wrap {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
 }
-.get-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r); padding: clamp(24px, 3vw, 32px);
-  position: relative; overflow: hidden;
-  transition: border-color .2s, transform .2s, box-shadow .2s;
+@media (max-width: 640px) { .cmp-wrap { grid-template-columns: 1fr; } }
+.cmp-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
-.get-card::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 2px;
+.cmp-col.featured {
+  border-color: var(--accent);
+  position: relative;
+}
+.cmp-col.featured::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: linear-gradient(90deg, var(--accent), var(--teal));
-  opacity: 0; transition: opacity .2s;
 }
-.get-card:hover { border-color: var(--line); transform: translateY(-3px); box-shadow: var(--shadow-md); }
-.get-card:hover::before { opacity: 1; }
-.get-icon { margin-bottom: 16px; display: flex; color: var(--accent); }
-.get-title {
+.cmp-head {
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.cmp-head-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.cmp-plan-name {
   font-family: 'DM Sans', sans-serif;
-  font-size: 17px; font-weight: 600;
-  color: var(--text); margin-bottom: 8px;
+  font-size: 16px; font-weight: 700; color: var(--text);
 }
-.get-desc { font-size: 14px; color: var(--soft); line-height: 1.65; }
-.get-tag {
-  display: inline-block; margin-top: 14px;
-  font-size: 11px; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; padding: 4px 10px; border-radius: 100px;
+.cmp-badge {
+  font-size: 11px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 100px;
 }
-.get-tag.free { background: rgba(13,122,95,.08); color: var(--green); }
-.get-tag.prem { background: rgba(139,105,20,.08); color: var(--gold); }
+.cmp-badge.free { background: rgba(13,122,95,.1); color: var(--green); }
+.cmp-badge.prem { background: var(--accent); color: #fff; }
+.cmp-highlight {
+  font-size: 11px; font-weight: 700; color: var(--gold);
+  letter-spacing: .07em; text-transform: uppercase;
+  margin-top: 4px;
+}
+.cmp-items {
+  padding: 20px 28px 28px;
+  display: flex; flex-direction: column; gap: 13px;
+}
+.cmp-item {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.cmp-check {
+  flex-shrink: 0; margin-top: 1px;
+  color: var(--green);
+}
+.cmp-col.featured .cmp-check { color: var(--accent); }
+.cmp-item-text {
+  font-size: 14px; color: var(--soft); line-height: 1.5;
+}
+.cmp-ctas {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  margin-top: 36px; justify-content: center;
+}
+.cmp-cta-primary {
+  display: inline-flex; align-items: center;
+  background: var(--accent); color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700;
+  padding: 14px 28px; border-radius: var(--r3);
+  text-decoration: none; transition: opacity .2s, transform .2s;
+  box-shadow: 0 8px 24px rgba(13,122,95,.25);
+}
+.cmp-cta-primary:hover { opacity: .9; transform: translateY(-1px); }
+.cmp-cta-secondary {
+  font-size: 14px; color: var(--soft); text-decoration: none;
+  border-bottom: 1px solid var(--border); transition: color .2s, border-color .2s;
+  padding-bottom: 1px;
+}
+.cmp-cta-secondary:hover { color: var(--accent); border-color: var(--accent); }
 
 /* AREAS */
 .areas-wrap {
@@ -990,55 +1037,93 @@ footer {
 <section class="section" id="o-que-voce-recebe" style="position:relative;z-index:1;background:var(--subtle);">
   <div class="container">
     <div class="sec-header reveal">
-      <div class="sec-tag" data-i18n="get-tag">O que você recebe</div>
-      <h2 data-i18n="get-title">Um diagnóstico completo,<br>não mais um relatório genérico</h2>
-      <p data-i18n="get-sub">Cada resultado é gerado pela IA com base no seu perfil &mdash; setor, tamanho e orçamento.</p>
+      <div class="sec-tag">O que você recebe no diagnóstico</div>
+      <h2>Compare os planos e<br>escolha o seu ponto de entrada</h2>
+      <p>Cada resultado é gerado pela IA com base no seu perfil &mdash; setor, tamanho e orçamento.</p>
     </div>
 
-    <div class="gets-grid">
-      <div class="get-card reveal">
-        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
-        <div class="get-title" data-i18n="get-item1-title">Score Global + Nível</div>
-        <div class="get-desc" data-i18n="get-item1-desc">Seu score de maturidade digital (0 a 100%) e o nível da sua empresa na escala de 1 a 5, com descrição do estágio atual e do que vem pela frente.</div>
-        <span class="get-tag free" data-i18n="get-free-tag">Incluído no gratuito</span>
+    <div class="cmp-wrap reveal">
+
+      <!-- Express column -->
+      <div class="cmp-col">
+        <div class="cmp-head">
+          <div class="cmp-head-top">
+            <span class="cmp-plan-name">Diagnóstico Express</span>
+            <span class="cmp-badge free">Gratuito</span>
+          </div>
+        </div>
+        <div class="cmp-items">
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Score global de maturidade (0&ndash;100%)</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Nível da empresa (1 a 5) com descrição</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">1 quick win prioritário para começar hoje</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Resultado entregue por e-mail</span>
+          </div>
+        </div>
       </div>
-      <div class="get-card reveal reveal-delay-1">
-        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-        <div class="get-title" data-i18n="get-item2-title">Quick Win Prioritário</div>
-        <div class="get-desc" data-i18n="get-item2-desc">A ação de maior impacto e menor esforço para você começar hoje &mdash; com a ferramenta certa e o prazo realista de implementação.</div>
-        <span class="get-tag free" data-i18n="get-free-tag">Incluído no gratuito</span>
+
+      <!-- Premium column -->
+      <div class="cmp-col featured">
+        <div class="cmp-head">
+          <div class="cmp-head-top">
+            <span class="cmp-plan-name">Diagnóstico Premium</span>
+            <span class="cmp-badge prem">R$499</span>
+          </div>
+          <div class="cmp-highlight">Mais completo</div>
+        </div>
+        <div class="cmp-items">
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text"><strong>Tudo do Express</strong>, mais:</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Radar completo das 7 áreas com semáforo</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Top 3 quick wins priorizados por impacto</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Ferramentas recomendadas por área e orçamento</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Plano de ação 30/60/90 dias detalhado</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Análise de 1 processo crítico com ROI estimado</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">Benchmark do seu setor</span>
+          </div>
+          <div class="cmp-item">
+            <span class="cmp-check"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="cmp-item-text">PDF exportável com a marca da sua empresa</span>
+          </div>
+        </div>
       </div>
-      <div class="get-card reveal reveal-delay-2">
-        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
-        <div class="get-title" data-i18n="get-item3-title">Radar das 7 Áreas</div>
-        <div class="get-desc" data-i18n="get-item3-desc">Score visual com semáforo por área &mdash; infraestrutura, processos, IA, dados, financeiro, vendas e atendimento. Visão completa da operação.</div>
-        <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
-      </div>
-      <div class="get-card reveal">
-        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
-        <div class="get-title" data-i18n="get-item4-title">Top 3 Quick Wins + Ferramentas</div>
-        <div class="get-desc" data-i18n="get-item4-desc">As três ações priorizadas com as ferramentas recomendadas por área, filtradas pelo seu orçamento e setor. Só o que faz sentido para a sua realidade.</div>
-        <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
-      </div>
-      <div class="get-card reveal">
-        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-        <div class="get-title" data-i18n="get-item5-title">Plano 30/60/90 Dias</div>
-        <div class="get-desc" data-i18n="get-item5-desc">Roadmap detalhado com ações sequenciadas, ferramentas por fase e custo estimado. Do gratuito ao pago, na ordem certa.</div>
-        <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
-      </div>
-      <div class="get-card reveal reveal-delay-1">
-        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
-        <div class="get-title" data-i18n="get-item6-title">Processo Auditado</div>
-        <div class="get-desc" data-i18n="get-item6-desc">Um processo crítico da sua operação analisado em detalhe &mdash; como está hoje, como automatizar e o impacto esperado em tempo e resultado.</div>
-        <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
-      </div>
-      <div class="get-card reveal reveal-delay-2">
-        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
-        <div class="get-title" data-i18n="get-item7-title">Relatório PDF Exportável</div>
-        <div class="get-desc" data-i18n="get-item7-desc">Documento completo com marca da sua empresa para compartilhar com sócios, equipe ou investidores. Pronto para usar em reuniões.</div>
-        <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
-      </div>
+
     </div>
+
+    <div class="cmp-ctas reveal">
+      <a href="/diagnostico.html" class="cmp-cta-primary" data-source="compare_free">Iniciar Diagnóstico Gratuito &rarr;</a>
+      <a href="#planos" class="cmp-cta-secondary">ou obter o Premium direto &rarr;</a>
+    </div>
+
   </div>
 </section>
 
@@ -1143,11 +1228,12 @@ footer {
 </section>
 
 <style>
+/* PLATFORM FEATURES — Section B */
 .auto-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
-  margin-top: 32px;
+  margin-top: 40px;
 }
 @media (min-width: 780px) {
   .auto-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1213,163 +1299,79 @@ footer {
   color: var(--accent);
 }
 .auto-title {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 22px;
-  font-weight: 400;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   line-height: 1.3;
 }
 .auto-desc {
   font-size: 14px;
   color: var(--soft);
   line-height: 1.7;
-  margin-bottom: 14px;
-}
-.auto-meta {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 600;
-  letter-spacing: .05em;
-}
-.auto-meta span {
-  background: var(--subtle);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 3px 8px;
-}
-.auto-banner {
-  margin-top: 48px;
-  background: var(--subtle);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 28px;
-  text-align: center;
-}
-.auto-banner-title {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: clamp(20px, 2.5vw, 26px);
-  color: var(--text);
-  margin-bottom: 8px;
-}
-.auto-banner-sub {
-  font-size: 14px;
-  color: var(--soft);
-  max-width: 620px;
-  margin: 0 auto;
 }
 </style>
 
-<section class="section" id="ferramenta" style="position:relative;z-index:1;background:var(--subtle);">
+<section class="section" id="ferramenta" style="position:relative;z-index:1;">
   <div class="container">
     <div class="sec-header reveal">
-      <div class="sec-tag" data-i18n="tool-tag">A Ferramenta</div>
-      <h2 data-i18n="tool-title">Tudo automatizado,<br>do diagnóstico ao acompanhamento</h2>
-      <p data-i18n="tool-sub">Você não recebe só um PDF estático. A plataforma opera continuamente, gerando análises, alertas e atualizações sem você precisar pedir.</p>
+      <div class="sec-tag">A plataforma trabalha por você</div>
+      <h2>Você faz o diagnóstico uma vez.<br>A IA cuida do resto.</h2>
+      <p>A plataforma gera, acompanha, compara e atualiza &mdash; em segundo plano, sem você precisar pedir.</p>
     </div>
 
     <div class="auto-grid reveal">
 
       <div class="auto-card">
         <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
-        <span class="auto-tag auto-tag-auto" data-i18n="auto-label">Automático</span>
-        <h3 class="auto-title" data-i18n="tool1-title">Benchmark do Setor em Tempo Real</h3>
-        <p class="auto-desc" data-i18n="tool1-desc">A IA compara seus scores contra a média de PMEs brasileiras do seu setor. Você vê exatamente onde está acima ou abaixo da concorrência, em cada uma das 6 áreas.</p>
-        <div class="auto-meta"><span data-i18n="tool1-meta1">10 setores cobertos</span><span data-i18n="tool1-meta2">Por area</span></div>
+        <h3 class="auto-title">Radar das 7 Áreas com Semáforo</h3>
+        <p class="auto-desc">Visualize seu perfil completo em uma tela. Cada área recebe score de 0–100 e uma cor de semáforo para priorização imediata.</p>
       </div>
 
       <div class="auto-card">
         <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
-        <span class="auto-tag auto-tag-auto" data-i18n="auto-label">Automático</span>
-        <h3 class="auto-title" data-i18n="tool2-title">Radar das 7 Áreas com Semáforo</h3>
-        <p class="auto-desc" data-i18n="tool2-desc">Visualize seu perfil completo em uma única tela. Cada área ganha um score de 0-100 e uma cor de semáforo para priorização imediata do que atacar primeiro.</p>
-        <div class="auto-meta"><span data-i18n="tool2-meta1">Infra, Processos, IA</span><span data-i18n="tool2-meta2">Dados, Vendas, Atendimento</span></div>
+        <h3 class="auto-title">Relatório PDF Gerado na Hora</h3>
+        <p class="auto-desc">Score, benchmark, quick wins, roadmap 30/60/90 e auditoria de processos. Tudo formatado e entregue por e-mail em menos de 2 minutos.</p>
       </div>
 
       <div class="auto-card">
         <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         </div>
-        <span class="auto-tag auto-tag-auto" data-i18n="auto-label">Automático</span>
-        <h3 class="auto-title" data-i18n="tool3-title">Relatório PDF Gerado na Hora</h3>
-        <p class="auto-desc" data-i18n="tool3-desc">Após pagar, o PDF completo chega por email em segundos: score, benchmark, quick wins, roadmap 30/60/90, auditoria de processos e gaps críticos. Todo formatado para apresentar ao time.</p>
-        <div class="auto-meta"><span data-i18n="tool3-meta1">Entrega em até 2min</span><span data-i18n="tool3-meta2">PDF + Email HTML</span></div>
+        <h3 class="auto-title">Benchmark do Setor em Tempo Real</h3>
+        <p class="auto-desc">Compare seus scores com a média de PMEs do seu setor. Veja exatamente onde está acima ou abaixo da concorrência em cada área.</p>
       </div>
 
       <div class="auto-card">
         <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         </div>
-        <span class="auto-tag auto-tag-evo" data-i18n="evo-label">Evolução</span>
-        <h3 class="auto-title" data-i18n="tool4-title">Gráfico de Evolução do Score</h3>
-        <p class="auto-desc" data-i18n="tool4-desc">Cada novo diagnóstico entra em um gráfico de evolução no seu painel. Você vê objetivamente o impacto das ações implementadas e quanto seu score subiu mês a mês.</p>
-        <div class="auto-meta"><span data-i18n="tool4-meta1">Histórico ilimitado</span><span data-i18n="tool4-meta2">Por área e global</span></div>
+        <h3 class="auto-title">Plano 30/60/90 com Checklist Interativo</h3>
+        <p class="auto-desc">Marque cada ação como concluída direto no painel. A barra de progresso mostra em tempo real quanto falta para o próximo nível de maturidade.</p>
       </div>
 
       <div class="auto-card">
         <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         </div>
-        <span class="auto-tag auto-tag-evo" data-i18n="evo-label">Evolução</span>
-        <h3 class="auto-title" data-i18n="tool5-title">Checklist Interativo do Roadmap</h3>
-        <p class="auto-desc" data-i18n="tool5-desc">Marque cada ação do plano 30/60/90 como concluída diretamente no painel. A barra de progresso mostra em tempo real o quanto falta para escalar no próximo nível de maturidade.</p>
-        <div class="auto-meta"><span data-i18n="tool5-meta1">9 ações acompanhadas</span><span data-i18n="tool5-meta2">Progresso salvo</span></div>
+        <h3 class="auto-title">Diagnóstico Refeito Mensalmente</h3>
+        <p class="auto-desc">Lembrete automático todo mês. O sistema compara scores antigos com novos, mostrando evolução por área e validando o resultado das suas ações.</p>
       </div>
 
       <div class="auto-card">
         <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </div>
-        <span class="auto-tag auto-tag-evo" data-i18n="evo-label">Evolução</span>
-        <h3 class="auto-title" data-i18n="tool6-title">Biblioteca de Playbooks por Setor</h3>
-        <p class="auto-desc" data-i18n="tool6-desc">Tutoriais passo a passo com ferramenta, tempo de implementação e impacto esperado. Filtrados automaticamente pelo setor do seu negócio — nada genérico.</p>
-        <div class="auto-meta"><span data-i18n="tool6-meta1">10+ playbooks</span><span data-i18n="tool6-meta2">Passo a passo</span></div>
-      </div>
-
-      <div class="auto-card">
-        <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <span class="auto-tag auto-tag-evo" data-i18n="evo-label">Evolução</span>
-        <h3 class="auto-title" data-i18n="tool7-title">Alertas Mensais de Ferramentas</h3>
-        <p class="auto-desc" data-i18n="tool7-desc">Todo mês você recebe 3 novas ferramentas de IA selecionadas para o seu setor, com descrição, custo e categoria. Curadoria automática enviada para sua caixa de entrada.</p>
-        <div class="auto-meta"><span data-i18n="tool7-meta1">1 email / mês</span><span data-i18n="tool7-meta2">Curadoria por setor</span></div>
-      </div>
-
-      <div class="auto-card">
-        <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <span class="auto-tag auto-tag-evo" data-i18n="evo-label">Evolução</span>
-        <h3 class="auto-title" data-i18n="tool8-title">Diagnóstico Refeito Mensalmente</h3>
-        <p class="auto-desc" data-i18n="tool8-desc">Lembrete automático todo mês para refazer o diagnóstico. O sistema compara scores antigos com novos, mostrando evolução por área e validando se suas ações deram resultado.</p>
-        <div class="auto-meta"><span data-i18n="tool8-meta1">Comparativo mês-a-mês</span><span data-i18n="tool8-meta2">ROI validado</span></div>
-      </div>
-
-      <div class="auto-card">
-        <div class="auto-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
-        </div>
-        <span class="auto-tag auto-tag-auto" data-i18n="auto-label">Automático</span>
-        <h3 class="auto-title" data-i18n="tool9-title">Auditoria de Processo Crítico</h3>
-        <p class="auto-desc" data-i18n="tool9-desc">A IA identifica o processo mais custoso do seu negócio, calcula o potencial de automação e estima horas salvas e economia mensal. Tudo em minutos, sem consultoria.</p>
-        <div class="auto-meta"><span data-i18n="tool9-meta1">Horas/semana</span><span data-i18n="tool9-meta2">Economia em R$</span></div>
+        <h3 class="auto-title">Alertas Mensais de Ferramentas</h3>
+        <p class="auto-desc">Todo mês, 3 novas ferramentas de IA selecionadas para o seu setor — com descrição, custo e categoria. Curadoria automática na sua caixa de entrada.</p>
       </div>
 
     </div>
-
-    <div class="auto-banner reveal">
-      <div class="auto-banner-title" data-i18n="tool-banner-title">A plataforma trabalha por você, todos os dias</div>
-      <p class="auto-banner-sub" data-i18n="tool-banner-sub">Você faz o diagnóstico uma vez. A IA gera, envia, acompanha, compara, alerta e atualiza — tudo sozinha, em segundo plano. Você só precisa executar as ações.</p>
-    </div>
-
   </div>
 </section>
 
