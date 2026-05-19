@@ -359,6 +359,7 @@ Deno.serve(async (req: Request) => {
     const body = await req.json().catch(() => ({}));
     const {
       diag_id,
+      user_id,
       stripe_session_id,
       email,
       name,
@@ -384,6 +385,7 @@ Deno.serve(async (req: Request) => {
       .from("report_data")
       .insert({
         diag_id: diag_id || null,
+        user_id: user_id || null,
         email,
         stripe_session_id: stripe_session_id || "",
         ai_data,
@@ -394,6 +396,41 @@ Deno.serve(async (req: Request) => {
 
     if (insertError) {
       console.error("[generate-report] insert error", insertError);
+    }
+
+    // Auto-populate user_goals from the 30/60/90 roadmap (if user is authenticated)
+    if (user_id && diag_id && ai_data?.roadmap) {
+      const AREA_MAP: Record<string, string> = {
+        infra: "infra", process: "process", ai: "ai",
+        data: "data", sales: "sales", service: "service",
+      };
+      const phaseMap: Array<{ key: string; prazo: string; source: string }> = [
+        { key: "d30", prazo: "30 dias", source: "roadmap_30" },
+        { key: "d60", prazo: "60 dias", source: "roadmap_60" },
+        { key: "d90", prazo: "90 dias", source: "roadmap_90" },
+      ];
+      const goalsToInsert: Array<Record<string, unknown>> = [];
+      for (const phase of phaseMap) {
+        const ph = (ai_data.roadmap as Record<string, { actions?: Array<{ title: string; area?: string }> }>)[phase.key];
+        if (!ph?.actions) continue;
+        for (const action of ph.actions) {
+          const rawArea = (action.area || "").toLowerCase();
+          const category = AREA_MAP[rawArea] || "geral";
+          goalsToInsert.push({
+            user_id,
+            title: action.title || "",
+            description: `Fase ${phase.prazo} — gerado automaticamente pelo diagnóstico`,
+            category,
+            priority: phase.key === "d30" ? "alta" : phase.key === "d60" ? "media" : "baixa",
+            source: phase.source,
+            source_diag_id: diag_id,
+          });
+        }
+      }
+      if (goalsToInsert.length > 0) {
+        const { error: goalsErr } = await supabase.from("user_goals").insert(goalsToInsert);
+        if (goalsErr) console.error("[generate-report] goals insert error", goalsErr);
+      }
     }
 
     // Build HTML report

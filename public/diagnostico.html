@@ -186,6 +186,34 @@
   .upsell-btn{background:var(--accent);color:#fff;border:none;padding:16px 34px;font-size:15px;font-weight:700;border-radius:980px;cursor:pointer;box-shadow:var(--shadow-md);transition:transform .2s var(--ease-spring),box-shadow .2s var(--ease-spring),background .2s;}
   .upsell-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg);background:#005fa3;}
 
+  /* Extra quick wins (premium) */
+  .qw-extra{display:none;}
+  .qw-extra.visible{display:block;}
+  .qw-num-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0;}
+
+  /* Benchmark section */
+  .bench-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:20px;display:none;}
+  .bench-card.visible{display:block;}
+  .bench-hdr{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+  .bench-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .bench-num{text-align:center;}
+  .bench-num-val{font-family:'Instrument Serif',serif;font-size:36px;color:var(--heading);line-height:1;}
+  .bench-num-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+  .bench-vs{font-size:16px;color:var(--line);}
+  .bench-pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:5px 14px;font-size:13px;font-weight:700;}
+  .bench-pill.acima{background:rgba(13,122,95,.08);color:var(--green);}
+  .bench-pill.abaixo{background:rgba(214,48,49,.06);color:var(--red);}
+  .bench-pill.media{background:rgba(139,105,20,.08);color:var(--gold);}
+  .bench-ctx{font-size:13px;color:var(--secondary);margin-top:12px;line-height:1.6;}
+
+  /* Dashboard CTA */
+  .dash-cta{background:linear-gradient(135deg,rgba(13,122,95,.06),rgba(0,119,204,.06));border:1px solid rgba(0,119,204,.15);border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;display:none;}
+  .dash-cta.visible{display:block;}
+  .dash-cta-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--heading);margin-bottom:8px;}
+  .dash-cta-sub{font-size:14px;color:var(--secondary);margin-bottom:16px;}
+  .dash-cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:14px 28px;font-size:15px;font-weight:700;border-radius:980px;cursor:pointer;text-decoration:none;box-shadow:0 4px 16px rgba(0,119,204,.2);transition:transform .2s,box-shadow .2s,background .2s;}
+  .dash-cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,119,204,.25);background:#005fa3;}
+
   /* Area bars */
   .area-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:20px;box-shadow:var(--shadow-sm);}
   .area-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
@@ -596,7 +624,59 @@
         </div>
         <h3 class="qw-title" id="qwTitle"></h3>
         <p class="qw-desc" id="qwDesc"></p>
-        <span class="qw-tool" id="qwTool"></span>
+        <a class="qw-tool" id="qwTool" href="#" target="_blank" rel="noopener">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <span id="qwToolText">—</span>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+
+      <!-- Quick wins 2 & 3 (PREMIUM) -->
+      <div class="qw-extra" id="qwExtra2">
+        <div class="qw-card">
+          <div class="qw-pre"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Quick win 2</div>
+          <h3 class="qw-title" id="qwTitle2"></h3>
+          <p class="qw-desc" id="qwDesc2"></p>
+          <a class="qw-tool" id="qwTool2" href="#" target="_blank" rel="noopener">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            <span id="qwToolText2">—</span>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="qw-extra" id="qwExtra3">
+        <div class="qw-card">
+          <div class="qw-pre"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Quick win 3</div>
+          <h3 class="qw-title" id="qwTitle3"></h3>
+          <p class="qw-desc" id="qwDesc3"></p>
+          <a class="qw-tool" id="qwTool3" href="#" target="_blank" rel="noopener">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            <span id="qwToolText3">—</span>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Benchmark (PREMIUM) -->
+      <div class="bench-card" id="benchCard">
+        <div class="bench-hdr">Benchmark do Setor</div>
+        <div class="bench-row">
+          <div class="bench-num"><div class="bench-num-val" id="benchSectorAvg">—</div><div class="bench-num-lbl">Média do setor</div></div>
+          <span class="bench-vs">vs</span>
+          <div class="bench-num"><div class="bench-num-val" id="benchYourScore">—</div><div class="bench-num-lbl">Sua empresa</div></div>
+          <span class="bench-pill" id="benchPill"></span>
+        </div>
+        <p class="bench-ctx" id="benchCtx"></p>
+      </div>
+
+      <!-- Dashboard CTA -->
+      <div class="dash-cta" id="dashCta">
+        <div class="dash-cta-title">Seu relatório está salvo no painel</div>
+        <div class="dash-cta-sub">Acompanhe sua evolução, veja o roadmap completo e gerencie suas metas no seu painel pessoal.</div>
+        <a href="/painel.html" class="dash-cta-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Ver no meu painel &rarr;
+        </a>
       </div>
 
       <!-- Area scores (LOCKED for free) -->
@@ -1140,6 +1220,43 @@ const QUICK_WINS = {
   },
 };
 
+// Tool URL lookup — used to make tool chips clickable
+const TOOL_URLS = {
+  'hubspot': 'https://www.hubspot.com/products/crm',
+  'hubspot free': 'https://www.hubspot.com/products/crm',
+  'make': 'https://www.make.com',
+  'zapier': 'https://zapier.com',
+  'typebot': 'https://typebot.io',
+  'n8n': 'https://n8n.io',
+  'notion': 'https://notion.so',
+  'clickup': 'https://clickup.com',
+  'looker studio': 'https://lookerstudio.google.com',
+  'rd station': 'https://www.rdstation.com',
+  'pipedrive': 'https://www.pipedrive.com',
+  'calendly': 'https://calendly.com',
+  'whatsapp business': 'https://business.whatsapp.com',
+  'omie': 'https://www.omie.com.br',
+  'conta azul': 'https://contaazul.com',
+  'contaazul': 'https://contaazul.com',
+  'bling': 'https://www.bling.com.br',
+  'chatgpt': 'https://chat.openai.com',
+  'claude': 'https://claude.ai',
+  'cal.com': 'https://cal.com',
+};
+
+function toolUrl(toolName) {
+  if (!toolName) return null;
+  const lower = toolName.toLowerCase().trim();
+  // Exact match
+  if (TOOL_URLS[lower]) return TOOL_URLS[lower];
+  // Partial match — find first key that appears in the tool string
+  for (const [key, url] of Object.entries(TOOL_URLS)) {
+    if (lower.includes(key)) return url;
+  }
+  // Fallback: Google search
+  return `https://www.google.com/search?q=${encodeURIComponent(toolName)}`;
+}
+
 const LEVELS = [
   { min: 0,  max: 20,  num: 1, name: 'Inicial',     desc: 'A operação é quase toda manual. O espaço para evolução é enorme e os primeiros passos trazem ganho rápido.' },
   { min: 21, max: 40,  num: 2, name: 'Em despertar', desc: 'Você tem ferramentas pontuais mas nada conectado. O foco agora é escolher o que priorizar para não se espalhar.' },
@@ -1607,6 +1724,9 @@ async function submitFinalStep(skip){
 
 async function saveFullDiagnostic(whatsapp, company){
   const email = state.capturedEmail || sessionStorage.getItem('mapeia_lead_email') || '';
+  // Get authenticated user ID (set by account gate)
+  const { data: { session: currentSession } } = await supabase.auth.getSession();
+  const authedUserId = currentSession?.user?.id || null;
 
   // Update lead with extra info if available
   if (state.leadId && (whatsapp || company)) {
@@ -1634,6 +1754,7 @@ async function saveFullDiagnostic(whatsapp, company){
       .from('diagnostic_responses')
       .insert({
         lead_id: state.leadId,
+        user_id: authedUserId,
         email: email.toLowerCase(),
         sector: state.answers.sector || '',
         company_size: state.answers.role || '',
@@ -1655,6 +1776,7 @@ async function saveFullDiagnostic(whatsapp, company){
     state.diagId = diag?.id || null;
     sessionStorage.setItem('mapeia_diag_meta', JSON.stringify({
       diag_id: diag?.id || null,
+      user_id: authedUserId,
       sector: state.answers.sector || '',
       global_score: state.globalScore,
       maturity_level: state.level.num,
@@ -1681,6 +1803,7 @@ async function saveFullDiagnostic(whatsapp, company){
           session_id: state.stripeSessionId || undefined,
           access_code: state.accessCode || undefined,
           diag_id: state.diagId,
+          user_id: authedUserId,
         }),
       });
       const v = await verifyRes.json().catch(() => ({}));
@@ -1989,21 +2112,66 @@ function renderResult(){
     stroke.style.strokeDashoffset = (circ * (1 - state.globalScore / 100)).toFixed(2);
   });
 
+  // Helper to populate a qw-tool anchor
+  function setToolChip(chipId, textId, toolName, toolUrlOverride) {
+    const chip = document.getElementById(chipId);
+    const text = document.getElementById(textId);
+    if (!chip || !text) return;
+    const name = toolName || '';
+    const url = toolUrlOverride || toolUrl(name);
+    text.textContent = `Ferramenta: ${name}`;
+    chip.href = url || '#';
+  }
+
   // Quick win #1 (free)
   const qwAI = ai?.quick_wins?.[0];
   const qwFallback = QUICK_WINS[state.weakestArea] || QUICK_WINS.process;
   document.getElementById('qwTitle').textContent = qwAI?.title || qwFallback.title;
   document.getElementById('qwDesc').textContent  = qwAI?.description || qwFallback.desc;
-  document.getElementById('qwTool').textContent  = `Ferramenta: ${qwAI?.tool || qwFallback.tool}`;
+  setToolChip('qwTool', 'qwToolText', qwAI?.tool || qwFallback.tool, qwAI?.tool_url);
 
-  // Unlock all sections for premium users
+  // Quick wins 2 & 3 + benchmark + dashboard CTA (premium only)
   if (state.isPremium) {
     ['areaSection','gapsSection','roadmapSection','processSection'].forEach(id => {
       document.getElementById(id)?.classList.remove('is-locked');
     });
-    // Hide the upsell block for premium users
     const upsell = document.querySelector('.upsell');
     if (upsell) upsell.style.display = 'none';
+
+    // QW 2
+    const qw2 = ai?.quick_wins?.[1];
+    if (qw2) {
+      document.getElementById('qwTitle2').textContent = qw2.title || '';
+      document.getElementById('qwDesc2').textContent  = qw2.description || '';
+      setToolChip('qwTool2', 'qwToolText2', qw2.tool, qw2.tool_url);
+      document.getElementById('qwExtra2')?.classList.add('visible');
+    }
+    // QW 3
+    const qw3 = ai?.quick_wins?.[2];
+    if (qw3) {
+      document.getElementById('qwTitle3').textContent = qw3.title || '';
+      document.getElementById('qwDesc3').textContent  = qw3.description || '';
+      setToolChip('qwTool3', 'qwToolText3', qw3.tool, qw3.tool_url);
+      document.getElementById('qwExtra3')?.classList.add('visible');
+    }
+
+    // Benchmark
+    const bench = ai?.benchmark;
+    if (bench?.sector_avg_score != null) {
+      document.getElementById('benchSectorAvg').textContent = bench.sector_avg_score;
+      document.getElementById('benchYourScore').textContent = bench.company_score ?? state.globalScore;
+      const pill = document.getElementById('benchPill');
+      const pos = bench.position || 'media';
+      pill.textContent = pos === 'acima' ? 'Acima da média' : pos === 'abaixo' ? 'Abaixo da média' : 'Na média do setor';
+      pill.className = `bench-pill ${pos}`;
+      if (bench.sector_context) document.getElementById('benchCtx').textContent = bench.sector_context;
+      document.getElementById('benchCard')?.classList.add('visible');
+    }
+
+    // Dashboard CTA (only if user is authenticated)
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      if (s?.user) document.getElementById('dashCta')?.classList.add('visible');
+    });
   }
 
   renderAreaBars();
@@ -2098,7 +2266,7 @@ function renderRoadmap(){
           <div class="rm-action-info">
             <div class="rm-action-title">${esc(a.title)}</div>
             <div class="rm-action-desc">${esc(a.description)}</div>
-            ${a.tool ? `<div class="rm-action-tool">${esc(a.tool)}</div>` : ''}
+            ${a.tool ? `<div class="rm-action-tool"><a href="${a.tool_url || toolUrl(a.tool)}" target="_blank" rel="noopener"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> ${esc(a.tool)}</a></div>` : ''}
           </div>
         </div>`;
     });

@@ -11,6 +11,7 @@ type VerifyBody = {
   session_id?: string;
   diag_id?: string;
   access_code?: string;
+  user_id?: string;
 };
 
 Deno.serve(async (req: Request) => {
@@ -38,6 +39,7 @@ Deno.serve(async (req: Request) => {
     const sessionId = (body.session_id || "").trim();
     const diagId = (body.diag_id || "").trim() || null;
     const accessCode = (body.access_code || "").trim().toUpperCase();
+    const userId = (body.user_id || "").trim() || null;
 
     if (!sessionId && !accessCode) {
       return json({ ok: false, error: "missing_credentials" }, 400);
@@ -227,6 +229,7 @@ Deno.serve(async (req: Request) => {
             },
             body: JSON.stringify({
               diag_id: fullRow.id,
+              user_id: userId || fullRow.user_id || null,
               stripe_session_id: validatedSessionId,
               access_code: validatedAccessCode,
               email: leadEmail,

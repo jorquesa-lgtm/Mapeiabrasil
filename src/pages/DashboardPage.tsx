@@ -23,17 +23,29 @@ interface ReportItem {
   created_at: string;
   stripe_session_id: string;
   pdf_sent: boolean;
+  // present when sourced from report_data
   ai_data: {
     level_title?: string;
     level_description?: string;
-    quick_wins?: Array<{ title: string }>;
+    quick_wins?: Array<{ title: string; description?: string; tool?: string; tool_url?: string }>;
+    benchmark?: { sector_avg_score?: number; company_score?: number; position?: string; sector_context?: string };
+    roadmap?: Record<string, { title: string; subtitle?: string; actions?: Array<{ title: string; description?: string; tool?: string; area?: string }> }>;
+    process_audit?: { process_name?: string; current_state?: string; automation_potential?: number; hours_saved_week?: number; money_saved_month?: string };
+    gaps?: Array<{ area?: string; title: string; severity: string; metric?: string }>;
   };
+  // present when joined from report_data -> diagnostic_responses
   diagnostic_responses?: {
     global_score: number;
     maturity_level: number;
     sector: string;
     area_scores: Record<string, number>;
   };
+  // present when sourced directly from diagnostic_responses
+  _fromDiag?: boolean;
+  global_score?: number;
+  maturity_level?: number;
+  sector?: string;
+  area_scores?: Record<string, number>;
 }
 
 const AREA_PT: Record<string, string> = {
@@ -60,7 +72,7 @@ export default function DashboardPage({ user }: { user: User }) {
     if (showRefresh) setRefreshing(true);
     else setLoading(true);
 
-    const [profileRes, subRes, reportsRes] = await Promise.all([
+    const [profileRes, subRes, reportsByUid, diagsByUid] = await Promise.all([
       supabase.from("user_profiles").select("*").eq("id", user.id).maybeSingle(),
       supabase
         .from("subscriptions")
@@ -69,9 +81,17 @@ export default function DashboardPage({ user }: { user: User }) {
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
+      // Primary: report_data linked by user_id (premium reports with full ai_data)
       supabase
         .from("report_data")
         .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores)")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(20),
+      // Primary: diagnostic_responses linked by user_id (all diagnostics, free + premium)
+      supabase
+        .from("diagnostic_responses")
+        .select("id, created_at, global_score, maturity_level, sector, area_scores, ai_data, plan_tier, stripe_session_id")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(20),
@@ -80,20 +100,57 @@ export default function DashboardPage({ user }: { user: User }) {
     setProfile(profileRes.data as UserProfile | null);
     setSubscription(subRes.data as Subscription | null);
 
-    // Fallback: look up by email if user_id not set on reports
-    if (!reportsRes.data?.length) {
+    // Merge report_data (has full ai_data) and diagnostic_responses (has score/area data).
+    // report_data rows are preferred because they contain the generated AI report.
+    // diagnostic_responses rows fill the gap for free diagnostics and premium ones
+    // that haven't had report_data written yet.
+    const reportRows: ReportItem[] = (reportsByUid.data ?? []) as ReportItem[];
+    const diagRows = (diagsByUid.data ?? []) as Array<{
+      id: string; created_at: string; global_score: number; maturity_level: number;
+      sector: string; area_scores: Record<string, number>; ai_data: ReportItem["ai_data"];
+      plan_tier: string; stripe_session_id: string;
+    }>;
+
+    // Build a set of diag_ids already represented in reportRows
+    const coveredDiagIds = new Set(
+      reportRows.map((r) => (r.diagnostic_responses ? r.id : null)).filter(Boolean)
+    );
+    // Also track by stripe_session_id to avoid duplication
+    const coveredSessions = new Set(reportRows.map((r) => r.stripe_session_id).filter(Boolean));
+
+    // Convert diagnostic_responses rows into ReportItem shape for display
+    const diagAsReports: ReportItem[] = diagRows
+      .filter((d) => !coveredDiagIds.has(d.id) && !coveredSessions.has(d.stripe_session_id))
+      .map((d) => ({
+        id: d.id,
+        created_at: d.created_at,
+        stripe_session_id: d.stripe_session_id || "",
+        pdf_sent: false,
+        ai_data: d.ai_data || {},
+        _fromDiag: true,
+        global_score: d.global_score,
+        maturity_level: d.maturity_level,
+        sector: d.sector,
+        area_scores: d.area_scores,
+      }));
+
+    let merged = [...reportRows, ...diagAsReports].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    // Fallback: if nothing found by user_id, try email lookup on report_data
+    if (!merged.length) {
       const emailRes = await supabase
         .from("report_data")
         .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores)")
         .eq("email", user.email ?? "")
         .order("created_at", { ascending: false })
         .limit(20);
-      setReports((emailRes.data as ReportItem[]) || []);
-      if (emailRes.data?.length) setSelectedReport((emailRes.data[0] as ReportItem) || null);
-    } else {
-      setReports((reportsRes.data as ReportItem[]) || []);
-      setSelectedReport((reportsRes.data[0] as ReportItem) || null);
+      merged = (emailRes.data as ReportItem[]) || [];
     }
+
+    setReports(merged);
+    if (merged.length) setSelectedReport(merged[0]);
 
     setLoading(false);
     setRefreshing(false);
@@ -193,7 +250,7 @@ export default function DashboardPage({ user }: { user: User }) {
 
         {/* Content */}
         {activeTab === "playbooks" ? (
-          <PlaybooksSection sector={reports[0]?.diagnostic_responses?.sector} isPremium={isPremium} />
+          <PlaybooksSection sector={reports[0]?._fromDiag ? reports[0]?.sector : reports[0]?.diagnostic_responses?.sector} isPremium={isPremium} />
         ) : activeTab === "metas" ? (
           <GoalsSection userId={user.id} latestReport={reports[0] ?? null} />
         ) : reports.length === 0 ? (
@@ -206,7 +263,8 @@ export default function DashboardPage({ user }: { user: User }) {
                 Relatórios ({reports.length})
               </div>
               {reports.map((r) => {
-                const score = r.diagnostic_responses?.global_score ?? 0;
+                const score = r._fromDiag ? (r.global_score ?? 0) : (r.diagnostic_responses?.global_score ?? 0);
+                const sectorLabel = r._fromDiag ? (r.sector || "Diagnóstico") : (r.diagnostic_responses?.sector || "Diagnóstico");
                 const scoreColor = score >= 61 ? "#00c896" : score >= 41 ? "#f5c842" : "#ff4055";
                 const isSelected = selectedReport?.id === r.id;
                 return (
@@ -226,10 +284,11 @@ export default function DashboardPage({ user }: { user: User }) {
                   >
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#e8f2ff", marginBottom: 3 }}>
-                        {r.diagnostic_responses?.sector || "Diagnóstico"}
+                        {sectorLabel}
                       </div>
                       <div style={{ fontSize: 11, color: "#4a6fa0" }}>
                         {new Date(r.created_at).toLocaleDateString("pt-BR")}
+                        {r._fromDiag && <span style={{ marginLeft: 6, fontSize: 10, color: "#2a4a6f", background: "#0d1d35", border: "1px solid #1a3355", borderRadius: 4, padding: "1px 5px" }}>Grátis</span>}
                       </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -353,7 +412,10 @@ function ActionCard({ onRefresh, refreshing }: { onRefresh: () => void; refreshi
 
 function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, userId, userEmail, clientName }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string }) {
   const ai = report.ai_data || {};
-  const diag = report.diagnostic_responses;
+  // Normalise: _fromDiag items have score data flat on the item; joined items nest it under diagnostic_responses
+  const diag = report._fromDiag
+    ? { global_score: report.global_score ?? 0, maturity_level: report.maturity_level ?? 0, sector: report.sector ?? "", area_scores: report.area_scores ?? {} }
+    : report.diagnostic_responses;
   const score = diag?.global_score ?? 0;
   const scoreColor = score >= 61 ? "#00c896" : score >= 41 ? "#f5c842" : "#ff4055";
   const maturity = MATURITY[diag?.maturity_level ?? 0] || "";
