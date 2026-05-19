@@ -318,7 +318,7 @@ function PlanCard({ subscription, isPremium, isEvolucao }: { subscription: Subsc
         <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 6 }}>
           {["Relatórios ilimitados", "Histórico completo", "Suporte prioritário", "Novas funcionalidades"].map(f => (
             <div key={f} style={{ fontSize: 12, color: "#7a9ec8", display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ color: "#00e5c8" }}>✓</span> {f}
+              <Check size={13} strokeWidth={2} style={{ color: "#00e5c8", flexShrink: 0 }} /> {f}
             </div>
           ))}
         </div>
@@ -1584,7 +1584,7 @@ function EvolucaoUpsell({ userEmail }: { userEmail: string }) {
           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 20px", marginBottom: 4 }}>
             {["Auditoria de processos detalhada", "Gaps críticos identificados", "Histórico de evolução", "Relatórios ilimitados", "Suporte prioritário"].map(f => (
               <div key={f} style={{ fontSize: 13, color: "#7a9ec8", display: "flex", alignItems: "center", gap: 5 }}>
-                <span style={{ color: "#00e5c8" }}>✓</span> {f}
+                <Check size={13} strokeWidth={2} style={{ color: "#00e5c8", flexShrink: 0 }} /> {f}
               </div>
             ))}
           </div>

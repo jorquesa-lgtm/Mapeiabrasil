@@ -374,7 +374,7 @@ nav {
   margin-bottom: 16px; display: block;
 }
 .how-icon {
-  font-size: 28px; margin-bottom: 14px; display: block;
+  margin-bottom: 14px; display: flex; color: var(--accent);
 }
 .how-title {
   font-family: 'DM Sans', sans-serif;
@@ -400,7 +400,7 @@ nav {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
-.sc-ico { font-size: 26px; margin-bottom: 8px; display: block; }
+.sc-ico { margin-bottom: 8px; display: flex; color: var(--soft); }
 .sc-lbl { font-size: 13px; font-weight: 500; color: var(--soft); }
 
 /* WHAT YOU GET */
@@ -424,7 +424,7 @@ nav {
 }
 .get-card:hover { border-color: var(--line); transform: translateY(-3px); box-shadow: var(--shadow-md); }
 .get-card:hover::before { opacity: 1; }
-.get-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+.get-icon { margin-bottom: 16px; display: flex; color: var(--accent); }
 .get-title {
   font-family: 'DM Sans', sans-serif;
   font-size: 17px; font-weight: 600;
@@ -454,7 +454,7 @@ nav {
   transition: all .2s;
 }
 .area-row:hover { border-color: var(--accent); background: var(--subtle); }
-.area-sem { font-size: 14px; flex-shrink: 0; }
+.area-sem { flex-shrink: 0; display: flex; align-items: center; color: var(--soft); }
 .area-name { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
 .area-bar-wrap { width: 80px; height: 3px; background: var(--border); border-radius: 10px; overflow: hidden; }
 .area-bar { height: 100%; border-radius: 10px; }
@@ -546,7 +546,7 @@ nav {
   padding: 4px 12px; border-radius: 100px;
 }
 
-.price-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+.price-icon { margin-bottom: 16px; display: flex; color: var(--accent); }
 .price-name {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px; font-weight: 700; letter-spacing: .1em;
@@ -578,7 +578,7 @@ nav {
 
 .price-features { display: flex; flex-direction: column; gap: 10px; flex: 1; margin-bottom: 28px; }
 .pf-item { display: flex; align-items: flex-start; gap: 10px; }
-.pf-check { color: var(--green); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.pf-check { color: var(--green); flex-shrink: 0; margin-top: 2px; display: flex; }
 .pf-check.gold { color: var(--gold); }
 .pf-text { font-size: 14px; color: var(--soft); line-height: 1.45; }
 .pf-text strong { color: var(--text); }
@@ -815,7 +815,6 @@ footer {
   background: rgba(13,122,95,.08);
   color: var(--green);
   display: flex; align-items: center; justify-content: center;
-  font-size: 32px;
   margin: 0 auto 18px;
 }
 .lm-success h3 {
@@ -939,25 +938,25 @@ footer {
     <div class="how-grid reveal">
       <div class="how-step">
         <span class="how-num">01</span>
-        <span class="how-icon">&#128203;</span>
+        <span class="how-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>
         <div class="how-title" data-i18n="how-step1-title">Responda 18 perguntas</div>
         <div class="how-desc" data-i18n="how-step1-desc">Sobre seu setor, tamanho, ferramentas atuais, processos e uso de IA. Leva menos de 5 minutos.</div>
       </div>
       <div class="how-step">
         <span class="how-num">02</span>
-        <span class="how-icon">&#129302;</span>
+        <span class="how-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></span>
         <div class="how-title" data-i18n="how-step2-title">IA analisa suas respostas</div>
         <div class="how-desc" data-i18n="how-step2-desc">O sistema calcula seu score de maturidade em 7 áreas e identifica os gaps de maior impacto para o seu setor.</div>
       </div>
       <div class="how-step">
         <span class="how-num">03</span>
-        <span class="how-icon">&#128202;</span>
+        <span class="how-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
         <div class="how-title" data-i18n="how-step3-title">Receba o diagnóstico</div>
         <div class="how-desc" data-i18n="how-step3-desc">Radar de maturidade, quick wins priorizados, ferramentas recomendadas para o seu orçamento e plano 30/60/90 dias.</div>
       </div>
       <div class="how-step">
         <span class="how-num">04</span>
-        <span class="how-icon">&#128640;</span>
+        <span class="how-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span>
         <div class="how-title" data-i18n="how-step4-title">Execute com clareza</div>
         <div class="how-desc" data-i18n="how-step4-desc">Saia com um roadmap concreto &mdash; ou opte pela sessão de implementação para colocar tudo em prática com suporte especializado.</div>
       </div>
@@ -973,14 +972,14 @@ footer {
       <p data-i18n="sectors-sub">Benchmarks, ferramentas e recomendações específicas para cada setor.</p>
     </div>
     <div class="sectors-grid reveal">
-      <div class="sector-chip"><span class="sc-ico">&#127978;</span><div class="sc-lbl" data-i18n="sector-retail">Varejo</div></div>
-      <div class="sector-chip"><span class="sc-ico">&#127869;</span><div class="sc-lbl" data-i18n="sector-food">Alimentação</div></div>
-      <div class="sector-chip"><span class="sc-ico">&#127973;</span><div class="sc-lbl" data-i18n="sector-health">Saúde</div></div>
-      <div class="sector-chip"><span class="sc-ico">&#9878;</span><div class="sc-lbl" data-i18n="sector-services">Serviços Prof.</div></div>
-      <div class="sector-chip"><span class="sc-ico">&#127891;</span><div class="sc-lbl" data-i18n="sector-education">Educação</div></div>
-      <div class="sector-chip"><span class="sc-ico">&#127959;</span><div class="sc-lbl" data-i18n="sector-construction">Construção</div></div>
-      <div class="sector-chip"><span class="sc-ico">&#128241;</span><div class="sc-lbl" data-i18n="sector-marketing">Marketing</div></div>
-      <div class="sector-chip"><span class="sc-ico">&#128187;</span><div class="sc-lbl" data-i18n="sector-tech">Tecnologia</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/></svg></span><div class="sc-lbl" data-i18n="sector-retail">Varejo</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span><div class="sc-lbl" data-i18n="sector-food">Alimentação</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span><div class="sc-lbl" data-i18n="sector-health">Saúde</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 7 0 1 0 0 14A9 7 0 1 0 12 3z"/><line x1="12" y1="10" x2="12" y2="10.01"/><path d="M12 13v-1.5c0-.83.67-1.5 1.5-1.5H15"/></svg></span><div class="sc-lbl" data-i18n="sector-services">Serviços Prof.</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><div class="sc-lbl" data-i18n="sector-education">Educação</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22 12 2l10 20"/><path d="M20 22H4"/><path d="M15 13a3 3 0 1 1-6 0"/></svg></span><div class="sc-lbl" data-i18n="sector-construction">Construção</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 19-9-9 19-2-8-8-2z"/></svg></span><div class="sc-lbl" data-i18n="sector-marketing">Marketing</div></div>
+      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><div class="sc-lbl" data-i18n="sector-tech">Tecnologia</div></div>
     </div>
   </div>
 </section>
@@ -995,43 +994,43 @@ footer {
 
     <div class="gets-grid">
       <div class="get-card reveal">
-        <span class="get-icon">&#128200;</span>
+        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
         <div class="get-title" data-i18n="get-item1-title">Score Global + Nível</div>
         <div class="get-desc" data-i18n="get-item1-desc">Seu score de maturidade digital (0 a 100%) e o nível da sua empresa na escala de 1 a 5, com descrição do estágio atual e do que vem pela frente.</div>
         <span class="get-tag free" data-i18n="get-free-tag">Incluído no gratuito</span>
       </div>
       <div class="get-card reveal reveal-delay-1">
-        <span class="get-icon">&#9889;</span>
+        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
         <div class="get-title" data-i18n="get-item2-title">Quick Win Prioritário</div>
         <div class="get-desc" data-i18n="get-item2-desc">A ação de maior impacto e menor esforço para você começar hoje &mdash; com a ferramenta certa e o prazo realista de implementação.</div>
         <span class="get-tag free" data-i18n="get-free-tag">Incluído no gratuito</span>
       </div>
       <div class="get-card reveal reveal-delay-2">
-        <span class="get-icon">&#128225;</span>
+        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
         <div class="get-title" data-i18n="get-item3-title">Radar das 7 Áreas</div>
         <div class="get-desc" data-i18n="get-item3-desc">Score visual com semáforo por área &mdash; infraestrutura, processos, IA, dados, financeiro, vendas e atendimento. Visão completa da operação.</div>
         <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
       </div>
       <div class="get-card reveal">
-        <span class="get-icon">&#128736;</span>
+        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
         <div class="get-title" data-i18n="get-item4-title">Top 3 Quick Wins + Ferramentas</div>
         <div class="get-desc" data-i18n="get-item4-desc">As três ações priorizadas com as ferramentas recomendadas por área, filtradas pelo seu orçamento e setor. Só o que faz sentido para a sua realidade.</div>
         <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
       </div>
       <div class="get-card reveal">
-        <span class="get-icon">&#128197;</span>
+        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
         <div class="get-title" data-i18n="get-item5-title">Plano 30/60/90 Dias</div>
         <div class="get-desc" data-i18n="get-item5-desc">Roadmap detalhado com ações sequenciadas, ferramentas por fase e custo estimado. Do gratuito ao pago, na ordem certa.</div>
         <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
       </div>
       <div class="get-card reveal reveal-delay-1">
-        <span class="get-icon">&#9881;</span>
+        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
         <div class="get-title" data-i18n="get-item6-title">Processo Auditado</div>
         <div class="get-desc" data-i18n="get-item6-desc">Um processo crítico da sua operação analisado em detalhe &mdash; como está hoje, como automatizar e o impacto esperado em tempo e resultado.</div>
         <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
       </div>
       <div class="get-card reveal reveal-delay-2">
-        <span class="get-icon">&#128196;</span>
+        <span class="get-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
         <div class="get-title" data-i18n="get-item7-title">Relatório PDF Exportável</div>
         <div class="get-desc" data-i18n="get-item7-desc">Documento completo com marca da sua empresa para compartilhar com sócios, equipe ou investidores. Pronto para usar em reuniões.</div>
         <span class="get-tag prem" data-i18n="get-prem-tag">Diagnóstico Premium</span>
@@ -1048,13 +1047,13 @@ footer {
         <h2 class="reveal" style="margin-bottom:16px;" data-i18n="areas-title">Diagnóstico granular<br>por área funcional</h2>
         <p class="reveal" style="color:var(--soft);margin-bottom:32px;font-size:16px;font-weight:300;" data-i18n="areas-sub">Cada área recebe um score independente. Sua empresa pode ser avançada em financeiro e crítica em atendimento &mdash; o diagnóstico mostra exatamente isso.</p>
         <div class="areas-list reveal">
-          <div class="area-row"><span class="area-sem">&#127959;</span><span class="area-name" data-i18n="area-infra">Infraestrutura & Ferramentas</span><div class="area-bar-wrap"><div class="area-bar" style="width:65%;background:var(--gold)"></div></div><span class="area-pct">65%</span></div>
-          <div class="area-row"><span class="area-sem">&#9881;</span><span class="area-name" data-i18n="area-process">Processos Internos</span><div class="area-bar-wrap"><div class="area-bar" style="width:45%;background:var(--gold)"></div></div><span class="area-pct">45%</span></div>
-          <div class="area-row"><span class="area-sem">&#129302;</span><span class="area-name" data-i18n="area-ai">IA & Automação</span><div class="area-bar-wrap"><div class="area-bar" style="width:20%;background:var(--red)"></div></div><span class="area-pct">20%</span></div>
-          <div class="area-row"><span class="area-sem">&#128202;</span><span class="area-name" data-i18n="area-data">Dados & Inteligência</span><div class="area-bar-wrap"><div class="area-bar" style="width:15%;background:var(--red)"></div></div><span class="area-pct">15%</span></div>
-          <div class="area-row"><span class="area-sem">&#128176;</span><span class="area-name" data-i18n="area-finance">Financeiro</span><div class="area-bar-wrap"><div class="area-bar" style="width:72%;background:var(--green)"></div></div><span class="area-pct">72%</span></div>
-          <div class="area-row"><span class="area-sem">&#129309;</span><span class="area-name" data-i18n="area-sales">Vendas & Conversão</span><div class="area-bar-wrap"><div class="area-bar" style="width:35%;background:var(--red)"></div></div><span class="area-pct">35%</span></div>
-          <div class="area-row"><span class="area-sem">&#128172;</span><span class="area-name" data-i18n="area-service">Atendimento ao Cliente</span><div class="area-bar-wrap"><div class="area-bar" style="width:18%;background:var(--red)"></div></div><span class="area-pct">18%</span></div>
+          <div class="area-row"><span class="area-sem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></span><span class="area-name" data-i18n="area-infra">Infraestrutura & Ferramentas</span><div class="area-bar-wrap"><div class="area-bar" style="width:65%;background:var(--gold)"></div></div><span class="area-pct">65%</span></div>
+          <div class="area-row"><span class="area-sem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M12 2v2"/><path d="M12 22v-2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg></span><span class="area-name" data-i18n="area-process">Processos Internos</span><div class="area-bar-wrap"><div class="area-bar" style="width:45%;background:var(--gold)"></div></div><span class="area-pct">45%</span></div>
+          <div class="area-row"><span class="area-sem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></span><span class="area-name" data-i18n="area-ai">IA & Automação</span><div class="area-bar-wrap"><div class="area-bar" style="width:20%;background:var(--red)"></div></div><span class="area-pct">20%</span></div>
+          <div class="area-row"><span class="area-sem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span><span class="area-name" data-i18n="area-data">Dados & Inteligência</span><div class="area-bar-wrap"><div class="area-bar" style="width:15%;background:var(--red)"></div></div><span class="area-pct">15%</span></div>
+          <div class="area-row"><span class="area-sem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><span class="area-name" data-i18n="area-finance">Financeiro</span><div class="area-bar-wrap"><div class="area-bar" style="width:72%;background:var(--green)"></div></div><span class="area-pct">72%</span></div>
+          <div class="area-row"><span class="area-sem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-1"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span><span class="area-name" data-i18n="area-sales">Vendas & Conversão</span><div class="area-bar-wrap"><div class="area-bar" style="width:35%;background:var(--red)"></div></div><span class="area-pct">35%</span></div>
+          <div class="area-row"><span class="area-sem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="area-name" data-i18n="area-service">Atendimento ao Cliente</span><div class="area-bar-wrap"><div class="area-bar" style="width:18%;background:var(--red)"></div></div><span class="area-pct">18%</span></div>
         </div>
       </div>
       <div class="reveal">
@@ -1075,17 +1074,17 @@ footer {
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;">
             <div style="background:rgba(13,122,95,.05);border:1px solid rgba(13,122,95,.12);border-radius:8px;padding:12px 14px;">
-              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">&#9889; Quick Win #1</div>
+              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quick Win #1</div>
               <div style="font-size:13px;color:var(--text);font-weight:500;">CRM + follow-up automático</div>
               <div style="font-size:12px;color:var(--muted);margin-top:2px;">HubSpot Free + Make &middot; Implementação em 30 dias</div>
             </div>
             <div style="background:rgba(13,122,95,.05);border:1px solid rgba(13,122,95,.12);border-radius:8px;padding:12px 14px;">
-              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">&#9889; Quick Win #2</div>
+              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quick Win #2</div>
               <div style="font-size:13px;color:var(--text);font-weight:500;">Chatbot WhatsApp 24h</div>
               <div style="font-size:12px;color:var(--muted);margin-top:2px;">Typebot &middot; Gratuito &middot; Resposta em &lt;2 minutos</div>
             </div>
             <div style="background:rgba(13,122,95,.05);border:1px solid rgba(13,122,95,.12);border-radius:8px;padding:12px 14px;">
-              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">&#9889; Quick Win #3</div>
+              <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quick Win #3</div>
               <div style="font-size:13px;color:var(--text);font-weight:500;">Dashboard de KPIs em tempo real</div>
               <div style="font-size:12px;color:var(--muted);margin-top:2px;">Looker Studio &middot; Gratuito &middot; Decisões baseadas em dados</div>
             </div>
@@ -1382,7 +1381,7 @@ footer {
     <div class="pricing-grid">
 
       <div class="price-card reveal">
-        <span class="price-icon">&#128269;</span>
+        <span class="price-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
         <div class="price-name" data-i18n="plan1-name">Camada 1 &middot; Express</div>
         <div class="price-title" data-i18n="plan1-title">Diagnóstico Gratuito</div>
         <div class="price-sub" data-i18n="plan1-sub">Primeiro contato: entenda em minutos onde sua empresa está na jornada digital.</div>
@@ -1397,11 +1396,11 @@ footer {
         <div class="price-divider"></div>
 
         <div class="price-features">
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan1-f1">Questionário de <strong>18 perguntas</strong></span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan1-f2"><strong>Score global</strong> de maturidade digital</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan1-f3"><strong>Nível (1 a 5)</strong> com descrição do estágio</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan1-f4"><strong>1 quick win</strong> prioritário para começar hoje</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan1-f5">Resultado entregue por e-mail</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan1-f1">Questionário de <strong>18 perguntas</strong></span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan1-f2"><strong>Score global</strong> de maturidade digital</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan1-f3"><strong>Nível (1 a 5)</strong> com descrição do estágio</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan1-f4"><strong>1 quick win</strong> prioritário para começar hoje</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan1-f5">Resultado entregue por e-mail</span></div>
         </div>
 
         <a href="/diagnostico.html" class="btn-price btn-price-outline" data-source="pricing_free" style="text-decoration:none;text-align:center;" data-i18n="plan1-cta">Iniciar diagnóstico grátis &rarr;</a>
@@ -1410,7 +1409,7 @@ footer {
 
       <div class="price-card featured reveal reveal-delay-1">
         <div class="price-tag-wrap"><div class="price-tag" data-i18n="plan2-badge">Mais completo</div></div>
-        <span class="price-icon">&#128202;</span>
+        <span class="price-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
         <div class="price-name" data-i18n="plan2-name">Camada 2 &middot; Premium</div>
         <div class="price-title" data-i18n="plan2-title">Diagnóstico Completo</div>
         <div class="price-sub" data-i18n="plan2-sub">Para o dono/gestor que quer um plano acionável e começar sozinho, com tudo nas mãos.</div>
@@ -1425,15 +1424,15 @@ footer {
         <div class="price-divider"></div>
 
         <div class="price-features">
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f1"><strong>Tudo do Express</strong>, mais:</span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f2"><strong>Radar completo das 7 áreas</strong> com semáforo</span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f3"><strong>Top 3 quick wins</strong> priorizados</span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f4">Lista de <strong>ferramentas recomendadas</strong> por área</span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f5">Plano de ação <strong>30/60/90 dias</strong> detalhado</span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f6">Análise de <strong>1 processo crítico</strong> com impacto estimado</span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f7">Score detalhado por <strong>subárea</strong></span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f8"><strong>Benchmark do setor</strong></span></div>
-          <div class="pf-item"><span class="pf-check gold">&#10003;</span><span class="pf-text" data-i18n="plan2-f9"><strong>PDF exportável</strong> com marca da empresa</span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f1"><strong>Tudo do Express</strong>, mais:</span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f2"><strong>Radar completo das 7 áreas</strong> com semáforo</span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f3"><strong>Top 3 quick wins</strong> priorizados</span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f4">Lista de <strong>ferramentas recomendadas</strong> por área</span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f5">Plano de ação <strong>30/60/90 dias</strong> detalhado</span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f6">Análise de <strong>1 processo crítico</strong> com impacto estimado</span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f7">Score detalhado por <strong>subárea</strong></span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f8"><strong>Benchmark do setor</strong></span></div>
+          <div class="pf-item"><span class="pf-check gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan2-f9"><strong>PDF exportável</strong> com marca da empresa</span></div>
         </div>
 
         <button type="button" class="btn-price btn-price-primary" data-lead-trigger data-source="pricing_premium" data-plan="premium" data-i18n="plan2-cta">Obter diagnóstico Premium &rarr;</button>
@@ -1441,7 +1440,7 @@ footer {
       </div>
 
       <div class="price-card reveal reveal-delay-2">
-        <span class="price-icon">&#128260;</span>
+        <span class="price-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>
         <div class="price-name" data-i18n="plan3-name">Camada 3 &middot; Evolução</div>
         <div class="price-title" data-i18n="plan3-title">Assinatura Mensal</div>
         <div class="price-sub" data-i18n="plan3-sub">Para a empresa em transformação que quer acompanhar progresso ao longo do tempo.</div>
@@ -1456,11 +1455,11 @@ footer {
         <div class="price-divider"></div>
 
         <div class="price-features">
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan3-f1"><strong>Tudo do Premium</strong>, mais:</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan3-f2">Diagnóstico <strong>refeito mensalmente</strong> com evolução do score</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan3-f3"><strong>Dashboard de progresso</strong> com metas</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan3-f4">Biblioteca de <strong>playbooks por setor</strong></span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan3-f5">Alertas mensais de novas ferramentas</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan3-f1"><strong>Tudo do Premium</strong>, mais:</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan3-f2">Diagnóstico <strong>refeito mensalmente</strong> com evolução do score</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan3-f3"><strong>Dashboard de progresso</strong> com metas</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan3-f4">Biblioteca de <strong>playbooks por setor</strong></span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan3-f5">Alertas mensais de novas ferramentas</span></div>
         </div>
 
         <button type="button" class="btn-price btn-price-outline" data-lead-trigger data-source="pricing_subscription" data-plan="subscription" data-i18n="plan3-cta">Assinar Evolução &rarr;</button>
@@ -1468,7 +1467,7 @@ footer {
       </div>
 
       <div class="price-card reveal reveal-delay-3">
-        <span class="price-icon">&#127919;</span>
+        <span class="price-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
         <div class="price-name" data-i18n="plan4-name">Camada 4 &middot; Advisory</div>
         <div class="price-title" data-i18n="plan4-title">Personalizado</div>
         <div class="price-sub" data-i18n="plan4-sub">Para empresas que querem suporte especializado e acompanhamento na implementação.</div>
@@ -1482,11 +1481,11 @@ footer {
         <div class="price-divider"></div>
 
         <div class="price-features">
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan4-f1"><strong>Auditoria aprofundada</strong> do negócio</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan4-f2"><strong>Roadmap customizado</strong> por prioridade</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan4-f3"><strong>Acompanhamento executivo</strong> dedicado</span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan4-f4">Modelo <strong>pontual ou recorrente</strong></span></div>
-          <div class="pf-item"><span class="pf-check">&#10003;</span><span class="pf-text" data-i18n="plan4-f5">Suporte direto do time MapeIA</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan4-f1"><strong>Auditoria aprofundada</strong> do negócio</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan4-f2"><strong>Roadmap customizado</strong> por prioridade</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan4-f3"><strong>Acompanhamento executivo</strong> dedicado</span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan4-f4">Modelo <strong>pontual ou recorrente</strong></span></div>
+          <div class="pf-item"><span class="pf-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pf-text" data-i18n="plan4-f5">Suporte direto do time MapeIA</span></div>
         </div>
 
         <a href="https://wa.me/5512996790859?text=Ola!%20Quero%20saber%20mais%20sobre%20o%20Advisory%20personalizado%20do%20MapeIA%20Brasil" target="_blank" class="btn-price btn-price-outline" style="text-decoration:none;display:flex;align-items:center;justify-content:center;" data-i18n="plan4-cta">Falar com especialista &rarr;</a>
@@ -1558,7 +1557,7 @@ footer {
     <p class="reveal" data-i18n="finalcta-sub">5 minutos. Resultado na hora. Sem compromisso.</p>
     <div class="cta-actions reveal">
       <a href="/diagnostico.html" class="btn-primary" data-source="final_cta" style="text-decoration:none;" data-i18n="finalcta-btn1">Iniciar Diagnóstico Gratuito &rarr;</a>
-      <a href="https://wa.me/5512996790859?text=Ol%C3%A1!%20Tenho%20d%C3%BAvidas%20sobre%20o%20MapeIA%20Brasil" target="_blank" class="btn-secondary" data-i18n="finalcta-btn2">&#128172; Falar com especialista</a>
+      <a href="https://wa.me/5512996790859?text=Ol%C3%A1!%20Tenho%20d%C3%BAvidas%20sobre%20o%20MapeIA%20Brasil" target="_blank" class="btn-secondary" data-i18n="finalcta-btn2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Falar com especialista</a>
     </div>
   </div>
 </section>
@@ -1637,7 +1636,7 @@ footer {
       </form>
     </div>
     <div class="lm-success" id="lmSuccessBox" style="display:none;">
-      <div class="lm-success-icon">&#10003;</div>
+      <div class="lm-success-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
       <h3>Pronto!</h3>
       <p>Recebemos seus dados. Em instantes você receberá no e-mail o link para iniciar o diagnóstico.</p>
       <button type="button" class="lm-submit" id="lmCloseSuccess">Fechar</button>
@@ -2150,7 +2149,7 @@ const translations = {
     'finalcta-title': 'Pronto para saber<br>onde sua empresa está?',
     'finalcta-sub': '5 minutos. Resultado na hora. Sem compromisso.',
     'finalcta-btn1': 'Iniciar Diagnóstico Gratuito &rarr;',
-    'finalcta-btn2': '&#128172; Falar com especialista',
+    'finalcta-btn2': 'Falar com especialista',
     'contact-tag': 'Entre em contato',
     'contact-title': 'Tem alguma dúvida?<br><em>Estamos aqui para ajudar</em>',
     'contact-sub': 'Nossa equipe está pronta para responder qualquer pergunta sobre o diagnóstico, relatório ou os próximos passos da sua empresa.',
@@ -2360,7 +2359,7 @@ const translations = {
     'finalcta-title': 'Ready to discover<br>where your company stands?',
     'finalcta-sub': '5 minutes. Instant results. No commitment.',
     'finalcta-btn1': 'Start Free Diagnostic &rarr;',
-    'finalcta-btn2': '&#128172; Talk to an expert',
+    'finalcta-btn2': 'Talk to an expert',
     'contact-tag': 'Get in touch',
     'contact-title': 'Have a question?<br><em>We\'re here to help</em>',
     'contact-sub': 'Our team is ready to answer any question about the diagnostic, report or the next steps for your company.',
@@ -2570,7 +2569,7 @@ const translations = {
     'finalcta-title': '¿Listo para descubrir<br>dónde está tu empresa?',
     'finalcta-sub': '5 minutos. Resultado al instante. Sin compromiso.',
     'finalcta-btn1': 'Iniciar Diagnóstico Gratuito &rarr;',
-    'finalcta-btn2': '&#128172; Hablar con un experto',
+    'finalcta-btn2': 'Hablar con un experto',
     'contact-tag': 'Ponte en contacto',
     'contact-title': '¿Tienes alguna duda?<br><em>Estamos aquí para ayudar</em>',
     'contact-sub': 'Nuestro equipo está listo para responder cualquier pregunta sobre el diagnóstico, informe o los próximos pasos de tu empresa.',
