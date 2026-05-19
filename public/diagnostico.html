@@ -1426,6 +1426,10 @@ function startQuiz(premium = false){
   ACTIVE_QUESTIONS = buildActiveQuestions();
   rebuildDots();
 
+  // Preserve any sector pre-selection from URL param before loading saved progress
+  const presetSector = state.answers.sector;
+  const presetIdx = state.idx;
+
   // Attempt to restore saved progress
   const restored = loadProgress();
   if (restored && Object.keys(state.answers).length > 0) {
@@ -1435,7 +1439,13 @@ function startQuiz(premium = false){
     // If email was already captured in a previous session, skip the gate
     if (state.capturedEmail) state.emailCaptured = true;
   } else {
-    state.idx = 0;
+    // No saved progress — apply URL pre-selection if present
+    if (presetSector) {
+      state.answers.sector = presetSector;
+      state.idx = presetIdx;
+    } else {
+      state.idx = 0;
+    }
   }
   renderQuestion();
   showScreen('quiz');
@@ -1825,6 +1835,25 @@ if (accessCodeApply) {
 
 // Auto-start premium quiz if returning from Stripe
 detectPremiumFlow();
+
+// Pre-select sector if ?sector= param is present (from homepage chips)
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const presetSector = params.get('sector');
+  if (presetSector) {
+    const valid = QUESTIONS.find(q => q.id === 'sector')?.options.map(o => o.v) || [];
+    if (valid.includes(presetSector)) {
+      state.answers.sector = presetSector;
+      // Advance past the sector question so the user starts on the next one
+      state.idx = 1;
+    }
+    // Clean the param from the URL without reload
+    params.delete('sector');
+    const qs = params.toString();
+    window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''));
+  }
+})();
+
 if (state.isPremium) {
   startQuiz(true);
 }

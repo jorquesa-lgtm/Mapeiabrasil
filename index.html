@@ -392,15 +392,18 @@ nav {
 .sector-chip {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--r2); padding: 20px 16px;
-  text-align: center; transition: all .2s; cursor: default;
-  box-shadow: var(--shadow-sm);
+  text-align: center; transition: all .2s; cursor: pointer;
+  box-shadow: var(--shadow-sm); text-decoration: none;
+  display: flex; flex-direction: column; align-items: center;
 }
 .sector-chip:hover {
   border-color: var(--accent); background: var(--subtle);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
-.sc-ico { margin-bottom: 8px; display: flex; color: var(--soft); }
+.sector-chip:hover .sc-ico { color: var(--accent); }
+.sector-chip:hover .sc-lbl { color: var(--text); }
+.sc-ico { margin-bottom: 8px; display: flex; color: var(--soft); transition: color .2s; }
 .sc-lbl { font-size: 13px; font-weight: 500; color: var(--soft); }
 
 /* WHAT YOU GET */
@@ -972,14 +975,14 @@ footer {
       <p data-i18n="sectors-sub">Benchmarks, ferramentas e recomendações específicas para cada setor.</p>
     </div>
     <div class="sectors-grid reveal">
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/></svg></span><div class="sc-lbl" data-i18n="sector-retail">Varejo</div></div>
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span><div class="sc-lbl" data-i18n="sector-food">Alimentação</div></div>
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span><div class="sc-lbl" data-i18n="sector-health">Saúde</div></div>
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 7 0 1 0 0 14A9 7 0 1 0 12 3z"/><line x1="12" y1="10" x2="12" y2="10.01"/><path d="M12 13v-1.5c0-.83.67-1.5 1.5-1.5H15"/></svg></span><div class="sc-lbl" data-i18n="sector-services">Serviços Prof.</div></div>
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><div class="sc-lbl" data-i18n="sector-education">Educação</div></div>
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22 12 2l10 20"/><path d="M20 22H4"/><path d="M15 13a3 3 0 1 1-6 0"/></svg></span><div class="sc-lbl" data-i18n="sector-construction">Construção</div></div>
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 19-9-9 19-2-8-8-2z"/></svg></span><div class="sc-lbl" data-i18n="sector-marketing">Marketing</div></div>
-      <div class="sector-chip"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><div class="sc-lbl" data-i18n="sector-tech">Tecnologia</div></div>
+      <a class="sector-chip" href="/diagnostico.html?sector=varejo"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/></svg></span><div class="sc-lbl" data-i18n="sector-retail">Varejo</div></a>
+      <a class="sector-chip" href="/diagnostico.html?sector=alimentacao"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span><div class="sc-lbl" data-i18n="sector-food">Alimentação</div></a>
+      <a class="sector-chip" href="/diagnostico.html?sector=saude"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span><div class="sc-lbl" data-i18n="sector-health">Saúde</div></a>
+      <a class="sector-chip" href="/diagnostico.html?sector=servicos"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 7 0 1 0 0 14A9 7 0 1 0 12 3z"/><line x1="12" y1="10" x2="12" y2="10.01"/><path d="M12 13v-1.5c0-.83.67-1.5 1.5-1.5H15"/></svg></span><div class="sc-lbl" data-i18n="sector-services">Serviços Prof.</div></a>
+      <a class="sector-chip" href="/diagnostico.html?sector=educacao"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><div class="sc-lbl" data-i18n="sector-education">Educação</div></a>
+      <a class="sector-chip" href="/diagnostico.html?sector=construcao"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22 12 2l10 20"/><path d="M20 22H4"/><path d="M15 13a3 3 0 1 1-6 0"/></svg></span><div class="sc-lbl" data-i18n="sector-construction">Construção</div></a>
+      <a class="sector-chip" href="/diagnostico.html?sector=marketing"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 19-9-9 19-2-8-8-2z"/></svg></span><div class="sc-lbl" data-i18n="sector-marketing">Marketing</div></a>
+      <a class="sector-chip" href="/diagnostico.html?sector=tech"><span class="sc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><div class="sc-lbl" data-i18n="sector-tech">Tecnologia</div></a>
     </div>
   </div>
 </section>
