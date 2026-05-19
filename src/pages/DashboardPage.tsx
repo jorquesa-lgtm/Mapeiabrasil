@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
-import { LogOut, FileText, Star, Clock, ChevronRight, Download, RefreshCw, Target, Plus, Trash2, Check, Calendar, Flag } from "lucide-react";
+import { LogOut, FileText, Star, Clock, ChevronRight, Download, RefreshCw, Target, Plus, Trash2, Check, Calendar, Flag, Eye, X } from "lucide-react";
 import AtivarSection from "../components/ativar/AtivarSection";
 
 interface UserProfile {
@@ -67,6 +67,7 @@ export default function DashboardPage({ user }: { user: User }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<"relatorios" | "metas" | "playbooks">("relatorios");
+  const [viewingReport, setViewingReport] = useState<ReportItem | null>(null);
 
   async function loadData(showRefresh = false) {
     if (showRefresh) setRefreshing(true);
@@ -111,9 +112,12 @@ export default function DashboardPage({ user }: { user: User }) {
       plan_tier: string; stripe_session_id: string;
     }>;
 
-    // Build a set of diag_ids already represented in reportRows
+    // Build a set of diag_ids already represented by report_data rows
+    // reportRows have a diag_id FK stored in the joined diagnostic_responses id
     const coveredDiagIds = new Set(
-      reportRows.map((r) => (r.diagnostic_responses ? r.id : null)).filter(Boolean)
+      reportRows
+        .map((r) => (r as unknown as { diag_id?: string }).diag_id)
+        .filter(Boolean) as string[]
     );
     // Also track by stripe_session_id to avoid duplication
     const coveredSessions = new Set(reportRows.map((r) => r.stripe_session_id).filter(Boolean));
@@ -171,6 +175,10 @@ export default function DashboardPage({ user }: { user: User }) {
     setTimeout(() => win.print(), 600);
   }
 
+  function handleViewReport() {
+    if (selectedReport) setViewingReport(selectedReport);
+  }
+
   const isEvolucao = subscription?.plan === "subscription" && subscription?.status === "active";
   const isPremium = !!subscription && subscription.status === "active";
 
@@ -185,6 +193,13 @@ export default function DashboardPage({ user }: { user: User }) {
 
   return (
     <div style={{ minHeight: "100vh", background: "#040812", fontFamily: "'DM Sans', sans-serif", color: "#c8daf0" }}>
+      {viewingReport && (
+        <ReportViewerModal
+          report={viewingReport}
+          profile={profile}
+          onClose={() => setViewingReport(null)}
+        />
+      )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -305,6 +320,7 @@ export default function DashboardPage({ user }: { user: User }) {
               <ReportDetail
                 report={selectedReport}
                 onDownload={handleDownloadPdf}
+                onView={handleViewReport}
                 isEvolucao={isEvolucao}
                 isPremium={isPremium}
                 allReports={reports}
@@ -410,7 +426,7 @@ function ActionCard({ onRefresh, refreshing }: { onRefresh: () => void; refreshi
   );
 }
 
-function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, userId, userEmail, clientName }: { report: ReportItem; onDownload: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string }) {
+function ReportDetail({ report, onDownload, onView, isEvolucao, isPremium, allReports, userId, userEmail, clientName }: { report: ReportItem; onDownload: () => void; onView: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string }) {
   const ai = report.ai_data || {};
   // Normalise: _fromDiag items have score data flat on the item; joined items nest it under diagnostic_responses
   const diag = report._fromDiag
@@ -440,11 +456,18 @@ function ReportDetail({ report, onDownload, isEvolucao, isPremium, allReports, u
             {(ai as { level_title?: string }).level_title || `Nível ${diag?.maturity_level ?? ""}`}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 32, fontWeight: 700, color: scoreColor, lineHeight: 1 }}>{score}</div>
             <div style={{ fontSize: 11, color: "#4a6fa0", marginTop: 2 }}>{maturity}</div>
           </div>
+          <button
+            onClick={onView}
+            className="btn-hover"
+            style={{ display: "flex", alignItems: "center", gap: 8, background: "#102240", border: "1px solid #1e3a5f", borderRadius: 10, padding: "10px 18px", color: "#c8daf0", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", transition: "all .2s" }}
+          >
+            <Eye size={14} /> Ver relatório
+          </button>
           <button
             onClick={onDownload}
             className="btn-hover"
@@ -1667,11 +1690,112 @@ function EvolucaoUpsell({ userEmail }: { userEmail: string }) {
   );
 }
 
+/* ─── Report Viewer Modal ─── */
+
+function ReportViewerModal({ report, profile, onClose }: { report: ReportItem; profile: UserProfile | null; onClose: () => void }) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const html = buildPrintHtml(report, profile);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    iframe.onload = () => {};
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+    doc.open();
+    doc.write(html);
+    doc.close();
+  }, [html]);
+
+  function handlePrint() {
+    iframeRef.current?.contentWindow?.print();
+  }
+
+  // Close on backdrop click
+  function onBackdrop(e: React.MouseEvent<HTMLDivElement>) {
+    if (e.target === e.currentTarget) onClose();
+  }
+
+  return (
+    <div
+      onClick={onBackdrop}
+      style={{
+        position: "fixed", inset: 0, zIndex: 1000,
+        background: "rgba(2,6,18,.85)",
+        backdropFilter: "blur(4px)",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
+        padding: "24px 16px",
+        overflowY: "auto",
+      }}
+    >
+      <div
+        style={{
+          width: "100%", maxWidth: 800,
+          background: "#0d1d35", border: "1px solid #1e3a5f", borderRadius: 16,
+          display: "flex", flexDirection: "column",
+          boxShadow: "0 32px 80px rgba(0,0,0,.6)",
+          maxHeight: "calc(100vh - 48px)",
+        }}
+      >
+        {/* Modal header */}
+        <div style={{
+          padding: "16px 20px", borderBottom: "1px solid #1e3a5f",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          flexShrink: 0,
+        }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: "#f4f8ff" }}>Relatório completo</div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button
+              onClick={handlePrint}
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                background: "linear-gradient(135deg,#1a7ff0,#00b8d4)", border: "none",
+                borderRadius: 8, padding: "8px 16px", color: "#fff",
+                fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+              }}
+            >
+              <Download size={13} /> Imprimir / Salvar PDF
+            </button>
+            <button
+              onClick={onClose}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: 32, height: 32,
+                background: "#102240", border: "1px solid #1e3a5f",
+                borderRadius: 8, color: "#7a9ec8", cursor: "pointer",
+              }}
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* iframe content */}
+        <iframe
+          ref={iframeRef}
+          title="Relatório completo"
+          style={{
+            flex: 1,
+            width: "100%",
+            minHeight: 600,
+            border: "none",
+            borderRadius: "0 0 16px 16px",
+            background: "#fff",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ─── Print HTML builder ─── */
 
 function buildPrintHtml(report: ReportItem, profile: UserProfile | null): string {
   const ai = report.ai_data || {};
-  const diag = report.diagnostic_responses;
+  // Normalise both report_data-joined and _fromDiag shapes
+  const diag = report._fromDiag
+    ? { global_score: report.global_score ?? 0, maturity_level: report.maturity_level ?? 0, sector: report.sector ?? "", area_scores: report.area_scores ?? {} }
+    : report.diagnostic_responses;
   const score = diag?.global_score ?? 0;
   const scoreColor = score >= 61 ? "#00c896" : score >= 41 ? "#f5c842" : "#ff4055";
   const maturity = MATURITY[diag?.maturity_level ?? 0] || "";
