@@ -1313,6 +1313,9 @@ function detectPremiumFlow(){
     state.isPremium = true;
     sessionStorage.setItem('mapeia_is_premium', '1');
     sessionStorage.removeItem('mapeia_premium_deepdive');
+    // Restore email from sessionStorage so the mid-quiz gate is skipped
+    const storedEmail = sessionStorage.getItem('mapeia_lead_email') || '';
+    if (storedEmail) { state.capturedEmail = storedEmail; state.emailCaptured = true; }
     if (urlPremium || urlSessionId) {
       urlParams.delete('premium');
       urlParams.delete('session_id');
@@ -1557,6 +1560,8 @@ function startQuiz(premium = false){
     if (state.capturedEmail) state.emailCaptured = true;
   } else {
     // No saved progress — apply URL pre-selection if present
+    // If capturedEmail was already set (e.g. by account gate), skip the mid-quiz gate
+    if (state.capturedEmail) state.emailCaptured = true;
     if (presetSector) {
       state.answers.sector = presetSector;
       state.idx = presetIdx;
@@ -1829,6 +1834,15 @@ async function saveFullDiagnostic(whatsapp, company){
 
 document.getElementById('fsSubmit').addEventListener('click', () => submitFinalStep(false));
 document.getElementById('fsSkip').addEventListener('click', () => submitFinalStep(true));
+
+// Pre-fill email from auth session so the mid-quiz gate is skipped for logged-in users
+supabase.auth.getSession().then(({ data: { session: s } }) => {
+  if (s?.user?.email) {
+    state.capturedEmail = s.user.email;
+    state.emailCaptured = true;
+    sessionStorage.setItem('mapeia_lead_email', s.user.email);
+  }
+});
 
 // Free flow
 document.getElementById('startBtn').addEventListener('click', () => {
