@@ -2661,5 +2661,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<!-- WhatsApp floating button -->
+<style>
+@keyframes waBubble {
+  0%,100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); }
+  60%      { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
+}
+.wa-btn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  animation: waBubble 2s ease-out infinite;
+  transition: transform .2s ease;
+}
+.wa-btn:hover { transform: scale(1.1); }
+</style>
+<a class="wa-btn"
+   href="https://wa.me/5512996790859?text=Ol%C3%A1!%20Tenho%20interesse%20no%20diagn%C3%B3stico%20da%20MapeIA%20Brasil"
+   target="_blank" rel="noopener noreferrer"
+   aria-label="Falar no WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16 2C8.268 2 2 8.268 2 16c0 2.47.643 4.788 1.768 6.8L2 30l7.394-1.738A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2z" fill="#fff"/>
+    <path d="M16 4.5C9.649 4.5 4.5 9.649 4.5 16c0 2.27.638 4.393 1.745 6.2l.283.467-1.204 4.393 4.522-1.183.452.267A11.46 11.46 0 0016 27.5c6.351 0 11.5-5.149 11.5-11.5S22.351 4.5 16 4.5zm5.805 15.77c-.247.694-1.456 1.327-2.003 1.41-.512.076-1.16.108-1.87-.118a17.1 17.1 0 01-1.695-.626c-2.98-1.286-4.926-4.28-5.074-4.48-.147-.198-1.196-1.59-1.196-3.033 0-1.443.757-2.154 1.025-2.449.267-.296.582-.37.776-.37h.554c.178 0 .42-.067.657.5.247.593.84 2.05.914 2.2.074.149.124.323.025.52-.1.198-.149.32-.297.494-.147.173-.31.387-.443.52-.148.148-.302.309-.13.605.172.296.765 1.263 1.642 2.045 1.128 1.005 2.08 1.317 2.376 1.465.297.148.47.124.643-.074.173-.198.74-.864 .937-1.16.198-.297.395-.247.666-.148.272.1 1.727.815 2.023.963.297.148.494.222.568.346.074.123.074.716-.173 1.41z" fill="#25D366"/>
+  </svg>
+</a>
+
 </body>
 </html>
