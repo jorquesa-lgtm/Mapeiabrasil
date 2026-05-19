@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium confirmado — MapeIA Brasil</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:     #fbfbfd;
+  --surface:#ffffff;
+  --subtle: #f5f5f7;
+  --border: #e8e8ed;
+  --line:   #d2d2d7;
+  --muted:  #86868b;
+  --soft:   #6e6e73;
+  --text:   #1d1d1f;
+  --accent: #0077CC;
+  --accent2:#005fa3;
+  --green:  #0d7a5f;
+  --green2: rgba(13,122,95,.1);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.06), 0 1px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.04);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.topnav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(251,251,253,.92);
+  backdrop-filter: blur(20px);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo img { height: 36px; width: auto; display: block; }
+.logo-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 600; color: var(--text);
+}
+.logo-text span { color: var(--accent); }
+
+/* MAIN */
+main {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 24px 80px;
+}
+
+.wrap {
+  max-width: 680px; width: 100%;
+}
+
+/* SUCCESS HEADER */
+.success-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--green2);
+  border: 1.5px solid rgba(13,122,95,.2);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  color: var(--green);
+}
+
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,119,204,.07);
+  border: 1px solid rgba(0,119,204,.15);
+  color: var(--accent);
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 5px 14px; border-radius: 100px;
+  margin-bottom: 20px;
+}
+.pill::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+}
+
+h1 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--text);
+  line-height: 1.15;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+h1 em { color: var(--accent); font-style: normal; }
+
+.sub {
+  font-size: 17px; color: var(--soft);
+  line-height: 1.65; max-width: 520px;
+  margin: 0 auto 36px;
+}
+
+/* SESSION ID */
+.session-wrap {
+  background: var(--subtle);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 32px;
+  display: none;
+}
+.session-lbl {
+  font-size: 11px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px;
+}
+.session-id {
+  font-family: monospace; font-size: 12px;
+  color: var(--soft); word-break: break-all;
+}
+
+/* WHAT YOU GET CARD */
+.deliverables-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.deliverables-header {
+  background: rgba(0,119,204,.04);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex; align-items: center; gap: 8px;
+}
+.deliverables-header-icon { color: var(--accent); flex-shrink: 0; }
+.deliverables-header-text {
+  font-size: 13px; font-weight: 700;
+  color: var(--text); letter-spacing: .02em;
+}
+.deliverables-list {
+  padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.dl-item {
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.dl-check {
+  flex-shrink: 0; color: var(--accent);
+  margin-top: 2px;
+}
+.dl-info {}
+.dl-title {
+  font-size: 14px; font-weight: 600; color: var(--text);
+  margin-bottom: 2px;
+}
+.dl-desc { font-size: 13px; color: var(--soft); line-height: 1.5; }
+
+/* STEPS CARD */
+.steps-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+.steps-title {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  letter-spacing: .04em; text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.step {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 16px;
+}
+.step:last-child { margin-bottom: 0; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(0,119,204,.07);
+  border: 1px solid rgba(0,119,204,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--accent);
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-title {
+  font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px;
+}
+.step-desc { font-size: 13px; color: var(--soft); line-height: 1.5; }
+
+/* BTNS */
+.btn-row {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.btn-primary {
+  background: var(--accent); color: #fff;
+  border: none; padding: 14px 32px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 600;
+  border-radius: 980px; cursor: pointer;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: all .2s; box-shadow: var(--shadow-md);
+}
+.btn-primary:hover {
+  background: var(--accent2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--line);
+  color: var(--soft); padding: 14px 28px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 600;
+  border-radius: 980px; cursor: pointer;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: all .2s;
+}
+.btn-ghost:hover { border-color: var(--soft); color: var(--text); }
+
+.fine {
+  font-size: 12px; color: var(--muted);
+  text-align: center; line-height: 1.6;
+}
+.fine a { color: var(--soft); text-decoration: none; }
+.fine a:hover { color: var(--text); }
+
+/* FADE IN */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.wrap { animation: fadeUp .5s ease forwards; }
+
+@media (max-width: 600px) {
+  .topnav { padding: 14px 20px; }
+  .btn-row { flex-direction: column; align-items: stretch; }
+  .btn-row a { justify-content: center; }
+  .sub { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="/" class="logo">
+    <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Brasil">
+    <span class="logo-text">Brasil</span>
+  </a>
+</nav>
+
+<main>
+  <div class="wrap">
+
+    <div style="text-align:center;">
+      <div class="success-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+
+      <div class="pill">Premium confirmado</div>
+
+      <h1>Tudo certo, <em id="firstName">obrigado</em>!<br>Seu diagnóstico está sendo gerado.</h1>
+
+      <p class="sub">Seu pagamento foi confirmado. Em até 15 minutos você receberá o relatório Premium completo no e-mail cadastrado.</p>
+    </div>
+
+    <div class="session-wrap" id="sessionWrap">
+      <div class="session-lbl">ID da compra</div>
+      <div class="session-id" id="sessionId"></div>
+    </div>
+
+    <!-- WHAT YOU GET -->
+    <div class="deliverables-card">
+      <div class="deliverables-header">
+        <span class="deliverables-header-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </span>
+        <span class="deliverables-header-text">O que você vai receber no relatório</span>
+      </div>
+      <div class="deliverables-list">
+        <div class="dl-item">
+          <span class="dl-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="dl-info">
+            <div class="dl-title">Score de maturidade + radar das 7 áreas</div>
+            <div class="dl-desc">Score de 0 a 100 por área, com semáforo de prioridade e descrição do seu estágio atual.</div>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="dl-info">
+            <div class="dl-title">Top 3 quick wins com ferramentas e prazos</div>
+            <div class="dl-desc">Cada quick win vem com ferramenta recomendada, custo estimado e prazo realista. É só implementar.</div>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="dl-info">
+            <div class="dl-title">Plano de ação 30/60/90 dias</div>
+            <div class="dl-desc">Cada passo priorizado por impacto e custo. Você sabe exatamente o que fazer na semana 1, no mês 1 e no mês 3.</div>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="dl-info">
+            <div class="dl-title">Benchmark do seu setor + análise de processo crítico</div>
+            <div class="dl-desc">Sua empresa comparada com PMEs do mesmo porte, mais ROI estimado no processo de maior gargalo.</div>
+          </div>
+        </div>
+        <div class="dl-item">
+          <span class="dl-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="dl-info">
+            <div class="dl-title">PDF exportável</div>
+            <div class="dl-desc">Relatório completo formatado, pronto para apresentar à equipe ou parceiros.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="steps-card">
+      <div class="steps-title">Próximos passos</div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Verifique seu e-mail</div>
+          <div class="step-desc">O relatório será enviado em até 15 minutos. Se não encontrar, verifique a pasta de spam.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Acesse seu painel</div>
+          <div class="step-desc">No painel você acompanha o checklist do plano 30/60/90 e vê a evolução dos seus scores ao longo do tempo.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Tire dúvidas no WhatsApp</div>
+          <div class="step-desc">Nossa equipe responde qualquer pergunta sobre o relatório ou os próximos passos da implementação.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <a href="/painel.html" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Acessar painel
+      </a>
+      <a href="https://wa.me/5512996790859?text=Ol%C3%A1!%20Acabei%20de%20comprar%20o%20Diagn%C3%B3stico%20Premium%20da%20MapeIA%20Brasil" class="btn-ghost" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Falar no WhatsApp
+      </a>
+    </div>
+
+    <p class="fine">
+      Dúvidas sobre a compra? Escreva para <a href="mailto:servicoaocliente@mapeiabrasil.com">servicoaocliente@mapeiabrasil.com</a><br>
+      ou acesse o <a href="https://billing.stripe.com/p/login/cNi3cofl94mLgr2d2w0Jq00" target="_blank" rel="noopener">portal do cliente Stripe</a> para ver o recibo.
+    </p>
+
+  </div>
+</main>
+
+<!-- WhatsApp floating button -->
+<style>
+@keyframes waBubble {
+  0%,100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); }
+  60%      { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
+}
+.wa-btn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  animation: waBubble 2s ease-out infinite;
+  transition: transform .2s ease;
+}
+.wa-btn:hover { transform: scale(1.1); }
+</style>
+<a class="wa-btn"
+   href="https://wa.me/5512996790859?text=Ol%C3%A1!%20Acabei%20de%20comprar%20o%20Diagn%C3%B3stico%20Premium%20da%20MapeIA%20Brasil"
+   target="_blank" rel="noopener noreferrer"
+   aria-label="Falar no WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16 2C8.268 2 2 8.268 2 16c0 2.47.643 4.788 1.768 6.8L2 30l7.394-1.738A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2z" fill="#fff"/>
+    <path d="M16 4.5C9.649 4.5 4.5 9.649 4.5 16c0 2.27.638 4.393 1.745 6.2l.283.467-1.204 4.393 4.522-1.183.452.267A11.46 11.46 0 0016 27.5c6.351 0 11.5-5.149 11.5-11.5S22.351 4.5 16 4.5zm5.805 15.77c-.247.694-1.456 1.327-2.003 1.41-.512.076-1.16.108-1.87-.118a17.1 17.1 0 01-1.695-.626c-2.98-1.286-4.926-4.28-5.074-4.48-.147-.198-1.196-1.59-1.196-3.033 0-1.443.757-2.154 1.025-2.449.267-.296.582-.37.776-.37h.554c.178 0 .42-.067.657.5.247.593.84 2.05.914 2.2.074.149.124.323.025.52-.1.198-.149.32-.297.494-.147.173-.31.387-.443.52-.148.148-.302.309-.13.605.172.296.765 1.263 1.642 2.045 1.128 1.005 2.08 1.317 2.376 1.465.297.148.47.124.643-.074.173-.198.74-.864.937-1.16.198-.297.395-.247.666-.148.272.1 1.727.815 2.023.963.297.148.494.222.568.346.074.123.074.716-.173 1.41z" fill="#25D366"/>
+  </svg>
+</a>
+
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  if (sessionId) {
+    document.getElementById('sessionId').textContent = sessionId;
+    document.getElementById('sessionWrap').style.display = 'block';
+  }
+
+  const name = sessionStorage.getItem('mapeia_lead_name');
+  if (name) {
+    const first = name.trim().split(' ')[0];
+    if (first) document.getElementById('firstName').textContent = first;
+  }
+})();
+</script>
+
+</body>
+</html>
