@@ -241,8 +241,27 @@ nav {
 }
 
 .hero-actions {
-  display: flex; align-items: center; justify-content: center;
-  gap: 14px; flex-wrap: wrap; margin-bottom: 72px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; margin-bottom: 72px;
+}
+
+.hero-text-link {
+  font-size: 15px;
+  color: var(--soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  transition: color 0.2s;
+}
+.hero-text-link:hover { color: var(--fg); }
+
+@media(max-width:600px) {
+  .hero-actions .btn-primary { width: 100%; justify-content: center; }
+  .hero-text-link { text-align: center; }
 }
 
 .btn-primary {
@@ -862,9 +881,7 @@ footer {
       <a href="/diagnostico.html" class="btn-primary" data-source="hero_cta" style="text-decoration:none;" data-i18n="hero-cta-primary">
         Iniciar Diagnóstico Gratuito &rarr;
       </a>
-      <a href="#demo" class="btn-secondary" data-i18n="hero-cta-secondary">
-        &#9654; Ver como funciona
-      </a>
+      <a href="#como-funciona" class="hero-text-link" data-i18n="hero-cta-secondary">ou veja como funciona</a>
     </div>
 
     <div class="hero-stats reveal reveal-delay-3">
@@ -1948,7 +1965,7 @@ const translations = {
     'hero-title': 'Descubra em 5 minutos onde sua empresa<br><em>perde tempo e oportunidades</em><br>por falta de automação',
     'hero-subtitle': 'Responda o questionário e receba um diagnóstico personalizado com seu nível de maturidade, quick wins e um plano de ação para os próximos 90 dias.',
     'hero-cta-primary': 'Iniciar Diagnóstico Gratuito &rarr;',
-    'hero-cta-secondary': '&#9654; Ver como funciona',
+    'hero-cta-secondary': 'ou veja como funciona',
     'stat-blocks': 'Blocos de análise',
     'stat-questions': 'Perguntas estruturadas',
     'stat-areas': 'Áreas diagnosticadas',
@@ -2158,7 +2175,7 @@ const translations = {
     'hero-title': 'Discover in 5 minutes where your company<br><em>wastes time and opportunities</em><br>due to lack of automation',
     'hero-subtitle': 'Answer the questionnaire and receive a personalized diagnostic with your maturity level, quick wins and an action plan for the next 90 days.',
     'hero-cta-primary': 'Start Free Diagnostic &rarr;',
-    'hero-cta-secondary': '&#9654; See how it works',
+    'hero-cta-secondary': 'or see how it works',
     'stat-blocks': 'Analysis blocks',
     'stat-questions': 'Structured questions',
     'stat-areas': 'Areas diagnosed',
@@ -2368,7 +2385,7 @@ const translations = {
     'hero-title': 'Descubre en 5 minutos dónde tu empresa<br><em>pierde tiempo y oportunidades</em><br>por falta de automatización',
     'hero-subtitle': 'Responde el cuestionario y recibe un diagnóstico personalizado con tu nivel de madurez, victorias rápidas y un plan de acción para los próximos 90 días.',
     'hero-cta-primary': 'Iniciar Diagnóstico Gratuito &rarr;',
-    'hero-cta-secondary': '&#9654; Ver cómo funciona',
+    'hero-cta-secondary': 'o vea cómo funciona',
     'stat-blocks': 'Bloques de análisis',
     'stat-questions': 'Preguntas estructuradas',
     'stat-areas': 'Áreas diagnosticadas',
