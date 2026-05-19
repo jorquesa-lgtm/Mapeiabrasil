@@ -891,6 +891,7 @@ footer {
       <li><a href="#o-que-voce-recebe" data-i18n-text="o-que-voce-recebe">O que você recebe</a></li>
       <li><a href="#ferramenta" data-i18n-text="a-ferramenta">A ferramenta</a></li>
       <li><a href="#planos" data-i18n-text="planos">Planos</a></li>
+      <li><a href="#exemplo-relatorio">Ver exemplo</a></li>
       <li><a href="#faq" data-i18n-text="faq">FAQ</a></li>
       <li><a href="#contato" data-i18n-text="contato">Contato</a></li>
       <li><a href="#planos" class="nav-cta" data-i18n-text="iniciar-diagnostico">Iniciar diagnóstico</a></li>
@@ -1501,6 +1502,385 @@ footer {
 
   </div>
 </section>
+
+<style>
+/* REPORT PREVIEW SECTION */
+.rp-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+}
+.rp-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+  padding: clamp(24px,3.5vw,40px);
+  border-bottom: 1px solid var(--border);
+  background: var(--subtle);
+}
+.rp-header-left { flex: 1; min-width: 200px; }
+.rp-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 6px;
+}
+.rp-company {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(18px, 2.5vw, 24px);
+  color: var(--text); margin-bottom: 8px; line-height: 1.25;
+}
+.rp-meta {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+}
+.rp-meta-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--soft);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; padding: 3px 10px;
+}
+.rp-score-ring {
+  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.rp-ring-wrap {
+  position: relative; width: 90px; height: 90px;
+}
+.rp-ring-wrap svg { position: absolute; top: 0; left: 0; }
+.rp-ring-inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  line-height: 1;
+}
+.rp-ring-score {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 26px; color: var(--gold); font-weight: 400;
+}
+.rp-ring-total { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.rp-level-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  padding: 4px 12px; border-radius: 100px;
+  background: rgba(139,105,20,.1); color: var(--gold);
+  white-space: nowrap;
+}
+
+/* RADAR BARS */
+.rp-radar {
+  padding: clamp(20px,3vw,36px);
+  border-bottom: 1px solid var(--border);
+}
+.rp-radar-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 18px;
+}
+.rp-bars { display: flex; flex-direction: column; gap: 10px; }
+.rp-bar-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 36px;
+  align-items: center; gap: 12px;
+}
+@media (max-width: 600px) {
+  .rp-bar-row { grid-template-columns: 140px 1fr 32px; gap: 8px; }
+}
+.rp-bar-label {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; color: var(--soft); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.rp-bar-label svg { flex-shrink: 0; }
+.rp-bar-track {
+  height: 7px; background: var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.rp-bar-fill {
+  height: 100%; border-radius: 10px;
+  transition: width .6s ease;
+}
+.rp-bar-fill.green { background: var(--green); }
+.rp-bar-fill.amber { background: var(--gold2); }
+.rp-bar-fill.red   { background: var(--red); }
+.rp-bar-pct {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  text-align: right;
+}
+
+/* QUICK WINS */
+.rp-qw {
+  padding: clamp(20px,3vw,36px);
+  border-bottom: 1px solid var(--border);
+}
+.rp-qw-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 18px;
+}
+.rp-qw-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 700px) { .rp-qw-grid { grid-template-columns: 1fr; } }
+.rp-qw-card {
+  background: var(--subtle); border: 1px solid var(--border);
+  border-radius: var(--r2); padding: 16px;
+}
+.rp-qw-priority {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; border-radius: 100px;
+  padding: 2px 8px; margin-bottom: 10px;
+}
+.rp-qw-priority.high {
+  background: rgba(220,38,38,.08); color: #dc2626;
+}
+.rp-qw-priority.med {
+  background: rgba(139,105,20,.1); color: var(--gold);
+}
+.rp-qw-action {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--text);
+  line-height: 1.4; margin-bottom: 10px;
+}
+.rp-qw-meta { display: flex; flex-direction: column; gap: 4px; }
+.rp-qw-row {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--muted);
+}
+.rp-qw-row svg { flex-shrink: 0; color: var(--soft); }
+
+/* BLUR OVERLAY */
+.rp-blur-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 42%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(var(--surface-rgb, 255,255,255), 0.92) 45%, var(--surface) 100%);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  padding: 28px 24px 36px;
+  text-align: center;
+  pointer-events: none;
+}
+.rp-blur-text {
+  font-size: 14px; color: var(--soft); line-height: 1.65;
+  max-width: 520px; margin-bottom: 20px;
+}
+.rp-blur-cta {
+  pointer-events: all;
+  display: inline-flex; align-items: center;
+  background: var(--accent); color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700;
+  padding: 13px 26px; border-radius: var(--r3);
+  text-decoration: none; transition: opacity .2s, transform .2s;
+  box-shadow: 0 8px 24px rgba(13,122,95,.25);
+}
+.rp-blur-cta:hover { opacity: .9; transform: translateY(-1px); }
+</style>
+
+<section class="section" id="exemplo-relatorio" style="position:relative;z-index:1;background:var(--subtle);">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-tag">Exemplo de relatório</div>
+      <h2>Veja como é o relatório Premium</h2>
+      <p>Um exemplo real &mdash; gerado para uma empresa fictícia do setor de saúde.</p>
+    </div>
+
+    <div class="rp-card reveal">
+
+      <!-- 1. REPORT HEADER -->
+      <div class="rp-header">
+        <div class="rp-header-left">
+          <div class="rp-label">Relatório de Maturidade Digital</div>
+          <div class="rp-company">Clínica Integrada Exemplo Ltda</div>
+          <div class="rp-meta">
+            <span class="rp-meta-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
+              Saúde
+            </span>
+            <span class="rp-meta-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              11–50 funcionários
+            </span>
+            <span class="rp-meta-pill" id="rp-date-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span id="rp-date-text">Mai 2026</span>
+            </span>
+          </div>
+        </div>
+        <div class="rp-score-ring">
+          <div class="rp-ring-wrap">
+            <svg width="90" height="90" viewBox="0 0 90 90">
+              <circle fill="none" stroke="var(--line)" stroke-width="7" cx="45" cy="45" r="38"/>
+              <circle fill="none" stroke="var(--gold2)" stroke-width="7" cx="45" cy="45" r="38"
+                stroke-dasharray="238.8" stroke-dashoffset="78.8"
+                stroke-linecap="round" transform="rotate(-90 45 45)"/>
+            </svg>
+            <div class="rp-ring-inner">
+              <span class="rp-ring-score">67</span>
+              <span class="rp-ring-total">/ 100</span>
+            </div>
+          </div>
+          <span class="rp-level-tag">Nível 3 &mdash; Em Transição</span>
+        </div>
+      </div>
+
+      <!-- 2. RADAR BARS -->
+      <div class="rp-radar">
+        <div class="rp-radar-title">Radar por Área</div>
+        <div class="rp-bars">
+          <div class="rp-bar-row">
+            <span class="rp-bar-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              Infraestrutura
+            </span>
+            <div class="rp-bar-track"><div class="rp-bar-fill green" style="width:78%"></div></div>
+            <span class="rp-bar-pct">78%</span>
+          </div>
+          <div class="rp-bar-row">
+            <span class="rp-bar-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M12 2v2"/><path d="M12 22v-2"/></svg>
+              Processos Internos
+            </span>
+            <div class="rp-bar-track"><div class="rp-bar-fill amber" style="width:52%"></div></div>
+            <span class="rp-bar-pct">52%</span>
+          </div>
+          <div class="rp-bar-row">
+            <span class="rp-bar-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+              IA &amp; Automação
+            </span>
+            <div class="rp-bar-track"><div class="rp-bar-fill red" style="width:30%"></div></div>
+            <span class="rp-bar-pct">30%</span>
+          </div>
+          <div class="rp-bar-row">
+            <span class="rp-bar-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              Dados &amp; Inteligência
+            </span>
+            <div class="rp-bar-track"><div class="rp-bar-fill red" style="width:22%"></div></div>
+            <span class="rp-bar-pct">22%</span>
+          </div>
+          <div class="rp-bar-row">
+            <span class="rp-bar-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Financeiro
+            </span>
+            <div class="rp-bar-track"><div class="rp-bar-fill green" style="width:75%"></div></div>
+            <span class="rp-bar-pct">75%</span>
+          </div>
+          <div class="rp-bar-row">
+            <span class="rp-bar-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-1"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>
+              Vendas &amp; Conversão
+            </span>
+            <div class="rp-bar-track"><div class="rp-bar-fill amber" style="width:48%"></div></div>
+            <span class="rp-bar-pct">48%</span>
+          </div>
+          <div class="rp-bar-row">
+            <span class="rp-bar-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Atendimento
+            </span>
+            <div class="rp-bar-track"><div class="rp-bar-fill red" style="width:25%"></div></div>
+            <span class="rp-bar-pct">25%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. QUICK WINS -->
+      <div class="rp-qw">
+        <div class="rp-qw-title">Top 3 Quick Wins</div>
+        <div class="rp-qw-grid">
+
+          <div class="rp-qw-card">
+            <div class="rp-qw-priority high">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Prioridade Alta
+            </div>
+            <div class="rp-qw-action">Implementar CRM com follow-up automático</div>
+            <div class="rp-qw-meta">
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                HubSpot Free + Make
+              </div>
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Prazo: 30 dias
+              </div>
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Custo: Gratuito
+              </div>
+            </div>
+          </div>
+
+          <div class="rp-qw-card">
+            <div class="rp-qw-priority high">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Prioridade Alta
+            </div>
+            <div class="rp-qw-action">Chatbot no WhatsApp para triagem de pacientes</div>
+            <div class="rp-qw-meta">
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Typebot
+              </div>
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Prazo: 15 dias
+              </div>
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Custo: Gratuito
+              </div>
+            </div>
+          </div>
+
+          <div class="rp-qw-card">
+            <div class="rp-qw-priority med">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Prioridade Média
+            </div>
+            <div class="rp-qw-action">Dashboard de KPIs operacionais</div>
+            <div class="rp-qw-meta">
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Looker Studio
+              </div>
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Prazo: 45 dias
+              </div>
+              <div class="rp-qw-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Custo: Gratuito
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 4. BLUR OVERLAY (covers bottom 40%) -->
+      <div class="rp-blur-overlay">
+        <p class="rp-blur-text">O relatório completo inclui plano 30/60/90 dias, auditoria de processo crítico, benchmark do setor e PDF exportável.</p>
+        <a href="#planos" class="rp-blur-cta">Obter meu diagnóstico Premium &rarr;</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  var d = new Date();
+  var el = document.getElementById('rp-date-text');
+  if (el) el.textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+})();
+</script>
 
 <section class="section" id="faq" style="position:relative;z-index:1;background:var(--subtle);">
   <div class="container">
