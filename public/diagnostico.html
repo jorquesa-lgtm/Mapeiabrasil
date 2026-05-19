@@ -263,6 +263,56 @@
   .screen{display:none;}
   .screen.on{display:block;}
 
+  /* Email capture inline step */
+  .email-capture-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:560px;margin:0 auto;box-shadow:var(--shadow-lg);}
+  .ec-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--accentSoft);color:var(--accent);padding:6px 14px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;border:1px solid rgba(0,119,204,.12);}
+  .ec-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+  .ec-title{font-family:'Instrument Serif',serif;font-size:26px;color:var(--heading);line-height:1.2;margin-bottom:8px;font-weight:400;}
+  .ec-sub{font-size:15px;color:var(--secondary);margin-bottom:28px;line-height:1.55;}
+  .ec-progress{font-size:12px;color:var(--muted);margin-bottom:20px;padding:10px 14px;background:var(--subtle);border-radius:8px;border:1px solid var(--border);}
+  .ec-progress strong{color:var(--accent);}
+  .ec-form{display:flex;flex-direction:column;gap:14px;}
+  .ec-input-wrap{position:relative;}
+  .ec-input-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted);}
+  .ec-input{width:100%;background:var(--subtle);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px 14px 42px;color:var(--text);font-size:15px;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
+  .ec-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,119,204,.1);}
+  .ec-input::placeholder{color:var(--muted);}
+  .ec-input.err{border-color:var(--red);}
+  .ec-err{font-size:13px;color:var(--red);min-height:18px;margin-top:-6px;}
+  .ec-btn{background:var(--accent);color:#fff;border:none;padding:16px;font-size:15px;font-weight:700;border-radius:980px;cursor:pointer;box-shadow:var(--shadow-md);transition:transform .2s var(--ease-spring),box-shadow .2s var(--ease-spring),background .2s,opacity .2s;margin-top:4px;}
+  .ec-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:var(--shadow-lg);background:#005fa3;}
+  .ec-btn:disabled{opacity:.5;cursor:wait;}
+  .ec-back{background:none;border:none;color:var(--secondary);font-size:13px;cursor:pointer;padding:8px 0;text-decoration:underline;text-underline-offset:3px;margin-top:2px;}
+  .ec-back:hover{color:var(--heading);}
+  .ec-lgpd{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .ec-lgpd svg{color:var(--muted);}
+
+  /* Final step (after Q18) */
+  .final-step-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:560px;margin:0 auto;box-shadow:var(--shadow-lg);}
+  .fs-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(10,138,122,.06);color:var(--teal);padding:6px 14px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;border:1px solid rgba(10,138,122,.15);}
+  .fs-title{font-family:'Instrument Serif',serif;font-size:26px;color:var(--heading);line-height:1.2;margin-bottom:8px;font-weight:400;}
+  .fs-sub{font-size:15px;color:var(--secondary);margin-bottom:28px;line-height:1.55;}
+  .fs-form{display:flex;flex-direction:column;gap:14px;}
+  .fs-field-label{font-size:12px;font-weight:600;color:var(--secondary);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px;}
+  .fs-optional{font-size:11px;color:var(--muted);font-weight:400;margin-left:6px;}
+  .fs-input-wrap{position:relative;}
+  .fs-input-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted);}
+  .fs-input{width:100%;background:var(--subtle);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px 14px 42px;color:var(--text);font-size:15px;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
+  .fs-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,119,204,.1);}
+  .fs-input::placeholder{color:var(--muted);}
+  .fs-website-wrap{position:relative;}
+  .fs-website-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted);}
+  .fs-website{width:100%;background:var(--subtle);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px 14px 42px;color:var(--text);font-size:15px;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
+  .fs-website:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,119,204,.1);}
+  .fs-website::placeholder{color:var(--muted);}
+  .fs-website-hint{font-size:11px;color:var(--teal);margin-top:5px;margin-left:2px;display:flex;align-items:center;gap:5px;opacity:.85;}
+  .fs-btn{background:var(--accent);color:#fff;border:none;padding:16px;font-size:15px;font-weight:700;border-radius:980px;cursor:pointer;box-shadow:var(--shadow-md);transition:transform .2s var(--ease-spring),box-shadow .2s var(--ease-spring),background .2s,opacity .2s;margin-top:4px;}
+  .fs-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:var(--shadow-lg);background:#005fa3;}
+  .fs-btn:disabled{opacity:.5;cursor:wait;}
+  .fs-skip{display:block;text-align:center;font-size:13px;color:var(--secondary);cursor:pointer;margin-top:12px;text-decoration:underline;text-underline-offset:3px;background:none;border:none;padding:4px 0;}
+  .fs-skip:hover{color:var(--heading);}
+  .fs-fine{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;}
+
   @media (max-width:1024px) and (min-width:641px){
     .shell{padding:40px 24px 60px;}
     .qcard{padding:32px 28px;}
@@ -396,6 +446,73 @@
         <div class="lstep"><div class="ldot"></div> Identificando gaps críticos no seu setor</div>
         <div class="lstep"><div class="ldot"></div> Selecionando o quick win de maior impacto</div>
         <div class="lstep"><div class="ldot"></div> Montando seu relatório personalizado</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL CAPTURE (inline, after Q4) -->
+  <section class="screen" id="screenEmailCapture">
+    <div class="email-capture-card">
+      <div class="ec-eyebrow"><span class="dot"></span> Progresso salvo</div>
+      <h2 class="ec-title">Para salvar seu progresso e enviar o resultado, qual seu e-mail?</h2>
+      <p class="ec-sub">Você está na metade do caminho. Informe seu e-mail para continuar — o resultado chegará diretamente para você.</p>
+      <div class="ec-progress">Respondidas: <strong id="ecProgressNum">4</strong> de 18 perguntas. Faltam apenas <strong id="ecProgressLeft">14</strong>.</div>
+      <div class="ec-form">
+        <div>
+          <div class="ec-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input class="ec-input" type="email" id="ecEmail" placeholder="seu@email.com" maxlength="319" autocomplete="email" inputmode="email">
+          </div>
+          <div class="ec-err" id="ecErr"></div>
+        </div>
+        <button type="button" class="ec-btn" id="ecContinue">Continuar &rarr;</button>
+        <button type="button" class="ec-back" id="ecBack">&larr; Voltar para as perguntas</button>
+        <div class="ec-lgpd">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Levamos sua privacidade a sério. LGPD.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL STEP (after Q18 — optional WhatsApp + company) -->
+  <section class="screen" id="screenFinalStep">
+    <div class="final-step-card">
+      <div class="fs-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Diagnóstico concluído
+      </div>
+      <h2 class="fs-title">Quase lá! Mais dois dados para personalizar seu resultado.</h2>
+      <p class="fs-sub">Opcional — mas ajuda a deixar o diagnóstico ainda mais preciso para a sua realidade.</p>
+      <div class="fs-form">
+        <div>
+          <div class="fs-field-label">WhatsApp <span class="fs-optional">(opcional)</span></div>
+          <div class="fs-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <input class="fs-input" type="tel" id="fsWpp" placeholder="+55 11 9XXXX-XXXX" maxlength="39" inputmode="tel">
+          </div>
+        </div>
+        <div>
+          <div class="fs-field-label">Empresa <span class="fs-optional">(opcional)</span></div>
+          <div class="fs-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <input class="fs-input" type="text" id="fsCompany" placeholder="Nome da sua empresa" maxlength="200">
+          </div>
+        </div>
+        <div>
+          <div class="fs-field-label">Site da empresa <span class="fs-optional">(opcional)</span></div>
+          <div class="fs-website-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <input class="fs-website" type="url" id="fsWebsite" placeholder="suaempresa.com.br" maxlength="500" autocomplete="url">
+          </div>
+          <div class="fs-website-hint">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Analisamos sua empresa com IA para personalizar ainda mais o diagnóstico
+          </div>
+        </div>
+        <button type="button" class="fs-btn" id="fsSubmit">Ver meu diagnóstico &rarr;</button>
+        <button type="button" class="fs-skip" id="fsSkip">Pular e ver resultado</button>
+        <div class="fs-fine">Seus dados estão seguros e em conformidade com a LGPD.</div>
       </div>
     </div>
   </section>
@@ -1045,13 +1162,15 @@ const state = {
   leadId: null,
   diagId: null,
   aiData: null,      // response from generate-diagnostic
-  websiteUrl: '',    // company website entered in gate form
+  websiteUrl: '',    // company website entered in final step
   companyIntel: null,// response from scrape-company
-  companyName: '',   // company name entered in gate form
+  companyName: '',   // company name entered in final step
   isPremium: false,  // true when user is in premium deep-dive flow
   stripeSessionId: null, // Stripe Checkout session id (set on return from Stripe)
   accessCode: null,  // Friends & family bypass code (alternative to stripeSessionId)
   premiumVerified: false, // true only after server-side Stripe verification
+  capturedEmail: '',  // captured at inline email step (after Q4)
+  emailCaptured: false, // true once email step was passed
 };
 
 // Detect if user is returning from Stripe after purchasing premium.
@@ -1120,19 +1239,70 @@ function prunePremiumQuestions(){
 let ACTIVE_QUESTIONS = buildActiveQuestions();
 
 // ---------------------------------------------------------------------------
+// localStorage persistence
+// ---------------------------------------------------------------------------
+const LS_KEY = 'mapeia_quiz_state';
+
+function saveProgress(){
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      idx: state.idx,
+      answers: state.answers,
+      answerLabels: state.answerLabels,
+      isPremium: state.isPremium,
+      capturedEmail: state.capturedEmail || '',
+    }));
+  } catch(e){}
+}
+
+function loadProgress(){
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    if (!saved || typeof saved.idx !== 'number') return false;
+    state.answers = saved.answers || {};
+    state.answerLabels = saved.answerLabels || {};
+    state.isPremium = saved.isPremium || state.isPremium;
+    state.capturedEmail = saved.capturedEmail || '';
+    state.idx = saved.idx;
+    return true;
+  } catch(e){ return false; }
+}
+
+function clearProgress(){
+  try { localStorage.removeItem(LS_KEY); } catch(e){}
+}
+
+// ---------------------------------------------------------------------------
 // Screen management
 // ---------------------------------------------------------------------------
 const screens = {
-  intro:  document.getElementById('screenIntro'),
-  quiz:   document.getElementById('screenQuiz'),
-  load:   document.getElementById('screenLoad'),
-  gate:   document.getElementById('screenGate'),
-  result: document.getElementById('screenResult'),
+  intro:        document.getElementById('screenIntro'),
+  quiz:         document.getElementById('screenQuiz'),
+  emailCapture: document.getElementById('screenEmailCapture'),
+  finalStep:    document.getElementById('screenFinalStep'),
+  load:         document.getElementById('screenLoad'),
+  gate:         document.getElementById('screenGate'),
+  result:       document.getElementById('screenResult'),
 };
 function showScreen(name){
   Object.values(screens).forEach(s => s.classList.remove('on'));
   screens[name].classList.add('on');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  // On mobile: delay scroll so keyboard doesn't cover inputs
+  if (name === 'emailCapture') {
+    setTimeout(() => {
+      const inp = document.getElementById('ecEmail');
+      if (inp && window.innerWidth < 768) inp.focus();
+    }, 400);
+  }
+  if (name === 'finalStep') {
+    setTimeout(() => {
+      const inp = document.getElementById('fsWpp');
+      if (inp && window.innerWidth < 768) inp.focus();
+    }, 400);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -1195,6 +1365,7 @@ function renderQuestion(){
       [...qOpts.children].forEach(c => c.classList.remove('sel'));
       el.classList.add('sel');
       fwdBtn.disabled = false;
+      saveProgress();
     });
     qOpts.appendChild(el);
   });
@@ -1208,25 +1379,38 @@ function renderQuestion(){
 }
 
 backBtn.addEventListener('click', () => {
-  if (state.idx > 0){ state.idx--; renderQuestion(); }
+  if (state.idx > 0){ state.idx--; saveProgress(); renderQuestion(); }
 });
 fwdBtn.addEventListener('click', () => {
   if (state.answers[ACTIVE_QUESTIONS[state.idx].id] === undefined) return;
-  const baseCount = QUESTIONS.filter(q => !q.premiumOnly).length;
+
+  const baseQuestions = QUESTIONS.filter(q => !q.premiumOnly);
+  const baseCount = baseQuestions.length;
+
+  // After Q4 (idx 3 in base = 4th answered question), show email capture
+  // Only intercept once, and only for the free flow
+  const EMAIL_GATE_IDX = 3; // 0-indexed, so this is after the 4th question answered
+  if (!state.emailCaptured && state.idx === EMAIL_GATE_IDX) {
+    state.idx++; // advance so coming back resumes at Q5
+    saveProgress();
+    showEmailCapture();
+    return;
+  }
+
   // When leaving last base question, prune premium questions by triggers
   if (state.isPremium && state.idx === baseCount - 1) {
     prunePremiumQuestions();
-    // If no premium questions triggered, finish immediately
     if (ACTIVE_QUESTIONS.length === baseCount) {
-      finishQuiz();
+      showFinalStep();
       return;
     }
   }
   if (state.idx < ACTIVE_QUESTIONS.length - 1){
     state.idx++;
+    saveProgress();
     renderQuestion();
   } else {
-    finishQuiz();
+    showFinalStep();
   }
 });
 
@@ -1234,10 +1418,277 @@ function startQuiz(premium = false){
   state.isPremium = premium;
   ACTIVE_QUESTIONS = buildActiveQuestions();
   rebuildDots();
-  state.idx = 0;
+
+  // Attempt to restore saved progress
+  const restored = loadProgress();
+  if (restored && Object.keys(state.answers).length > 0) {
+    // Clamp idx to valid range
+    state.idx = Math.min(state.idx, ACTIVE_QUESTIONS.length - 1);
+    if (state.idx < 0) state.idx = 0;
+    // If email was already captured in a previous session, skip the gate
+    if (state.capturedEmail) state.emailCaptured = true;
+  } else {
+    state.idx = 0;
+  }
   renderQuestion();
   showScreen('quiz');
 }
+
+// ---------------------------------------------------------------------------
+// Email capture screen logic
+// ---------------------------------------------------------------------------
+function showEmailCapture(){
+  const answered = Object.keys(state.answers).length;
+  const total = QUESTIONS.filter(q => !q.premiumOnly).length;
+  const left = total - Math.min(answered, total);
+  document.getElementById('ecProgressNum').textContent = Math.min(answered, total);
+  document.getElementById('ecProgressLeft').textContent = left;
+  // Pre-fill if we already have an email
+  if (state.capturedEmail) {
+    document.getElementById('ecEmail').value = state.capturedEmail;
+  }
+  showScreen('emailCapture');
+}
+
+document.getElementById('ecContinue').addEventListener('click', () => {
+  const emailInput = document.getElementById('ecEmail');
+  const errEl = document.getElementById('ecErr');
+  const email = emailInput.value.trim();
+  errEl.textContent = '';
+  emailInput.classList.remove('err');
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailInput.classList.add('err');
+    errEl.textContent = 'Informe um e-mail válido para continuar.';
+    emailInput.focus();
+    return;
+  }
+
+  state.capturedEmail = email;
+  state.emailCaptured = true;
+  saveProgress();
+
+  // Fire conversion event — this is when the user becomes a real lead
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'conversion', { 'send_to': 'AW-18172305016' });
+  }
+
+  // Save email to sessionStorage for later use in final step
+  sessionStorage.setItem('mapeia_lead_email', email.toLowerCase());
+
+  // Capture lead immediately with just email (non-blocking)
+  fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      apikey: SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({
+      email,
+      source: 'diagnostic_email_gate',
+      plan_interest: state.isPremium ? 'premium' : 'free',
+    }),
+  }).then(r => r.json()).then(d => {
+    if (d && d.lead_id) state.leadId = d.lead_id;
+  }).catch(() => {});
+
+  // Continue to next question (idx was already incremented before showing email capture)
+  renderQuestion();
+  showScreen('quiz');
+});
+
+document.getElementById('ecBack').addEventListener('click', () => {
+  // Go back to the last answered question
+  state.idx = Math.max(0, state.idx - 1);
+  renderQuestion();
+  showScreen('quiz');
+});
+
+// ---------------------------------------------------------------------------
+// Final step screen logic (after Q18)
+// ---------------------------------------------------------------------------
+function showFinalStep(){
+  computeScores();
+  showScreen('finalStep');
+}
+
+async function submitFinalStep(skip){
+  const whatsapp = skip ? '' : (document.getElementById('fsWpp').value.trim());
+  const company  = skip ? '' : (document.getElementById('fsCompany').value.trim());
+  const websiteRaw = skip ? '' : (document.getElementById('fsWebsite').value.trim());
+
+  let website = '';
+  if (websiteRaw) {
+    website = websiteRaw.startsWith('http://') || websiteRaw.startsWith('https://')
+      ? websiteRaw
+      : 'https://' + websiteRaw;
+  }
+
+  state.companyName = company;
+  state.websiteUrl = website;
+
+  const btn = document.getElementById('fsSubmit');
+  const skipBtn = document.getElementById('fsSkip');
+  btn.disabled = true;
+  skipBtn.disabled = true;
+  btn.textContent = website ? 'Analisando sua empresa...' : 'Gerando seu diagnóstico...';
+
+  if (company) sessionStorage.setItem('mapeia_lead_company', company);
+  if (website) sessionStorage.setItem('mapeia_lead_website', website);
+
+  // Show loading screen
+  showScreen('load');
+  const steps = document.querySelectorAll('#lsteps .lstep');
+  steps.forEach(s => s.classList.remove('on', 'done'));
+  const lstepSite = document.getElementById('lstepSite');
+  if (lstepSite) lstepSite.style.display = website ? '' : 'none';
+
+  const visibleSteps = [...steps].filter(s => s.style.display !== 'none');
+  let stepIdx = 0;
+  visibleSteps[0].classList.add('on');
+
+  // Start AI call (and optionally scrape) in parallel
+  let scrapePromise = website ? callScrape(website) : Promise.resolve(null);
+  let aiStarted = false;
+  let aiPromise;
+
+  const advanceStep = () => {
+    visibleSteps[stepIdx].classList.remove('on');
+    visibleSteps[stepIdx].classList.add('done');
+    stepIdx++;
+    if (stepIdx < visibleSteps.length) visibleSteps[stepIdx].classList.add('on');
+  };
+
+  const tick = setInterval(async () => {
+    // On first site step completion, kick off scrape result
+    if (stepIdx === 0 && website) {
+      advanceStep();
+    } else if (!aiStarted) {
+      aiStarted = true;
+      advanceStep();
+      // Wait for scrape, then run AI
+      const intel = await scrapePromise;
+      state.companyIntel = intel;
+      if (lstepSite && intel) {
+        // mark site step done if visible
+      }
+      aiPromise = callAI();
+    } else {
+      advanceStep();
+    }
+
+    if (stepIdx >= visibleSteps.length) {
+      clearInterval(tick);
+      if (!aiPromise) aiPromise = callAI();
+      const data = await aiPromise;
+      state.aiData = data;
+      await saveFullDiagnostic(whatsapp, company);
+    }
+  }, 900);
+}
+
+async function saveFullDiagnostic(whatsapp, company){
+  const email = state.capturedEmail || sessionStorage.getItem('mapeia_lead_email') || '';
+
+  // Update lead with extra info if available
+  if (state.leadId && (whatsapp || company)) {
+    fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({
+        email,
+        whatsapp: whatsapp || '',
+        company: company || '',
+        source: 'diagnostic_final_step',
+        plan_interest: state.isPremium ? 'premium' : 'free',
+      }),
+    }).catch(() => {});
+  }
+
+  // Save diagnostic
+  try {
+    const planTier = state.isPremium ? 'premium' : 'free';
+    const { data: diag } = await supabase
+      .from('diagnostic_responses')
+      .insert({
+        lead_id: state.leadId,
+        email: email.toLowerCase(),
+        sector: state.answers.sector || '',
+        company_size: state.answers.role || '',
+        revenue: state.answers.stage || '',
+        budget: '',
+        answers: state.answers,
+        area_scores: state.areaScores,
+        global_score: state.globalScore,
+        maturity_level: state.level.num,
+        plan_tier: planTier,
+        unlocked: false,
+        stripe_session_id: state.stripeSessionId || null,
+        website_url: state.websiteUrl || '',
+        company_intel: state.companyIntel || {},
+        ai_data: state.aiData || {},
+      })
+      .select('id')
+      .maybeSingle();
+    state.diagId = diag?.id || null;
+    sessionStorage.setItem('mapeia_diag_meta', JSON.stringify({
+      diag_id: diag?.id || null,
+      sector: state.answers.sector || '',
+      global_score: state.globalScore,
+      maturity_level: state.level.num,
+      area_scores: state.areaScores,
+      answers: state.answers,
+      answerLabels: state.answerLabels,
+    }));
+  } catch (err) { console.error('diag insert failed', err); }
+
+  if (state.aiData) sessionStorage.setItem('mapeia_diag_result', JSON.stringify(state.aiData));
+  if (state.companyIntel) sessionStorage.setItem('mapeia_company_intel', JSON.stringify(state.companyIntel));
+
+  // Premium verification
+  if (state.isPremium && (state.stripeSessionId || state.accessCode)) {
+    try {
+      const verifyRes = await fetch(`${SUPABASE_URL}/functions/v1/verify-premium`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          apikey: SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          session_id: state.stripeSessionId || undefined,
+          access_code: state.accessCode || undefined,
+          diag_id: state.diagId,
+        }),
+      });
+      const v = await verifyRes.json().catch(() => ({}));
+      state.premiumVerified = !!(v && v.ok && v.paid);
+    } catch (err) {
+      state.premiumVerified = false;
+    }
+    if (!state.premiumVerified) state.isPremium = false;
+  } else if (state.isPremium && !state.stripeSessionId && !state.accessCode) {
+    state.isPremium = false;
+  }
+
+  if (state.premiumVerified) {
+    sessionStorage.removeItem('mapeia_is_premium');
+    sessionStorage.removeItem('mapeia_stripe_session_id');
+    sessionStorage.removeItem('mapeia_access_code');
+  }
+
+  clearProgress(); // quiz is done — clear saved state
+  renderResult();
+  showScreen('result');
+}
+
+document.getElementById('fsSubmit').addEventListener('click', () => submitFinalStep(false));
+document.getElementById('fsSkip').addEventListener('click', () => submitFinalStep(true));
 
 // Free flow
 document.getElementById('startBtn').addEventListener('click', () => {
@@ -1467,97 +1918,6 @@ async function callAI(){
   return null;
 }
 
-// ---------------------------------------------------------------------------
-// Loading animation + scrape + AI call in parallel, then gate
-// ---------------------------------------------------------------------------
-function finishQuiz(){
-  computeScores();
-  showScreen('load');
-
-  const steps = document.querySelectorAll('#lsteps .lstep');
-  steps.forEach(s => s.classList.remove('on', 'done'));
-
-  // Hide the site-research step if no website was entered yet
-  // (website is captured later in gate form — we'll scrape after gate submit)
-  const lstepSite = document.getElementById('lstepSite');
-  if (lstepSite) lstepSite.style.display = 'none';
-
-  const aiPromise = callAI();
-
-  let stepIdx = 0;
-  // Skip hidden steps when animating
-  const visibleSteps = [...steps].filter(s => s.style.display !== 'none');
-  visibleSteps[0].classList.add('on');
-
-  const tick = setInterval(() => {
-    visibleSteps[stepIdx].classList.remove('on');
-    visibleSteps[stepIdx].classList.add('done');
-    stepIdx++;
-    if (stepIdx >= visibleSteps.length){
-      clearInterval(tick);
-      aiPromise.then(data => {
-        state.aiData = data;
-        setTimeout(showGate, 400);
-      });
-    } else {
-      visibleSteps[stepIdx].classList.add('on');
-    }
-  }, 900);
-}
-
-// ---------------------------------------------------------------------------
-// Run scrape + regenerate AI after gate form (with website URL)
-// ---------------------------------------------------------------------------
-async function enrichWithWebsite(url){
-  if (!url) return;
-
-  // Show scrape step in loading screen briefly
-  const lstepSite = document.getElementById('lstepSite');
-  if (lstepSite) {
-    lstepSite.style.display = '';
-    lstepSite.classList.add('on');
-  }
-
-  const intel = await callScrape(url);
-  state.companyIntel = intel;
-
-  if (lstepSite) {
-    lstepSite.classList.remove('on');
-    lstepSite.classList.add('done');
-  }
-
-  // If we got intel, regenerate the AI report with richer context
-  if (intel) {
-    const richer = await callAI();
-    if (richer) state.aiData = richer;
-  }
-}
-
-function showGate(){
-  document.getElementById('gringNum').textContent = state.globalScore;
-  document.getElementById('gateLvl').textContent = `Nível ${state.level.num} - ${state.level.name}`;
-  document.getElementById('gateHl').textContent = state.aiData?.level_description || state.level.desc;
-  const stroke = document.getElementById('gringStroke');
-  const circ = 2 * Math.PI * 38;
-  stroke.setAttribute('stroke-dasharray', circ.toFixed(2));
-  requestAnimationFrame(() => {
-    stroke.style.strokeDashoffset = (circ * (1 - state.globalScore / 100)).toFixed(2);
-    stroke.setAttribute('stroke', levelColor(state.globalScore));
-  });
-  // Adapt gate copy for premium users
-  if (state.isPremium) {
-    const pre = document.querySelector('.gate-pre');
-    if (pre) pre.textContent = 'Diagnóstico Premium concluído';
-    const h3 = document.querySelector('.gate-h3');
-    if (h3) h3.textContent = 'Quase lá — confirme seus dados';
-    const psub = document.querySelector('.gate-psub');
-    if (psub) psub.textContent = 'Informe seus dados para receber o relatório Premium completo no e-mail.';
-    const gateBtn2 = document.getElementById('gateBtn');
-    if (gateBtn2) gateBtn2.textContent = 'Ver meu relatório Premium \u2192';
-  }
-  showScreen('gate');
-}
-
 function levelColor(score){
   if (score < 30) return 'var(--red)';
   if (score < 55) return 'var(--or)';
@@ -1572,177 +1932,6 @@ function areaColor(score){
   return 'var(--teal2)';
 }
 
-// ---------------------------------------------------------------------------
-// Gate form submit -> save lead + diagnostic -> show result
-// ---------------------------------------------------------------------------
-const gateForm = document.getElementById('gateForm');
-const gateErr  = document.getElementById('gateErr');
-const gateBtn  = document.getElementById('gateBtn');
-
-function showError(msg){ gateErr.textContent = msg; gateErr.classList.add('on'); }
-
-gateForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  gateErr.classList.remove('on');
-
-  const name    = document.getElementById('giName').value.trim();
-  const email   = document.getElementById('giEmail').value.trim();
-  const whatsapp= document.getElementById('giWpp').value.trim();
-  const company = document.getElementById('giCompany').value.trim();
-  const websiteRaw = document.getElementById('giWebsite').value.trim();
-
-  // Normalise website URL
-  let website = '';
-  if (websiteRaw) {
-    website = websiteRaw.startsWith('http://') || websiteRaw.startsWith('https://')
-      ? websiteRaw
-      : 'https://' + websiteRaw;
-  }
-  state.websiteUrl = website;
-
-  if (!name)    return showError('Por favor, informe seu nome.');
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Informe um e-mail válido.');
-  if (!company) return showError('Por favor, informe o nome da empresa.');
-
-  state.companyName = company;
-
-  gateBtn.disabled = true;
-  gateBtn.textContent = website ? 'Analisando sua empresa...' : 'Preparando seu diagnóstico...';
-
-  sessionStorage.setItem('mapeia_lead_name', name);
-  sessionStorage.setItem('mapeia_lead_email', email.toLowerCase());
-  sessionStorage.setItem('mapeia_lead_company', company);
-  if (website) sessionStorage.setItem('mapeia_lead_website', website);
-
-  // If website provided — scrape + re-run AI with context before saving
-  if (website) {
-    showScreen('load');
-    const lstepSite = document.getElementById('lstepSite');
-    const allSteps = document.querySelectorAll('#lsteps .lstep');
-    allSteps.forEach(s => { s.classList.remove('on','done'); s.style.display = ''; });
-    if (lstepSite) lstepSite.classList.add('on');
-
-    await enrichWithWebsite(website);
-    // Return to gate-like flow after enrichment
-    showScreen('gate');
-    gateBtn.disabled = true;
-    gateBtn.textContent = 'Salvando diagnóstico...';
-  }
-
-  let leadId = null;
-  try {
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        apikey: SUPABASE_ANON_KEY,
-      },
-      body: JSON.stringify({
-        name, email, whatsapp, company,
-        sector: state.answerLabels.sector || '',
-        source: 'diagnostic_gate',
-        plan_interest: state.isPremium ? 'premium' : 'free',
-      }),
-    });
-    const d = await resp.json().catch(() => ({}));
-    if (resp.ok && d.ok) leadId = d.lead_id || null;
-  } catch (err) { console.error('lead edge failed', err); }
-
-  try {
-    const planTier = state.isPremium ? 'premium' : 'free';
-    const { data: diag } = await supabase
-      .from('diagnostic_responses')
-      .insert({
-        lead_id: leadId,
-        email: email.toLowerCase(),
-        sector: state.answers.sector || '',
-        company_size: state.answers.role || '',
-        revenue: state.answers.stage || '',
-        budget: '',
-        answers: state.answers,
-        area_scores: state.areaScores,
-        global_score: state.globalScore,
-        maturity_level: state.level.num,
-        plan_tier: planTier,
-        // Never trust the client: unlock is set server-side by verify-premium
-        // (or by the stripe-webhook) after Stripe confirms payment.
-        unlocked: false,
-        stripe_session_id: state.stripeSessionId || null,
-        website_url: state.websiteUrl || '',
-        company_intel: state.companyIntel || {},
-        ai_data: state.aiData || {},
-      })
-      .select('id')
-      .maybeSingle();
-    state.diagId = diag?.id || null;
-    // Persist diagnostic meta for obrigado.html report trigger
-    sessionStorage.setItem('mapeia_diag_meta', JSON.stringify({
-      diag_id: diag?.id || null,
-      sector: state.answers.sector || '',
-      global_score: state.globalScore,
-      maturity_level: state.level.num,
-      area_scores: state.areaScores,
-      answers: state.answers,
-      answerLabels: state.answerLabels,
-    }));
-  } catch (err) { console.error('diag insert failed', err); }
-
-  // Persist AI result for obrigado.html
-  if (state.aiData) {
-    sessionStorage.setItem('mapeia_diag_result', JSON.stringify(state.aiData));
-  }
-  if (state.companyIntel) {
-    sessionStorage.setItem('mapeia_company_intel', JSON.stringify(state.companyIntel));
-  }
-
-  // For premium flows, verify payment server-side (Stripe API lookup).
-  // Only after the server confirms `paid` do we unlock the full report.
-  if (state.isPremium && (state.stripeSessionId || state.accessCode)) {
-    try {
-      const verifyRes = await fetch(`${SUPABASE_URL}/functions/v1/verify-premium`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          apikey: SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({
-          session_id: state.stripeSessionId || undefined,
-          access_code: state.accessCode || undefined,
-          diag_id: state.diagId,
-        }),
-      });
-      const v = await verifyRes.json().catch(() => ({}));
-      state.premiumVerified = !!(v && v.ok && v.paid);
-    } catch (err) {
-      console.error('verify-premium failed', err);
-      state.premiumVerified = false;
-    }
-    // If verification failed, downgrade this session to free so the user
-    // isn't shown premium content for free.
-    if (!state.premiumVerified) {
-      state.isPremium = false;
-    }
-  } else if (state.isPremium && !state.stripeSessionId && !state.accessCode) {
-    // Premium flag present but no credential to verify — treat as free.
-    state.isPremium = false;
-  }
-
-  // Premium session fulfilled — clear flags so a fresh visit doesn't re-trigger
-  if (state.premiumVerified) {
-    sessionStorage.removeItem('mapeia_is_premium');
-    sessionStorage.removeItem('mapeia_stripe_session_id');
-    sessionStorage.removeItem('mapeia_access_code');
-  }
-
-  state.leadId = leadId;
-  renderResult();
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'conversion', { 'send_to': 'AW-18172305016' });
-  }
-  showScreen('result');
-});
 
 // ---------------------------------------------------------------------------
 // Render result
@@ -1945,7 +2134,7 @@ document.getElementById('premiumBtn').addEventListener('click', async () => {
   sessionStorage.setItem('mapeia_premium_deepdive', '1');
 
   try {
-    const email = document.getElementById('giEmail')?.value?.trim() || undefined;
+    const email = state.capturedEmail || undefined;
     const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
       method: 'POST',
       headers: {
