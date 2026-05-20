@@ -3,284 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MapeIA PME — Demo</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<title>MapeIA Brasil — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#080810;--sf:#111119;--s2:#181825;--bd:#252538;
-  --ac:#00e5a0;--ac2:#7c6dfa;--ac3:#ff6b35;
-  --tx:#eeeef8;--mu:#6a6a88;
+  --bg:#060610;--sf:#0f0f1c;--s2:#161625;--bd:#22223a;--bd2:#2a2a45;
+  --ac:#00e5a0;--ac2:#6c5ce7;--ac3:#ff6b35;
+  --tx:#eeeef8;--mu:#5a5a7a;--mu2:#7a7a98;
   --red:#ff4055;--or:#ff8c00;--yl:#f5c842;--gr:#00e5a0;
   --blue:#4d9fff;
 }
 html{scrollbar-width:none;-ms-overflow-style:none;}
-html::-webkit-scrollbar{display:none;width:0;height:0;}
-body{background:#020208;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;align-items:center;padding:28px 16px 56px;min-height:100vh;color:var(--tx);scrollbar-width:none;-ms-overflow-style:none;}
-body::-webkit-scrollbar{display:none;width:0;height:0;}
-.wrap{width:100%;max-width:960px;}
+html::-webkit-scrollbar{display:none;}
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(108,92,231,.07) 0%,transparent 60%),#04040e;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;align-items:center;padding:32px 16px 64px;min-height:100vh;color:var(--tx);scrollbar-width:none;}
+body::-webkit-scrollbar{display:none;}
+.wrap{width:100%;max-width:980px;}
 
-.dhead{text-align:center;margin-bottom:22px;}
-.dhead h1{font-family:'Syne',sans-serif;font-size:clamp(19px,3.2vw,30px);font-weight:800;color:#fff;margin-bottom:6px;line-height:1.2;}
+.dhead{text-align:center;margin-bottom:24px;}
+.dhead-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--ac);font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;}
+.dhead-eyebrow::before,.dhead-eyebrow::after{content:'';width:28px;height:1px;background:rgba(0,229,160,.3);}
+.dhead h1{font-family:'Syne',sans-serif;font-size:clamp(18px,2.8vw,28px);font-weight:800;color:#fff;margin-bottom:6px;line-height:1.2;}
 .dhead h1 em{color:var(--ac);font-style:normal;}
-.dhead p{color:#3a3a55;font-size:12px;}
+.dhead p{color:var(--mu2);font-size:11.5px;}
 
-.chrome{background:#0c0c14;border-radius:18px;border:1px solid #1c1c2c;overflow:hidden;box-shadow:0 48px 96px rgba(0,0,0,.92),0 0 0 1px #16162a;}
-.topbar{background:#08080e;padding:9px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #141422;}
+/* CHROME */
+.chrome{background:#09091a;border-radius:20px;border:1px solid var(--bd2);overflow:hidden;box-shadow:0 60px 120px rgba(0,0,0,.85),0 0 0 1px rgba(108,92,231,.08),0 0 60px rgba(0,229,160,.03);}
+.topbar{background:#06060f;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bd);}
 .wdots{display:flex;gap:5px;}
 .wd{width:10px;height:10px;border-radius:50%;}
-.urlbar{flex:1;background:#121220;border-radius:5px;padding:4px 12px;font-size:10.5px;color:#3a3a55;font-family:monospace;text-align:center;}
+.urlbar{flex:1;background:#0f0f1e;border-radius:6px;padding:5px 13px;font-size:10px;color:#35355a;font-family:monospace;text-align:center;border:1px solid var(--bd);transition:color .3s;}
+.urlbar.active{color:var(--mu2);}
 
+/* VIEWPORT */
 .vp{width:100%;aspect-ratio:16/9;background:var(--bg);position:relative;overflow:hidden;}
-.vp::before{content:'';position:absolute;inset:0;background:
-  radial-gradient(ellipse 55% 32% at 18% 12%,rgba(0,229,160,.05) 0%,transparent 55%),
-  radial-gradient(ellipse 45% 28% at 84% 86%,rgba(124,109,250,.06) 0%,transparent 55%);
+.vp-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 60% 40% at 15% 10%,rgba(0,229,160,.04) 0%,transparent 55%),
+  radial-gradient(ellipse 50% 35% at 88% 88%,rgba(108,92,231,.05) 0%,transparent 55%);
   pointer-events:none;z-index:0;}
+.vp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:40px 40px;z-index:0;pointer-events:none;}
 
-.ctrl{background:#07070d;border-top:1px solid #141422;padding:9px 15px;display:flex;align-items:center;gap:10px;}
-.cbtn{background:none;border:none;cursor:pointer;color:#fff;font-size:15px;padding:3px;line-height:1;transition:opacity .2s;}
-.cbtn:hover{opacity:.6;}
-.tline{flex:1;height:3px;background:#141422;border-radius:10px;cursor:pointer;overflow:hidden;}
-.tfill{height:100%;background:var(--ac);border-radius:10px;transition:width .2s linear;}
-.tlbl{font-size:10px;color:#333344;font-family:monospace;white-space:nowrap;}
-.sbtn{background:#111120;border:none;color:#555;font-size:8.5px;font-weight:700;padding:4px 7px;border-radius:4px;cursor:pointer;font-family:'Syne',sans-serif;}
+/* CONTROLS */
+.ctrl{background:#05050e;border-top:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:10px;}
+.cbtn{background:none;border:none;cursor:pointer;color:var(--mu2);padding:4px 6px;line-height:1;transition:color .2s;font-size:14px;border-radius:4px;}
+.cbtn:hover{color:#fff;}
+.tline{flex:1;height:3px;background:var(--bd);border-radius:10px;cursor:pointer;overflow:visible;position:relative;}
+.tline:hover .tfill::after{opacity:1;}
+.tfill{height:100%;background:linear-gradient(90deg,var(--ac2),var(--ac));border-radius:10px;transition:width .1s linear;position:relative;}
+.tfill::after{content:'';position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(0,229,160,.5);opacity:0;transition:opacity .2s;}
+.tlbl{font-size:9.5px;color:var(--mu);font-family:monospace;white-space:nowrap;min-width:70px;text-align:right;}
+.sbtn{background:var(--s2);border:1px solid var(--bd);color:var(--mu2);font-size:9px;font-weight:700;padding:4px 8px;border-radius:5px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .2s;}
+.sbtn:hover{color:#fff;border-color:var(--bd2);}
 
-.caption-wrap{
-  min-height:48px;
-  display:flex;align-items:center;justify-content:center;
-  padding:10px 20px;
-  background:#07070d;
-  border-top:1px solid #0e0e1e;
-  border-radius:0 0 18px 18px;
-}
-.caption-text{
-  font-size:clamp(11px,1.35vw,13.5px);
-  color:#9090b8;
-  text-align:center;
-  line-height:1.5;
-  max-width:760px;
-  opacity:0;
-  transform:translateY(4px);
-  transition:opacity .3s ease,transform .3s ease;
-}
+/* CAPTION */
+.caption-wrap{min-height:50px;display:flex;align-items:center;justify-content:center;padding:10px 24px;background:#04040d;border-top:1px solid var(--bd);border-radius:0 0 20px 20px;}
+.caption-text{font-size:clamp(10.5px,1.3vw,13px);color:var(--mu2);text-align:center;line-height:1.55;max-width:820px;opacity:0;transform:translateY(5px);transition:opacity .35s ease,transform .35s ease;}
 .caption-text.on{opacity:1;transform:translateY(0);}
-.caption-text strong{color:#e0e0f8;}
+.caption-text strong{color:#d0d0f0;font-weight:600;}
+.cap-step{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:.1em;margin-right:8px;opacity:.7;}
 
-.sc{position:absolute;inset:0;z-index:1;opacity:0;pointer-events:none;transition:opacity .35s ease;padding:clamp(9px,1.8vw,22px);display:flex;flex-direction:column;}
-.sc.on{opacity:1;}
+/* CURSOR */
+.cur{position:absolute;width:14px;height:14px;z-index:200;pointer-events:none;transition:left .55s cubic-bezier(.25,.1,.25,1),top .55s cubic-bezier(.25,.1,.25,1);}
+.cur svg path{fill:white;stroke:#000;stroke-width:.5;}
+.click-ring{position:absolute;bottom:-8px;right:-8px;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--ac);opacity:0;transform:scale(0);transition:none;}
+.cur.clk .click-ring{animation:clickPulse .35s ease-out forwards;}
+@keyframes clickPulse{0%{opacity:.8;transform:scale(0.4);}100%{opacity:0;transform:scale(1.5);}}
 
-.slbl{position:absolute;top:7px;right:9px;z-index:150;background:rgba(0,0,0,.7);border:1px solid var(--bd);border-radius:5px;padding:3px 8px;font-size:7px;color:var(--mu);font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:opacity .4s;}
+/* SCENE LABEL */
+.slbl{position:absolute;top:8px;right:10px;z-index:150;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);border:1px solid var(--bd2);border-radius:6px;padding:3px 9px;font-size:7px;color:var(--mu2);font-weight:600;letter-spacing:.07em;text-transform:uppercase;opacity:0;transition:opacity .4s;}
 .slbl.on{opacity:1;}
 
-.cur{position:absolute;width:13px;height:13px;z-index:100;pointer-events:none;transition:left .5s cubic-bezier(.4,0,.2,1),top .5s cubic-bezier(.4,0,.2,1);}
-.cdot{position:absolute;bottom:-2px;right:-2px;width:6px;height:6px;border-radius:50%;background:var(--ac);opacity:0;transition:opacity .1s,transform .1s;}
-.cur.clk .cdot{opacity:1;transform:scale(1.6);}
+/* SCENES */
+.sc{position:absolute;inset:0;z-index:1;opacity:0;pointer-events:none;transition:opacity .3s ease;padding:clamp(10px,1.8vw,20px);display:flex;flex-direction:column;}
+.sc.on{opacity:1;}
 
-.pgwrap{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:7px 11px;margin-bottom:8px;flex-shrink:0;}
-.pgtop{display:flex;justify-content:space-between;margin-bottom:4px;}
-.pglbl{font-size:7.5px;color:var(--mu);font-weight:500;letter-spacing:.03em;}
+/* PROGRESS BAR */
+.pgwrap{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:7px 12px;margin-bottom:7px;flex-shrink:0;}
+.pgtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.pglbl{font-size:7px;color:var(--mu);font-weight:600;letter-spacing:.04em;}
 .pgcnt{font-family:'Syne',sans-serif;font-size:7.5px;color:var(--ac);font-weight:700;}
 .pgtrack{height:2px;background:var(--bd);border-radius:10px;overflow:hidden;}
-.pgfill{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:10px;}
-.blkdots{display:flex;gap:4px;margin-top:5px;}
-.bd2{height:2px;flex:1;border-radius:10px;background:var(--bd);}
+.pgfill{height:100%;background:linear-gradient(90deg,var(--ac2),var(--ac));border-radius:10px;}
+.blkdots{display:flex;gap:3px;margin-top:5px;}
+.bd2{height:2px;flex:1;border-radius:10px;background:var(--bd);transition:background .3s;}
 .bd2.act{background:var(--ac);}
-.bd2.dn{background:rgba(0,229,160,.28);}
+.bd2.dn{background:rgba(0,229,160,.22);}
 
-.qcard{background:var(--sf);border:1px solid var(--bd);border-radius:11px;padding:clamp(9px,1.6vw,16px);flex:1;display:flex;flex-direction:column;min-height:0;}
-.qtag{font-size:7px;color:var(--ac2);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
-.qttl{font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.5vw,13.5px);font-weight:700;line-height:1.3;margin-bottom:2px;}
-.qhint{font-size:7.5px;color:var(--mu);font-style:italic;margin-bottom:9px;}
+/* QUESTION CARD */
+.qcard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:clamp(10px,1.7vw,16px);flex:1;display:flex;flex-direction:column;min-height:0;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.qtag{font-size:6.5px;color:var(--ac2);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px;}
+.qttl{font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.45vw,13.5px);font-weight:700;line-height:1.3;margin-bottom:3px;}
+.qhint{font-size:7px;color:var(--mu);font-style:italic;margin-bottom:9px;}
 .opts{display:flex;flex-direction:column;gap:4px;flex:1;}
-.opt{display:flex;align-items:center;gap:7px;background:var(--s2);border:1.5px solid var(--bd);border-radius:6px;padding:6px 9px;font-size:clamp(7.5px,1.1vw,10.5px);color:var(--tx);transition:all .2s;}
-.opt.sel{border-color:var(--ac);background:rgba(0,229,160,.07);color:var(--ac);}
-.odot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--bd);flex-shrink:0;transition:all .2s;}
-.opt.sel .odot{background:var(--ac);border-color:var(--ac);}
-.navbtns{display:flex;gap:6px;margin-top:7px;flex-shrink:0;}
-.nbtn{font-family:'Syne',sans-serif;font-size:8.5px;font-weight:700;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;}
+.opt{display:flex;align-items:center;gap:8px;background:var(--s2);border:1.5px solid var(--bd);border-radius:7px;padding:7px 10px;font-size:clamp(7.5px,1.05vw,10.5px);color:var(--tx);transition:all .25s;}
+.opt.sel{border-color:rgba(0,229,160,.5);background:rgba(0,229,160,.06);}
+.odot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--bd2);flex-shrink:0;transition:all .2s;}
+.opt.sel .odot{background:var(--ac);border-color:var(--ac);box-shadow:0 0 6px rgba(0,229,160,.4);}
+.navbtns{display:flex;gap:6px;margin-top:8px;flex-shrink:0;}
+.nbtn{font-family:'Syne',sans-serif;font-size:8px;font-weight:700;padding:6px 13px;border-radius:7px;border:none;cursor:pointer;transition:all .2s;}
 .nb-back{background:transparent;color:var(--mu);border:1px solid var(--bd);}
 .nb-fwd{background:var(--ac);color:#000;flex:1;}
-.nb-gen{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;flex:1;}
+.nb-gen{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;flex:1;box-shadow:0 4px 16px rgba(0,229,160,.2);}
 
-.sc-load{align-items:center;justify-content:center;text-align:center;gap:7px;}
-.lring{width:clamp(34px,5vw,52px);height:clamp(34px,5vw,52px);border:2.5px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite;}
+/* LOADING */
+.sc-load{align-items:center;justify-content:center;text-align:center;gap:8px;}
+.lring-wrap{position:relative;width:clamp(38px,5.5vw,56px);height:clamp(38px,5.5vw,56px);}
+.lring{position:absolute;inset:0;border:2px solid var(--bd);border-top-color:var(--ac);border-right-color:rgba(0,229,160,.3);border-radius:50%;animation:spin .7s linear infinite;}
+.lring2{position:absolute;inset:5px;border:1.5px solid transparent;border-bottom-color:var(--ac2);border-radius:50%;animation:spin .95s linear infinite reverse;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ltitle{font-family:'Syne',sans-serif;font-size:clamp(11px,1.8vw,16px);font-weight:700;}
-.lsub{font-size:clamp(8.5px,1.1vw,11px);color:var(--mu);}
-.lsteps{display:flex;flex-direction:column;gap:5px;margin-top:5px;}
-.lstep{display:flex;align-items:center;gap:6px;font-size:clamp(7.5px,1vw,10.5px);color:var(--mu);}
+.ltitle{font-family:'Syne',sans-serif;font-size:clamp(11px,1.7vw,16px);font-weight:700;}
+.lsub{font-size:clamp(8.5px,1.05vw,10.5px);color:var(--mu);}
+.lbar-wrap{width:180px;height:3px;background:var(--bd);border-radius:10px;overflow:hidden;margin-top:2px;}
+.lbar{height:100%;background:linear-gradient(90deg,var(--ac2),var(--ac));border-radius:10px;width:0%;transition:width .6s ease;}
+.lsteps{display:flex;flex-direction:column;gap:4px;margin-top:6px;text-align:left;}
+.lstep{display:flex;align-items:center;gap:7px;font-size:clamp(7px,.95vw,10px);color:var(--mu);transition:color .3s;}
 .lstep.lit{color:var(--ac);}
-.ldot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.ldot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.lstep.lit .ldot{box-shadow:0 0 6px currentColor;}
 
+/* GATE */
 .sc-gate{align-items:center;justify-content:center;}
-.gcard{background:var(--sf);border:1px solid var(--bd);border-radius:13px;padding:clamp(13px,2.2vw,22px);width:min(420px,88%);text-align:center;}
-.g-pre{font-size:7.5px;color:var(--ac);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
-.g-srow{display:flex;align-items:center;justify-content:center;gap:13px;margin-bottom:11px;}
-.g-ring{position:relative;width:clamp(58px,7.5vw,76px);height:clamp(58px,7.5vw,76px);}
+.gcard{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:clamp(14px,2.2vw,22px);width:min(430px,90%);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.g-pre{font-size:7px;color:var(--ac);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:5px;}
+.g-pre::before{content:'';width:18px;height:1px;background:rgba(0,229,160,.3);}
+.g-pre::after{content:'';width:18px;height:1px;background:rgba(0,229,160,.3);}
+.g-srow{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;}
+.g-ring{position:relative;width:clamp(60px,7.5vw,78px);height:clamp(60px,7.5vw,78px);}
 .g-ring svg{transform:rotate(-90deg);}
 .g-rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.g-sn{font-family:'Syne',sans-serif;font-size:clamp(15px,2.4vw,22px);font-weight:800;color:var(--yl);}
-.g-sp{font-size:7.5px;color:var(--mu);}
+.g-sn{font-family:'Syne',sans-serif;font-size:clamp(16px,2.5vw,24px);font-weight:800;color:var(--yl);}
+.g-sp{font-size:7px;color:var(--mu);}
 .g-li{text-align:left;}
-.g-nv{font-size:7.5px;color:var(--yl);font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px;}
-.g-hl{font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.5vw,12.5px);font-weight:700;line-height:1.3;}
-.g-blur{background:var(--s2);border:1px dashed var(--bd);border-radius:8px;padding:9px 11px;margin-bottom:11px;filter:blur(3px);position:relative;pointer-events:none;overflow:hidden;}
-.g-blur::after{content:'🔒 Diagnóstico completo bloqueado';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:blur(0);font-size:9.5px;font-weight:700;color:var(--mu);background:rgba(8,8,16,.55);}
+.g-nv{font-size:7px;color:var(--yl);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;}
+.g-hl{font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.4vw,12.5px);font-weight:700;line-height:1.35;}
+.g-blur{background:var(--s2);border:1px dashed var(--bd2);border-radius:9px;padding:10px 12px;margin-bottom:12px;filter:blur(3.5px);position:relative;pointer-events:none;overflow:hidden;user-select:none;}
+.g-blur::after{content:'Diagnóstico completo bloqueado';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:blur(0);font-size:9px;font-weight:700;color:rgba(255,255,255,.4);background:rgba(6,6,16,.5);letter-spacing:.03em;}
 .brow{display:flex;gap:5px;margin-bottom:5px;}
-.bchip{height:11px;border-radius:3px;background:var(--bd);}
-.bline{height:6px;border-radius:3px;background:var(--bd);margin-bottom:4px;}
-.gform{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
-.gi{background:var(--s2);border:1.5px solid var(--bd);border-radius:6px;padding:7px 10px;font-size:clamp(8.5px,1.15vw,10.5px);color:var(--tx);font-family:'DM Sans',sans-serif;width:100%;}
-.gi.focus{border-color:var(--ac);}
-.gbtn{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.3vw,11.5px);font-weight:700;padding:9px;border-radius:7px;border:none;width:100%;}
-.gfine{font-size:7.5px;color:var(--mu);margin-top:5px;}
+.bchip{height:11px;border-radius:4px;background:var(--bd2);}
+.bline{height:6px;border-radius:4px;background:var(--bd2);margin-bottom:4px;}
+.gform{display:flex;flex-direction:column;gap:6px;margin-bottom:9px;}
+.gi{background:var(--s2);border:1.5px solid var(--bd);border-radius:7px;padding:8px 11px;font-size:clamp(8.5px,1.1vw,10.5px);color:var(--tx);font-family:'DM Sans',sans-serif;width:100%;outline:none;transition:border-color .2s;}
+.gi.focus{border-color:rgba(0,229,160,.45);box-shadow:0 0 0 3px rgba(0,229,160,.07);}
+.gbtn{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.25vw,11.5px);font-weight:700;padding:10px;border-radius:8px;border:none;width:100%;cursor:pointer;box-shadow:0 6px 20px rgba(0,229,160,.2);}
+.gfine{font-size:7px;color:var(--mu);margin-top:5px;}
 
+/* RESULTS */
 .sc-res{gap:7px;overflow:hidden;}
-.rhdr{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:clamp(8px,1.5vw,13px);display:flex;align-items:center;gap:11px;flex-shrink:0;}
-.r-ring{position:relative;width:clamp(46px,6vw,62px);height:clamp(46px,6vw,62px);flex-shrink:0;}
+.rhdr{background:var(--sf);border:1px solid var(--bd);border-radius:11px;padding:clamp(9px,1.5vw,14px);display:flex;align-items:center;gap:12px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.25);}
+.r-ring{position:relative;width:clamp(48px,6.2vw,64px);height:clamp(48px,6.2vw,64px);flex-shrink:0;}
 .r-ring svg{transform:rotate(-90deg);}
 .r-rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.rsc{font-family:'Syne',sans-serif;font-size:clamp(13px,2.1vw,19px);font-weight:800;}
+.rsc{font-family:'Syne',sans-serif;font-size:clamp(14px,2.2vw,20px);font-weight:800;}
 .rpt{font-size:6.5px;color:var(--mu);}
 .rif{flex:1;min-width:0;}
-.rnv{font-size:7.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;}
-.rtt{font-family:'Syne',sans-serif;font-size:clamp(8.5px,1.35vw,12px);font-weight:700;line-height:1.25;}
-.rsb{font-size:clamp(6.5px,.95vw,8.5px);color:var(--mu);margin-top:2px;line-height:1.4;}
+.rnv{font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px;}
+.rtt{font-family:'Syne',sans-serif;font-size:clamp(9px,1.3vw,12.5px);font-weight:700;line-height:1.25;}
+.rsb{font-size:clamp(6.5px,.9vw,8.5px);color:var(--mu2);margin-top:2px;line-height:1.45;}
 .rcols{display:flex;gap:7px;flex:1;min-height:0;overflow:hidden;}
 .rcol{display:flex;flex-direction:column;gap:7px;min-width:0;}
 .rcl{flex:1.05;}.rcr{flex:.95;}
-.mcard{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:clamp(6px,1.2vw,12px);flex:1;min-height:0;overflow:hidden;}
-.mt{font-family:'Syne',sans-serif;font-size:clamp(7.5px,1vw,9.5px);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.mcard{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:clamp(7px,1.2vw,12px);flex:1;min-height:0;overflow:hidden;}
+.mt{font-family:'Syne',sans-serif;font-size:clamp(7.5px,1vw,9.5px);font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px;color:var(--tx);}
 .mt::after{content:'';flex:1;height:1px;background:var(--bd);}
 
-.rrows{display:flex;flex-direction:column;gap:3.5px;}
+.rrows{display:flex;flex-direction:column;gap:4px;}
 .rrow{display:flex;align-items:center;gap:5px;}
-.rlb{font-size:clamp(6px,.88vw,8px);color:var(--mu);width:clamp(48px,7vw,66px);flex-shrink:0;}
-.rtk{flex:1;height:2px;background:var(--bd);border-radius:10px;overflow:hidden;}
-.rfl{height:100%;border-radius:10px;}
-.rsm{font-size:clamp(6.5px,.9vw,9px);flex-shrink:0;}
+.rlb{font-size:clamp(6px,.85vw,8px);color:var(--mu2);width:clamp(50px,7vw,68px);flex-shrink:0;}
+.rtk{flex:1;height:3px;background:var(--bd);border-radius:10px;overflow:hidden;}
+.rfl{height:100%;border-radius:10px;transform-origin:left;}
+.rsm{font-size:clamp(6.5px,.9vw,8.5px);flex-shrink:0;}
 
 .qwrows{display:flex;flex-direction:column;gap:5px;}
-.qwr{background:var(--s2);border:1px solid var(--bd);border-left:2.5px solid var(--ac);border-radius:6px;padding:6px 8px;}
-.qwl{font-size:6.5px;color:var(--ac);font-weight:700;text-transform:uppercase;letter-spacing:.07em;}
-.qwt{font-size:clamp(7px,.98vw,9px);font-weight:600;margin:2px 0;}
+.qwr{background:var(--s2);border:1px solid var(--bd);border-left:2.5px solid var(--ac);border-radius:7px;padding:6px 9px;}
+.qwl{font-size:6px;color:var(--ac);font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.qwt{font-size:clamp(7px,.95vw,9.5px);font-weight:600;margin:2px 0;}
 .qwtl{font-size:6.5px;color:var(--mu);}
 
-.trows{display:flex;flex-direction:column;gap:4px;}
-.tr{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:6px 8px;display:flex;align-items:flex-start;gap:6px;}
+.trows{display:flex;flex-direction:column;gap:5px;}
+.tr{background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:6px 9px;display:flex;align-items:flex-start;gap:7px;}
 .ttg{font-size:6.5px;color:var(--ac2);font-weight:700;white-space:nowrap;margin-top:1px;}
 .ti{flex:1;min-width:0;}
-.tn{font-size:clamp(7px,.98vw,9.5px);font-weight:700;}
+.tn{font-size:clamp(7.5px,1vw,10px);font-weight:700;}
 .td{font-size:6.5px;color:var(--mu);line-height:1.35;}
-.tp{font-size:6.5px;color:var(--ac3);font-weight:600;background:rgba(255,107,53,.1);padding:1px 5px;border-radius:100px;margin-top:2px;display:inline-block;}
 
-.sc-plan{gap:9px;overflow:hidden;}
-.plan-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:clamp(9px,1.6vw,14px);flex-shrink:0;display:flex;align-items:center;gap:10px;}
-.plan-hdr-icon{width:clamp(30px,4vw,40px);height:clamp(30px,4vw,40px);border-radius:8px;background:rgba(124,109,250,.12);border:1px solid rgba(124,109,250,.25);display:flex;align-items:center;justify-content:center;font-size:clamp(13px,1.8vw,18px);flex-shrink:0;}
-.plan-hdr-info{flex:1;}
-.plan-hdr-tag{font-size:7px;color:var(--ac2);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px;}
-.plan-hdr-title{font-family:'Syne',sans-serif;font-size:clamp(10px,1.6vw,14px);font-weight:700;line-height:1.2;}
-.plan-hdr-sub{font-size:clamp(7px,.95vw,9px);color:var(--mu);margin-top:2px;}
-.plan-phases{display:flex;gap:9px;flex:1;min-height:0;}
-.plan-phase{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:clamp(10px,1.7vw,16px);display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden;}
+/* PLAN */
+.sc-plan{gap:8px;overflow:hidden;}
+.plan-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:11px;padding:clamp(9px,1.5vw,14px);flex-shrink:0;display:flex;align-items:center;gap:11px;}
+.plan-hdr-icon{width:clamp(32px,4.2vw,42px);height:clamp(32px,4.2vw,42px);border-radius:9px;background:rgba(108,92,231,.12);border:1px solid rgba(108,92,231,.2);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.9vw,19px);flex-shrink:0;}
+.plan-hdr-tag{font-size:6.5px;color:var(--ac2);font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:2px;}
+.plan-hdr-title{font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.5vw,13.5px);font-weight:700;line-height:1.2;}
+.plan-hdr-sub{font-size:clamp(7px,.9vw,9px);color:var(--mu);margin-top:2px;}
+.plan-phases{display:flex;gap:8px;flex:1;min-height:0;}
+.plan-phase{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:11px;padding:clamp(10px,1.6vw,15px);display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden;}
 .pp-head{display:flex;align-items:center;gap:9px;flex-shrink:0;}
 .pp-badge{width:clamp(32px,4.5vw,44px);height:clamp(32px,4.5vw,44px);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:clamp(10px,1.5vw,14px);font-weight:800;flex-shrink:0;}
-.pp-badge.d30{background:rgba(0,229,160,.15);color:var(--ac);border:1px solid rgba(0,229,160,.25);}
-.pp-badge.d60{background:rgba(124,109,250,.15);color:var(--ac2);border:1px solid rgba(124,109,250,.25);}
-.pp-badge.d90{background:rgba(255,107,53,.15);color:var(--ac3);border:1px solid rgba(255,107,53,.25);}
+.pp-badge.d30{background:rgba(0,229,160,.12);color:var(--ac);border:1px solid rgba(0,229,160,.2);}
+.pp-badge.d60{background:rgba(108,92,231,.12);color:var(--ac2);border:1px solid rgba(108,92,231,.2);}
+.pp-badge.d90{background:rgba(255,107,53,.12);color:var(--ac3);border:1px solid rgba(255,107,53,.2);}
 .pp-label{flex:1;}
-.pp-title{font-family:'Syne',sans-serif;font-size:clamp(9px,1.4vw,13px);font-weight:700;}
-.pp-sub{font-size:clamp(7px,.9vw,9px);color:var(--mu);margin-top:1px;}
-.pp-cost{font-size:clamp(7px,.9vw,8.5px);font-weight:600;padding:2px 8px;border-radius:100px;margin-top:4px;display:inline-block;}
-.pp-cost.free{background:rgba(0,229,160,.1);color:var(--ac);}
-.pp-cost.low{background:rgba(124,109,250,.1);color:var(--ac2);}
-.pp-cost.med{background:rgba(245,200,66,.1);color:var(--yl);}
+.pp-title{font-family:'Syne',sans-serif;font-size:clamp(9px,1.35vw,13px);font-weight:700;}
+.pp-sub{font-size:clamp(6.5px,.88vw,8.5px);color:var(--mu);margin-top:1px;}
+.pp-cost{font-size:clamp(6.5px,.85vw,8px);font-weight:600;padding:2px 8px;border-radius:100px;margin-top:4px;display:inline-block;}
+.pp-cost.free{background:rgba(0,229,160,.08);color:var(--ac);}
+.pp-cost.low{background:rgba(108,92,231,.08);color:var(--ac2);}
+.pp-cost.med{background:rgba(245,200,66,.08);color:var(--yl);}
 .pp-divider{height:1px;background:var(--bd);flex-shrink:0;}
-.pp-items{display:flex;flex-direction:column;gap:6px;flex:1;overflow:hidden;}
-.pp-item{display:flex;align-items:flex-start;gap:7px;}
-.pp-item-num{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:7px;font-weight:800;flex-shrink:0;margin-top:1px;}
-.pp-item-num.n30{background:rgba(0,229,160,.15);color:var(--ac);}
-.pp-item-num.n60{background:rgba(124,109,250,.15);color:var(--ac2);}
-.pp-item-num.n90{background:rgba(255,107,53,.15);color:var(--ac3);}
-.pp-item-info{flex:1;}
+.pp-items{display:flex;flex-direction:column;gap:7px;flex:1;overflow:hidden;}
+.pp-item{display:flex;align-items:flex-start;gap:8px;}
+.pp-item-num{width:17px;height:17px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:7px;font-weight:800;flex-shrink:0;margin-top:1px;}
+.pp-item-num.n30{background:rgba(0,229,160,.12);color:var(--ac);}
+.pp-item-num.n60{background:rgba(108,92,231,.12);color:var(--ac2);}
+.pp-item-num.n90{background:rgba(255,107,53,.12);color:var(--ac3);}
 .pp-item-title{font-size:clamp(8px,1.1vw,10.5px);font-weight:600;line-height:1.3;}
-.pp-item-desc{font-size:clamp(6.5px,.88vw,8px);color:var(--mu);line-height:1.35;margin-top:1px;}
-.pp-tool{display:inline-flex;align-items:center;gap:3px;margin-top:3px;font-size:clamp(6.5px,.85vw,7.5px);font-weight:600;color:var(--ac2);background:rgba(124,109,250,.08);padding:1.5px 6px;border-radius:100px;}
+.pp-item-desc{font-size:clamp(6.5px,.85vw,8px);color:var(--mu);line-height:1.35;margin-top:1px;}
+.pp-tool{display:inline-flex;align-items:center;gap:3px;margin-top:3px;font-size:clamp(6px,.8vw,7.5px);font-weight:600;color:var(--ac2);background:rgba(108,92,231,.07);padding:2px 7px;border-radius:100px;}
 
+/* PROCESS */
 .sc-proc{gap:7px;overflow:hidden;}
-.proc-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:clamp(8px,1.4vw,13px);flex-shrink:0;display:flex;align-items:center;gap:10px;}
-.proc-icon{width:clamp(30px,4.2vw,42px);height:clamp(30px,4.2vw,42px);border-radius:8px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);display:flex;align-items:center;justify-content:center;font-size:clamp(13px,1.8vw,19px);flex-shrink:0;}
-.proc-tag{font-size:7px;color:var(--ac);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px;}
-.proc-title{font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.5vw,13px);font-weight:700;line-height:1.2;}
-.proc-sub{font-size:clamp(6.5px,.9vw,8.5px);color:var(--mu);margin-top:2px;}
+.proc-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:11px;padding:clamp(8px,1.4vw,13px);flex-shrink:0;display:flex;align-items:center;gap:11px;}
+.proc-icon{width:clamp(30px,4vw,42px);height:clamp(30px,4vw,42px);border-radius:8px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.18);display:flex;align-items:center;justify-content:center;font-size:clamp(13px,1.8vw,19px);flex-shrink:0;}
+.proc-tag{font-size:6.5px;color:var(--ac);font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:2px;}
+.proc-title{font-family:'Syne',sans-serif;font-size:clamp(9px,1.45vw,13px);font-weight:700;line-height:1.2;}
+.proc-sub{font-size:clamp(6.5px,.88vw,8.5px);color:var(--mu);margin-top:2px;}
 .proc-cols{display:flex;gap:7px;flex:1;min-height:0;overflow:hidden;}
 .proc-col{display:flex;flex-direction:column;gap:7px;flex:1;min-width:0;}
-.flow-card{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:clamp(7px,1.2vw,12px);flex:1;}
-.flow-steps{display:flex;flex-direction:column;gap:6px;}
-.fstep{display:flex;align-items:flex-start;gap:8px;position:relative;}
-.fstep:not(:last-child)::after{content:'';position:absolute;left:11px;top:22px;width:1px;height:calc(100% + 6px);background:var(--bd);}
+.flow-card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:clamp(7px,1.2vw,12px);flex:1;}
+.flow-steps{display:flex;flex-direction:column;gap:7px;}
+.fstep{display:flex;align-items:flex-start;gap:9px;position:relative;}
+.fstep:not(:last-child)::after{content:'';position:absolute;left:11px;top:22px;width:1px;height:calc(100% + 7px);background:var(--bd);}
 .fnum{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:8px;font-weight:800;flex-shrink:0;position:relative;z-index:1;}
-.fnum.done{background:rgba(0,229,160,.15);color:var(--ac);border:1px solid rgba(0,229,160,.25);}
-.fnum.now{background:rgba(124,109,250,.15);color:var(--ac2);border:1px solid rgba(124,109,250,.3);}
+.fnum.done{background:rgba(0,229,160,.12);color:var(--ac);border:1px solid rgba(0,229,160,.2);}
+.fnum.now{background:rgba(108,92,231,.12);color:var(--ac2);border:1px solid rgba(108,92,231,.25);}
 .fnum.todo{background:var(--s2);color:var(--mu);border:1px solid var(--bd);}
 .finfo{flex:1;padding-top:2px;}
 .ftitle{font-size:clamp(8px,1.1vw,10.5px);font-weight:600;margin-bottom:1px;}
-.fdesc{font-size:clamp(6.5px,.9vw,8.5px);color:var(--mu);line-height:1.4;}
-.fbadge{display:inline-flex;align-items:center;gap:3px;margin-top:3px;font-size:7px;font-weight:600;padding:2px 7px;border-radius:100px;}
+.fdesc{font-size:clamp(6.5px,.88vw,8.5px);color:var(--mu);line-height:1.4;}
+.fbadge{display:inline-flex;align-items:center;gap:3px;margin-top:3px;font-size:6.5px;font-weight:600;padding:2px 7px;border-radius:100px;}
 .fb-red{background:rgba(255,64,85,.1);color:var(--red);}
 .fb-blue{background:rgba(77,159,255,.1);color:var(--blue);}
 .fb-green{background:rgba(0,229,160,.1);color:var(--ac);}
-.tool-spot{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:clamp(7px,1.2vw,12px);}
-.ts-label{font-size:7px;color:var(--ac2);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.tool-spot{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:clamp(7px,1.2vw,12px);}
+.ts-label{font-size:6.5px;color:var(--ac2);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;}
 .ts-list{display:flex;flex-direction:column;gap:5px;}
-.tsl{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:6px 8px;}
-.tsl-ico{font-size:clamp(11px,1.5vw,15px);flex-shrink:0;}
+.tsl{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:7px 9px;}
+.tsl-ico{font-size:clamp(12px,1.6vw,16px);flex-shrink:0;}
 .tsl-info{flex:1;}
-.tsl-name{font-size:clamp(8px,1.1vw,10px);font-weight:700;}
-.tsl-use{font-size:clamp(6.5px,.88vw,8px);color:var(--mu);margin-top:1px;}
-.tsl-pr{font-size:clamp(6.5px,.85vw,7.5px);font-weight:600;color:var(--ac3);background:rgba(255,107,53,.1);padding:1.5px 6px;border-radius:100px;}
-.tsl-st{font-size:clamp(6.5px,.85vw,7.5px);font-weight:700;padding:2px 7px;border-radius:100px;}
-.st-now{background:rgba(0,229,160,.12);color:var(--ac);}
-.st-next{background:rgba(124,109,250,.12);color:var(--ac2);}
+.tsl-name{font-size:clamp(8px,1.05vw,10px);font-weight:700;}
+.tsl-use{font-size:clamp(6.5px,.85vw,8px);color:var(--mu);margin-top:1px;}
+.tsl-st{font-size:clamp(6px,.82vw,7.5px);font-weight:700;padding:2px 8px;border-radius:100px;white-space:nowrap;}
+.st-now{background:rgba(0,229,160,.1);color:var(--ac);}
+.st-next{background:rgba(108,92,231,.1);color:var(--ac2);}
 
+/* HOOK / CTA */
 .sc-hook{align-items:center;justify-content:center;}
-.hkcard{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:clamp(14px,2.4vw,24px);width:min(580px,94%);position:relative;overflow:hidden;}
-.hkcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,160,.03) 0%,rgba(124,109,250,.04) 100%);pointer-events:none;}
-.hk-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:13px;}
-.hk-ico{width:clamp(34px,4.8vw,46px);height:clamp(34px,4.8vw,46px);border-radius:9px;background:rgba(255,64,85,.1);border:1px solid rgba(255,64,85,.2);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,2vw,20px);flex-shrink:0;}
+.hkcard{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:clamp(15px,2.4vw,24px);width:min(590px,95%);position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.hkcard::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(108,92,231,.05) 0%,transparent 60%);pointer-events:none;}
+.hk-top{display:flex;align-items:flex-start;gap:13px;margin-bottom:13px;}
+.hk-ico{width:clamp(36px,5vw,48px);height:clamp(36px,5vw,48px);border-radius:10px;background:rgba(255,64,85,.1);border:1px solid rgba(255,64,85,.18);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,2vw,20px);flex-shrink:0;}
 .hk-inf{flex:1;}
-.hk-pre{font-size:7.5px;color:var(--red);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
-.hk-ttl{font-family:'Syne',sans-serif;font-size:clamp(11px,1.8vw,17px);font-weight:800;line-height:1.2;margin-bottom:3px;}
-.hk-sub{font-size:clamp(8px,1.1vw,10.5px);color:var(--mu);line-height:1.5;}
-.hk-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:11px;}
-.hkf{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;}
-.hkf-top{display:flex;align-items:center;gap:5px;margin-bottom:2px;}
+.hk-pre{font-size:7px;color:var(--ac);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+.hk-ttl{font-family:'Syne',sans-serif;font-size:clamp(11px,1.75vw,17px);font-weight:800;line-height:1.2;margin-bottom:4px;}
+.hk-sub{font-size:clamp(8px,1.1vw,10.5px);color:var(--mu2);line-height:1.5;}
+.hk-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px;}
+.hkf{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:9px 11px;}
+.hkf-top{display:flex;align-items:center;gap:5px;margin-bottom:3px;}
 .hkf-ico{font-size:clamp(10px,1.4vw,14px);}
 .hkf-lbl{font-size:7px;color:var(--mu);font-weight:500;}
-.hkf-val{font-family:'Syne',sans-serif;font-size:clamp(10px,1.5vw,13px);font-weight:700;margin-bottom:2px;}
+.hkf-val{font-family:'Syne',sans-serif;font-size:clamp(10px,1.5vw,13.5px);font-weight:800;margin-bottom:2px;}
 .hkf-val.red{color:var(--red);}
 .hkf-val.or{color:var(--or);}
 .hkf-val.yl{color:var(--yl);}
-.hkf-hint{font-size:clamp(6.5px,.88vw,8px);color:var(--mu);line-height:1.4;}
-.hk-urg{background:rgba(255,64,85,.06);border:1px solid rgba(255,64,85,.18);border-radius:8px;padding:8px 11px;margin-bottom:11px;}
-.hku-ttl{font-size:clamp(8px,1.15vw,10px);font-weight:700;color:var(--red);margin-bottom:4px;display:flex;align-items:center;gap:5px;}
-.hku-it{font-size:clamp(7.5px,1vw,9px);color:var(--mu);display:flex;gap:6px;line-height:1.4;margin-bottom:3px;}
-.hku-it::before{content:'⚠';color:var(--or);flex-shrink:0;font-size:8px;}
+.hkf-hint{font-size:clamp(6.5px,.85vw,8px);color:var(--mu);line-height:1.4;}
+.hk-urg{background:rgba(255,64,85,.05);border:1px solid rgba(255,64,85,.15);border-radius:9px;padding:9px 12px;margin-bottom:12px;}
+.hku-ttl{font-size:clamp(8px,1.1vw,10px);font-weight:700;color:var(--red);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.hku-it{font-size:clamp(7.5px,.98vw,9px);color:var(--mu2);display:flex;gap:6px;line-height:1.45;margin-bottom:3px;}
+.hku-it::before{content:'⚡';color:var(--or);flex-shrink:0;font-size:8px;}
 .hk-cta{text-align:center;}
-.hkc-ttl{font-family:'Syne',sans-serif;font-size:clamp(10px,1.5vw,13px);font-weight:700;margin-bottom:3px;}
-.hkc-sub{font-size:clamp(7.5px,1vw,9.5px);color:var(--mu);margin-bottom:9px;line-height:1.4;}
-.hkc-btn{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.3vw,12px);font-weight:700;padding:9px 22px;border-radius:8px;border:none;display:inline-block;}
-.hkc-fine{font-size:7.5px;color:var(--mu);margin-top:5px;}
+.hkc-ttl{font-family:'Syne',sans-serif;font-size:clamp(10px,1.5vw,13.5px);font-weight:700;margin-bottom:3px;}
+.hkc-sub{font-size:clamp(7.5px,1vw,9.5px);color:var(--mu2);margin-bottom:10px;line-height:1.4;}
+.hkc-btn{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;font-family:'Syne',sans-serif;font-size:clamp(9.5px,1.3vw,12px);font-weight:700;padding:10px 24px;border-radius:9px;border:none;display:inline-block;box-shadow:0 8px 24px rgba(0,229,160,.2);}
+.hkc-fine{font-size:7.5px;color:var(--mu);margin-top:6px;}
 
-.below{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
-.bi{font-size:11.5px;color:#32324a;display:flex;align-items:center;gap:5px;}
+/* BELOW */
+.below{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:16px;}
+.bi{font-size:11px;color:#2a2a48;display:flex;align-items:center;gap:6px;}
+.bi span{color:var(--ac);}
+.bi.b2 span{color:var(--ac2);}
+.bi.b3 span{color:var(--ac3);}
+
+/* WELCOME SCENE */
+.sc-welcome{align-items:center;justify-content:center;text-align:center;gap:0;}
+.w-badge{display:inline-flex;align-items:center;gap:6px;font-size:7px;color:var(--ac);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.15);padding:4px 12px;border-radius:100px;}
+.w-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--ac);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.w-title{font-family:'Syne',sans-serif;font-size:clamp(14px,2.4vw,24px);font-weight:800;line-height:1.2;margin-bottom:8px;}
+.w-sub{font-size:clamp(8px,1.1vw,10.5px);color:var(--mu2);max-width:300px;margin:0 auto 14px;line-height:1.6;}
+.w-chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+.w-chip{font-size:7.5px;color:var(--mu2);display:flex;align-items:center;gap:4px;}
+.w-chip::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--bd2);}
+.w-btn{background:var(--ac);color:#000;font-family:'Syne',sans-serif;font-size:clamp(9px,1.3vw,12px);font-weight:700;padding:10px 26px;border-radius:9px;display:inline-block;box-shadow:0 8px 24px rgba(0,229,160,.25);}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="dhead">
-    <h1>Veja como funciona o <em>MapeIA</em></h1>
-    <p>Demo animado — do preenchimento até o plano de ação completo</p>
+    <div class="dhead-eyebrow">Demo Interativo</div>
+    <h1>Veja como funciona o <em>MapeIA Brasil</em></h1>
+    <p>Do preenchimento ao plano de ação — tudo em menos de 5 minutos</p>
   </div>
 
   <div class="chrome">
@@ -290,83 +319,110 @@ body::-webkit-scrollbar{display:none;width:0;height:0;}
         <div class="wd" style="background:#ffbd2e"></div>
         <div class="wd" style="background:#28c840"></div>
       </div>
-      <div class="urlbar" id="urlbar">mapeia.com.br</div>
+      <div class="urlbar" id="urlbar">mapeiabrasil.com</div>
     </div>
 
     <div class="vp" id="vp">
-      <div class="cur" id="cur" style="left:50%;top:82%">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 2L2 12.5L5.8 8.8L8.2 14.5L10.3 13.5L7.9 7.8L12.8 7.8L2 2Z" fill="white" stroke="#000" stroke-width=".6"/></svg>
-        <div class="cdot"></div>
+      <div class="vp-bg"></div>
+      <div class="vp-grid"></div>
+
+      <div class="cur" id="cur" style="left:50%;top:80%">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 2L2 12.5L5.8 8.8L8.2 14.5L10.3 13.5L7.9 7.8L12.8 7.8L2 2Z" fill="white" stroke="#000" stroke-width=".5"/></svg>
+        <div class="click-ring"></div>
       </div>
       <div class="slbl" id="slbl"></div>
 
-      <div class="sc on" id="s0" style="align-items:center;justify-content:center;text-align:center;">
-        <div style="font-size:7.5px;color:var(--ac);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:5px;justify-content:center;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ac);animation:pulse 2s infinite;display:inline-block;"></span>Diagnóstico Gratuito</div>
-        <div style="font-family:'Syne',sans-serif;font-size:clamp(14px,2.4vw,22px);font-weight:800;line-height:1.2;margin-bottom:8px;">Sua empresa está pronta<br>para <span style="color:var(--ac)">IA & Automação</span>?</div>
-        <div style="font-size:clamp(8px,1.15vw,10.5px);color:var(--mu);max-width:300px;margin:0 auto 14px;">Responda as perguntas e receba diagnóstico personalizado com nível de maturidade, gaps críticos e ferramentas — na hora.</div>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;"><span style="font-size:7.5px;color:var(--mu)">⏱ ~5 min</span><span style="font-size:7.5px;color:var(--mu)">🎯 Resultado instantâneo</span><span style="font-size:7.5px;color:var(--mu)">🇧🇷 PMEs brasileiras</span></div>
-        <div style="background:var(--ac);color:#000;font-family:'Syne',sans-serif;font-size:clamp(9px,1.3vw,11.5px);font-weight:700;padding:9px 24px;border-radius:8px;display:inline-block;">Iniciar Diagnóstico Gratuito →</div>
+      <!-- S0: WELCOME -->
+      <div class="sc sc-welcome on" id="s0">
+        <div class="w-badge"><div class="w-badge-dot"></div>Diagnóstico Gratuito</div>
+        <div class="w-title">Sua empresa está pronta<br>para <span style="color:var(--ac)">IA & Automação</span>?</div>
+        <div class="w-sub">Responda as perguntas e receba diagnóstico personalizado com nível de maturidade, gaps críticos e plano de ação — na hora.</div>
+        <div class="w-chips">
+          <div class="w-chip">5 min</div>
+          <div class="w-chip">Resultado instantâneo</div>
+          <div class="w-chip">Para PMEs brasileiras</div>
+        </div>
+        <div class="w-btn">Iniciar Diagnóstico Gratuito →</div>
       </div>
-      <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}</style>
 
-      <div class="sc" id="s1"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 0 — Perfil</span><span class="pgcnt">1/18</span></div><div class="pgtrack"><div class="pgfill" style="width:5%"></div></div><div class="blkdots"><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
+      <!-- S1: Setor -->
+      <div class="sc" id="s1">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 0 — Perfil</span><span class="pgcnt">1 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:5%"></div></div><div class="blkdots"><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
         <div class="qcard"><div class="qtag">Bloco 0 — Perfil da Empresa</div><div class="qttl">Qual é o setor principal da sua empresa?</div><div class="qhint">Personaliza benchmarks e ferramentas recomendadas</div>
         <div class="opts"><div class="opt"><div class="odot"></div>Varejo (loja física, e-commerce ou híbrido)</div><div class="opt"><div class="odot"></div>Alimentação e Food Service</div><div class="opt"><div class="odot"></div>Saúde e Bem-estar (clínica, consultório, academia)</div><div class="opt sel"><div class="odot"></div>Serviços Profissionais (contabilidade, advocacia, consultoria)</div><div class="opt"><div class="odot"></div>Educação (escola, curso, treinamento)</div></div>
         <div class="navbtns"><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s2"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 0 — Perfil</span><span class="pgcnt">2/18</span></div><div class="pgtrack"><div class="pgfill" style="width:11%"></div></div><div class="blkdots"><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
+      <!-- S2: Tamanho -->
+      <div class="sc" id="s2">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 0 — Perfil</span><span class="pgcnt">2 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:11%"></div></div><div class="blkdots"><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
         <div class="qcard"><div class="qtag">Bloco 0 — Perfil da Empresa</div><div class="qttl">Quantos funcionários trabalham na empresa hoje?</div><div class="qhint">Define a escala das recomendações</div>
         <div class="opts"><div class="opt"><div class="odot"></div>Só eu (solopreneur / MEI)</div><div class="opt"><div class="odot"></div>2 a 5 pessoas</div><div class="opt sel"><div class="odot"></div>6 a 20 pessoas</div><div class="opt"><div class="odot"></div>21 a 50 pessoas</div><div class="opt"><div class="odot"></div>Mais de 50 pessoas</div></div>
         <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s3"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 0 — Perfil</span><span class="pgcnt">3/18</span></div><div class="pgtrack"><div class="pgfill" style="width:17%"></div></div><div class="blkdots"><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
+      <!-- S3: Faturamento -->
+      <div class="sc" id="s3">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 0 — Perfil</span><span class="pgcnt">3 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:17%"></div></div><div class="blkdots"><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
         <div class="qcard"><div class="qtag">Bloco 0 — Perfil da Empresa</div><div class="qttl">Qual é o faturamento mensal médio da empresa?</div><div class="qhint">Define o teto de investimento realista</div>
         <div class="opts"><div class="opt"><div class="odot"></div>Menos de R$10 mil/mês</div><div class="opt sel"><div class="odot"></div>R$10 mil a R$50 mil/mês</div><div class="opt"><div class="odot"></div>R$51 mil a R$200 mil/mês</div><div class="opt"><div class="odot"></div>Acima de R$200 mil/mês</div></div>
         <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s4"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 1 — Infraestrutura</span><span class="pgcnt">5/18</span></div><div class="pgtrack"><div class="pgfill" style="width:28%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
+      <!-- S4: Infraestrutura - Finanças -->
+      <div class="sc" id="s4">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 1 — Infraestrutura</span><span class="pgcnt">5 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:28%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
         <div class="qcard"><div class="qtag">Bloco 1 — Infraestrutura & Ferramentas</div><div class="qttl">Como você gerencia as finanças da empresa hoje?</div><div class="qhint"></div>
         <div class="opts"><div class="opt"><div class="odot"></div>Caderno ou anotações manuais</div><div class="opt sel"><div class="odot"></div>Planilha Excel ou Google Sheets</div><div class="opt"><div class="odot"></div>Sistema de gestão financeira (Conta Azul, Omie…)</div><div class="opt"><div class="odot"></div>ERP completo (Totvs, SAP, Sankhya…)</div></div>
         <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s5"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 1 — Infraestrutura</span><span class="pgcnt">6/18</span></div><div class="pgtrack"><div class="pgfill" style="width:33%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
+      <!-- S5: Infraestrutura - CRM -->
+      <div class="sc" id="s5">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 1 — Infraestrutura</span><span class="pgcnt">6 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:33%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
         <div class="qcard"><div class="qtag">Bloco 1 — Infraestrutura & Ferramentas</div><div class="qttl">Como você gerencia clientes e histórico de contatos?</div><div class="qhint"></div>
         <div class="opts"><div class="opt sel"><div class="odot"></div>WhatsApp, memória ou caderno — sem registro formal</div><div class="opt"><div class="odot"></div>Planilha com nome e telefone básico</div><div class="opt"><div class="odot"></div>CRM simples (HubSpot Free, RD Station, Pipedrive…)</div><div class="opt"><div class="odot"></div>CRM avançado integrado ao ERP ou marketing</div></div>
         <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s6"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 2 — Processos Internos</span><span class="pgcnt">9/18</span></div><div class="pgtrack"><div class="pgfill" style="width:50%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
+      <!-- S6: Processos -->
+      <div class="sc" id="s6">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 2 — Processos</span><span class="pgcnt">9 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:50%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div><div class="bd2"></div></div></div>
         <div class="qcard"><div class="qtag">Bloco 2 — Processos Internos</div><div class="qttl">Quanto tempo a equipe gasta por semana em tarefas repetitivas?</div><div class="qhint">Preencher planilhas, e-mails padrão, emitir documentos…</div>
         <div class="opts"><div class="opt sel"><div class="odot"></div>Mais de 20 horas/semana — é um problema sério</div><div class="opt"><div class="odot"></div>11 a 20 horas/semana</div><div class="opt"><div class="odot"></div>6 a 10 horas/semana</div><div class="opt"><div class="odot"></div>Menos de 5 horas/semana</div></div>
         <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s7"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 3 — IA & Automação</span><span class="pgcnt">11/18</span></div><div class="pgtrack"><div class="pgfill" style="width:61%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div></div></div>
+      <!-- S7: IA -->
+      <div class="sc" id="s7">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 3 — IA & Automação</span><span class="pgcnt">11 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:61%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div><div class="bd2"></div></div></div>
         <div class="qcard"><div class="qtag">Bloco 3 — IA & Automação Atual</div><div class="qttl">Você já usa alguma ferramenta de Inteligência Artificial no seu negócio?</div><div class="qhint"></div>
         <div class="opts"><div class="opt"><div class="odot"></div>Não, nunca usei</div><div class="opt"><div class="odot"></div>Ouvi falar mas não sei por onde começar</div><div class="opt sel"><div class="odot"></div>Usei esporadicamente (ChatGPT para textos)</div><div class="opt"><div class="odot"></div>Uso regularmente em tarefas específicas</div><div class="opt"><div class="odot"></div>Múltiplas ferramentas de IA no fluxo de trabalho</div></div>
         <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s8"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 4F — Dados & Inteligência</span><span class="pgcnt">14/18</span></div><div class="pgtrack"><div class="pgfill" style="width:78%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div></div></div>
-        <div class="qcard"><div class="qtag">Bloco 4F — Dados & Inteligência de Negócio</div><div class="qttl">Como você toma as principais decisões do negócio hoje?</div><div class="qhint"></div>
+      <!-- S8: Dados -->
+      <div class="sc" id="s8">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 4 — Dados</span><span class="pgcnt">14 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:78%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div><div class="bd2"></div></div></div>
+        <div class="qcard"><div class="qtag">Bloco 4 — Dados & Inteligência de Negócio</div><div class="qttl">Como você toma as principais decisões do negócio hoje?</div><div class="qhint"></div>
         <div class="opts"><div class="opt sel"><div class="odot"></div>Na intuição e experiência acumulada</div><div class="opt"><div class="odot"></div>Com base no que aconteceu no mês anterior</div><div class="opt"><div class="odot"></div>Com KPIs definidos que acompanho regularmente</div><div class="opt"><div class="odot"></div>Com dashboards em tempo real cruzando múltiplas fontes</div></div>
         <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-fwd">Próxima →</button></div></div>
       </div>
 
-      <div class="sc" id="s9"><div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 5 — Visão Estratégica</span><span class="pgcnt">18/18</span></div><div class="pgtrack"><div class="pgfill" style="width:100%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div></div></div>
-        <div class="qcard"><div class="qtag">Bloco 5 — Visão Estratégica</div><div class="qttl">Quanto você estaria disposto a investir por mês em ferramentas de IA e automação?</div><div class="qhint">Isso filtra as recomendações para o seu orçamento real</div>
+      <!-- S9: Visão Estratégica -->
+      <div class="sc" id="s9">
+        <div class="pgwrap"><div class="pgtop"><span class="pglbl">Bloco 5 — Visão Estratégica</span><span class="pgcnt">18 / 18</span></div><div class="pgtrack"><div class="pgfill" style="width:100%"></div></div><div class="blkdots"><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 dn"></div><div class="bd2 act"></div></div></div>
+        <div class="qcard"><div class="qtag">Bloco 5 — Visão Estratégica</div><div class="qttl">Quanto você estaria disposto a investir por mês em ferramentas de IA e automação?</div><div class="qhint">Filtra as recomendações para o seu orçamento real</div>
         <div class="opts"><div class="opt"><div class="odot"></div>R$0 — só ferramentas gratuitas por enquanto</div><div class="opt sel"><div class="odot"></div>Até R$150/mês</div><div class="opt"><div class="odot"></div>R$150 a R$500/mês</div><div class="opt"><div class="odot"></div>R$500 a R$1.500/mês</div></div>
-        <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-gen">🚀 Gerar Diagnóstico</button></div></div>
+        <div class="navbtns"><button class="nbtn nb-back">←</button><button class="nbtn nb-gen">Gerar Diagnóstico →</button></div></div>
       </div>
 
+      <!-- S10: LOADING -->
       <div class="sc sc-load" id="s10">
-        <div class="lring"></div>
+        <div class="lring-wrap"><div class="lring"></div><div class="lring2"></div></div>
         <div class="ltitle">Gerando seu diagnóstico…</div>
         <div class="lsub">Nossa IA está analisando suas respostas</div>
+        <div class="lbar-wrap"><div class="lbar" id="lbar"></div></div>
         <div class="lsteps">
           <div class="lstep" id="ls1"><div class="ldot"></div>Calculando score de maturidade por área</div>
           <div class="lstep" id="ls2"><div class="ldot"></div>Identificando gaps críticos no seu setor</div>
@@ -375,11 +431,12 @@ body::-webkit-scrollbar{display:none;width:0;height:0;}
         </div>
       </div>
 
+      <!-- S11: GATE -->
       <div class="sc sc-gate" id="s11">
         <div class="gcard">
-          <div class="g-pre">✅ Diagnóstico Concluído</div>
+          <div class="g-pre">Diagnóstico Concluído</div>
           <div class="g-srow">
-            <div class="g-ring"><svg width="100%" height="100%" viewBox="0 0 76 76"><circle fill="none" stroke="var(--bd)" stroke-width="6" cx="38" cy="38" r="31"/><circle fill="none" stroke="var(--yl)" stroke-width="6" cx="38" cy="38" r="31" stroke-dasharray="194.8" stroke-dashoffset="77.9" stroke-linecap="round"/></svg><div class="g-rc"><div class="g-sn">60</div><div class="g-sp">%</div></div></div>
+            <div class="g-ring"><svg width="100%" height="100%" viewBox="0 0 76 76"><circle fill="none" stroke="var(--bd)" stroke-width="5.5" cx="38" cy="38" r="31"/><circle fill="none" stroke="var(--yl)" stroke-width="5.5" cx="38" cy="38" r="31" stroke-dasharray="194.8" stroke-dashoffset="77.9" stroke-linecap="round"/></svg><div class="g-rc"><div class="g-sn">60</div><div class="g-sp">/ 100</div></div></div>
             <div class="g-li"><div class="g-nv">Nível 3 — Em Transição</div><div class="g-hl">Você tem base digital.<br>Falta conectar e automatizar<br>os processos certos.</div></div>
           </div>
           <div class="g-blur"><div class="brow"><div class="bchip" style="width:52px"></div><div class="bchip" style="width:35px"></div><div class="bchip" style="width:65px"></div></div><div class="bline" style="width:85%"></div><div class="bline" style="width:62%"></div><div class="brow"><div class="bchip" style="width:100%;height:8px"></div></div></div>
@@ -389,34 +446,39 @@ body::-webkit-scrollbar{display:none;width:0;height:0;}
             <input class="gi" id="gi-wpp" placeholder="WhatsApp (com DDD)" value="" readonly/>
           </div>
           <button class="gbtn">Ver meu diagnóstico completo →</button>
-          <div class="gfine">🔒 Sem spam. Usado apenas para enviar seu relatório.</div>
+          <div class="gfine">Sem spam. Usado apenas para enviar seu relatório.</div>
         </div>
       </div>
 
+      <!-- S12: RESULTS -->
       <div class="sc sc-res" id="s12">
         <div class="rhdr">
-          <div class="r-ring"><svg width="100%" height="100%" viewBox="0 0 62 62"><circle fill="none" stroke="var(--bd)" stroke-width="5" cx="31" cy="31" r="26"/><circle fill="none" stroke="var(--yl)" stroke-width="5" cx="31" cy="31" r="26" stroke-dasharray="163.4" stroke-dashoffset="65.4" stroke-linecap="round"/></svg><div class="r-rc"><div class="rsc" style="color:var(--yl)">60</div><div class="rpt">%</div></div></div>
-          <div class="rif"><div class="rnv" style="color:var(--yl)">Nível 3 — Em Transição</div><div class="rtt">Base digital existe. Falta integrar, automatizar e usar dados.</div><div class="rsb">Gaps críticos em IA, atendimento, vendas e dados para Serviços Profissionais com 6–20 pessoas.</div></div>
+          <div class="r-ring"><svg width="100%" height="100%" viewBox="0 0 62 62"><circle fill="none" stroke="var(--bd)" stroke-width="4.5" cx="31" cy="31" r="26"/><circle fill="none" stroke="var(--yl)" stroke-width="4.5" cx="31" cy="31" r="26" stroke-dasharray="163.4" stroke-dashoffset="65.4" stroke-linecap="round"/></svg><div class="r-rc"><div class="rsc" style="color:var(--yl)">60</div><div class="rpt">/ 100</div></div></div>
+          <div class="rif">
+            <div class="rnv" style="color:var(--yl)">Nível 3 — Em Transição</div>
+            <div class="rtt">Base digital existe. Falta integrar, automatizar e usar dados.</div>
+            <div class="rsb">Gaps críticos em IA, atendimento, vendas e dados — Serviços Profissionais, 6–20 pessoas.</div>
+          </div>
         </div>
         <div class="rcols">
           <div class="rcol rcl">
-            <div class="mcard"><div class="mt">📡 Maturidade por Área</div><div class="rrows">
-              <div class="rrow"><div class="rlb">🏗 Infraestr.</div><div class="rtk"><div class="rfl" style="width:62%;background:var(--yl)"></div></div><div class="rsm">🟡</div></div>
-              <div class="rrow"><div class="rlb">⚙️ Processos</div><div class="rtk"><div class="rfl" style="width:45%;background:var(--yl)"></div></div><div class="rsm">🟡</div></div>
-              <div class="rrow"><div class="rlb">🤖 IA & Auto.</div><div class="rtk"><div class="rfl" style="width:20%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
-              <div class="rrow"><div class="rlb">📊 Dados</div><div class="rtk"><div class="rfl" style="width:15%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
-              <div class="rrow"><div class="rlb">💰 Financeiro</div><div class="rtk"><div class="rfl" style="width:70%;background:var(--gr)"></div></div><div class="rsm">🟢</div></div>
-              <div class="rrow"><div class="rlb">🤝 Vendas</div><div class="rtk"><div class="rfl" style="width:30%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
-              <div class="rrow"><div class="rlb">💬 Atendimento</div><div class="rtk"><div class="rfl" style="width:18%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
+            <div class="mcard"><div class="mt">Maturidade por Área</div><div class="rrows">
+              <div class="rrow"><div class="rlb">Infraestr.</div><div class="rtk"><div class="rfl" style="width:62%;background:var(--yl)"></div></div><div class="rsm">🟡</div></div>
+              <div class="rrow"><div class="rlb">Processos</div><div class="rtk"><div class="rfl" style="width:45%;background:var(--yl)"></div></div><div class="rsm">🟡</div></div>
+              <div class="rrow"><div class="rlb">IA & Auto.</div><div class="rtk"><div class="rfl" style="width:20%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
+              <div class="rrow"><div class="rlb">Dados</div><div class="rtk"><div class="rfl" style="width:15%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
+              <div class="rrow"><div class="rlb">Financeiro</div><div class="rtk"><div class="rfl" style="width:70%;background:var(--gr)"></div></div><div class="rsm">🟢</div></div>
+              <div class="rrow"><div class="rlb">Vendas</div><div class="rtk"><div class="rfl" style="width:30%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
+              <div class="rrow"><div class="rlb">Atendimento</div><div class="rtk"><div class="rfl" style="width:18%;background:var(--red)"></div></div><div class="rsm">🔴</div></div>
             </div></div>
-            <div class="mcard"><div class="mt">⚡ Quick Wins</div><div class="qwrows">
-              <div class="qwr"><div class="qwl">Quick Win 1</div><div class="qwt">CRM + follow-up automático</div><div class="qwtl">🛠 HubSpot Free + Make</div></div>
-              <div class="qwr"><div class="qwl">Quick Win 2</div><div class="qwt">Chatbot WhatsApp 24h</div><div class="qwtl">🛠 Typebot — Gratuito</div></div>
-              <div class="qwr"><div class="qwl">Quick Win 3</div><div class="qwt">Dashboard de KPIs automático</div><div class="qwtl">🛠 Looker Studio — Gratuito</div></div>
+            <div class="mcard"><div class="mt">Quick Wins</div><div class="qwrows">
+              <div class="qwr"><div class="qwl">Quick Win 1</div><div class="qwt">CRM + follow-up automático</div><div class="qwtl">HubSpot Free + Make</div></div>
+              <div class="qwr"><div class="qwl">Quick Win 2</div><div class="qwt">Chatbot WhatsApp 24h</div><div class="qwtl">Typebot — Gratuito</div></div>
+              <div class="qwr"><div class="qwl">Quick Win 3</div><div class="qwt">Dashboard de KPIs automático</div><div class="qwtl">Looker Studio — Gratuito</div></div>
             </div></div>
           </div>
           <div class="rcol rcr">
-            <div class="mcard"><div class="mt">🛠 Ferramentas Recomendadas</div><div class="trows">
+            <div class="mcard"><div class="mt">Ferramentas Recomendadas</div><div class="trows">
               <div class="tr"><div class="ttg">Automação</div><div class="ti"><div class="tn">Make</div><div class="td">Conecta sistemas sem código</div></div></div>
               <div class="tr"><div class="ttg">CRM</div><div class="ti"><div class="tn">HubSpot Free</div><div class="td">Pipeline + histórico completo</div></div></div>
               <div class="tr"><div class="ttg">Atendimento</div><div class="ti"><div class="tn">Typebot</div><div class="td">Chatbot WhatsApp sem dev</div></div></div>
@@ -426,138 +488,62 @@ body::-webkit-scrollbar{display:none;width:0;height:0;}
         </div>
       </div>
 
+      <!-- S13: PLAN -->
       <div class="sc sc-plan" id="s13">
         <div class="plan-hdr">
           <div class="plan-hdr-icon">🗓</div>
-          <div class="plan-hdr-info">
+          <div>
             <div class="plan-hdr-tag">Plano de Implementação</div>
             <div class="plan-hdr-title">Roadmap 30 / 60 / 90 dias — Serviços Profissionais</div>
             <div class="plan-hdr-sub">Sequência priorizada por impacto × esforço • Ferramentas dentro do orçamento declarado</div>
           </div>
         </div>
         <div class="plan-phases">
-
           <div class="plan-phase">
-            <div class="pp-head">
-              <div class="pp-badge d30">30d</div>
-              <div class="pp-label">
-                <div class="pp-title">Organizar & Estruturar</div>
-                <div class="pp-sub">Fundação digital sem custo</div>
-              </div>
-            </div>
-            <div class="pp-cost free">✓ Começa com ferramentas 100% gratuitas</div>
+            <div class="pp-head"><div class="pp-badge d30">30d</div><div class="pp-label"><div class="pp-title">Organizar & Estruturar</div><div class="pp-sub">Fundação digital sem custo</div></div></div>
+            <div class="pp-cost free">Começa com ferramentas 100% gratuitas</div>
             <div class="pp-divider"></div>
             <div class="pp-items">
-              <div class="pp-item">
-                <div class="pp-item-num n30">1</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">Ativar HubSpot Free como CRM</div>
-                  <div class="pp-item-desc">Importar contatos, criar pipeline de vendas e registrar histórico de clientes — tudo que hoje fica no WhatsApp</div>
-                  <div class="pp-tool">🛠 HubSpot Free</div>
-                </div>
-              </div>
-              <div class="pp-item">
-                <div class="pp-item-num n30">2</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">Configurar WhatsApp Business com automação básica</div>
-                  <div class="pp-item-desc">Mensagem de saudação, ausência e menu automático — resposta imediata mesmo fora do horário</div>
-                  <div class="pp-tool">🛠 WhatsApp Business</div>
-                </div>
-              </div>
-              <div class="pp-item">
-                <div class="pp-item-num n30">3</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">Mapear os 3 processos que mais consomem tempo</div>
-                  <div class="pp-item-desc">Documentar em 1 página cada: quem faz, quando, quanto tempo — base para automatizar nas próximas fases</div>
-                  <div class="pp-tool">🛠 Notion ou Google Docs</div>
-                </div>
-              </div>
+              <div class="pp-item"><div class="pp-item-num n30">1</div><div><div class="pp-item-title">Ativar HubSpot Free como CRM</div><div class="pp-item-desc">Importar contatos, criar pipeline e registrar histórico — tudo que hoje fica no WhatsApp</div><div class="pp-tool">HubSpot Free</div></div></div>
+              <div class="pp-item"><div class="pp-item-num n30">2</div><div><div class="pp-item-title">Configurar WhatsApp Business</div><div class="pp-item-desc">Mensagem de saudação, ausência e menu automático — resposta imediata fora do horário</div><div class="pp-tool">WhatsApp Business</div></div></div>
+              <div class="pp-item"><div class="pp-item-num n30">3</div><div><div class="pp-item-title">Mapear os 3 processos mais lentos</div><div class="pp-item-desc">Documentar: quem faz, quando, quanto tempo — base para automatizar nas próximas fases</div><div class="pp-tool">Notion ou Google Docs</div></div></div>
             </div>
           </div>
-
           <div class="plan-phase">
-            <div class="pp-head">
-              <div class="pp-badge d60">60d</div>
-              <div class="pp-label">
-                <div class="pp-title">Conectar & Automatizar</div>
-                <div class="pp-sub">Primeiras automações reais</div>
-              </div>
-            </div>
-            <div class="pp-cost low">✓ Primeiras automações de impacto real</div>
+            <div class="pp-head"><div class="pp-badge d60">60d</div><div class="pp-label"><div class="pp-title">Conectar & Automatizar</div><div class="pp-sub">Primeiras automações reais</div></div></div>
+            <div class="pp-cost low">Primeiras automações de impacto real</div>
             <div class="pp-divider"></div>
             <div class="pp-items">
-              <div class="pp-item">
-                <div class="pp-item-num n60">1</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">Integrar formulário de contato → CRM via Make</div>
-                  <div class="pp-item-desc">Lead novo no site cai direto no HubSpot com notificação para a equipe — sem digitação manual</div>
-                  <div class="pp-tool">🛠 Make + HubSpot</div>
-                </div>
-              </div>
-              <div class="pp-item">
-                <div class="pp-item-num n60">2</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">Chatbot WhatsApp para triagem de atendimento</div>
-                  <div class="pp-item-desc">Typebot resolve dúvidas frequentes, agenda reuniões e encaminha para humano só quando necessário</div>
-                  <div class="pp-tool">🛠 Typebot + Make</div>
-                </div>
-              </div>
-              <div class="pp-item">
-                <div class="pp-item-num n60">3</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">Dashboard de KPIs automático no Looker Studio</div>
-                  <div class="pp-item-desc">Faturamento, leads, conversão e inadimplência atualizados em tempo real — fim das planilhas manuais</div>
-                  <div class="pp-tool">🛠 Looker Studio + Sheets</div>
-                </div>
-              </div>
+              <div class="pp-item"><div class="pp-item-num n60">1</div><div><div class="pp-item-title">Integrar formulário → CRM via Make</div><div class="pp-item-desc">Lead novo cai direto no HubSpot com notificação — sem digitação manual</div><div class="pp-tool">Make + HubSpot</div></div></div>
+              <div class="pp-item"><div class="pp-item-num n60">2</div><div><div class="pp-item-title">Chatbot WhatsApp para triagem</div><div class="pp-item-desc">Typebot resolve dúvidas frequentes, agenda reuniões e encaminha para humano só quando necessário</div><div class="pp-tool">Typebot + Make</div></div></div>
+              <div class="pp-item"><div class="pp-item-num n60">3</div><div><div class="pp-item-title">Dashboard de KPIs no Looker Studio</div><div class="pp-item-desc">Faturamento, leads e conversão em tempo real — fim das planilhas manuais</div><div class="pp-tool">Looker Studio + Sheets</div></div></div>
             </div>
           </div>
-
           <div class="plan-phase">
-            <div class="pp-head">
-              <div class="pp-badge d90">90d</div>
-              <div class="pp-label">
-                <div class="pp-title">Escalar com IA</div>
-                <div class="pp-sub">IA gerando resultado real</div>
-              </div>
-            </div>
-            <div class="pp-cost med">✓ IA gerando resultado mensurável</div>
+            <div class="pp-head"><div class="pp-badge d90">90d</div><div class="pp-label"><div class="pp-title">Escalar com IA</div><div class="pp-sub">IA gerando resultado real</div></div></div>
+            <div class="pp-cost med">IA gerando resultado mensurável</div>
             <div class="pp-divider"></div>
             <div class="pp-items">
-              <div class="pp-item">
-                <div class="pp-item-num n90">1</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">IA generativa no chatbot — resolve 70% sem humano</div>
-                  <div class="pp-item-desc">Conectar GPT ao Typebot: respostas inteligentes, contextualizadas e no tom da marca</div>
-                  <div class="pp-tool">🛠 Typebot + OpenAI API</div>
-                </div>
-              </div>
-              <div class="pp-item">
-                <div class="pp-item-num n90">2</div>
-                <div class="pp-item-info">
-                  <div class="pp-item-title">Segmentação automática de clientes por comportamento</div>
-                  <div class="pp-item-desc">HubSpot identifica clientes inativos, em risco de churn ou com oportunidade de upsell — sem análise manual</div>
-                  <div class="pp-tool">🛠 HubSpot + Make</div>
-                </div>
-              </div>
+              <div class="pp-item"><div class="pp-item-num n90">1</div><div><div class="pp-item-title">IA generativa no chatbot — 70% sem humano</div><div class="pp-item-desc">Conectar GPT ao Typebot: respostas inteligentes, contextualizadas e no tom da marca</div><div class="pp-tool">Typebot + OpenAI API</div></div></div>
+              <div class="pp-item"><div class="pp-item-num n90">2</div><div><div class="pp-item-title">Segmentação automática de clientes</div><div class="pp-item-desc">HubSpot identifica inativos, em risco de churn ou com oportunidade de upsell — sem análise manual</div><div class="pp-tool">HubSpot + Make</div></div></div>
             </div>
           </div>
-
         </div>
       </div>
 
+      <!-- S14: PROCESSO -->
       <div class="sc sc-proc" id="s14">
         <div class="proc-hdr">
           <div class="proc-icon">⚙️</div>
-          <div><div class="proc-tag">Exemplo de processo auditado</div><div class="proc-title">Atendimento ao Cliente — Do contato à resolução</div><div class="proc-sub">Atual: 100% manual • Potencial de automação: 70% • Economia: ~12h/semana</div></div>
+          <div><div class="proc-tag">Processo auditado</div><div class="proc-title">Atendimento ao Cliente — Do contato à resolução</div><div class="proc-sub">Atual: 100% manual • Potencial de automação: 70% • Economia: ~12h/semana</div></div>
         </div>
         <div class="proc-cols">
           <div class="proc-col">
-            <div class="flow-card"><div class="mt">🔄 Hoje vs. Como deveria funcionar</div>
+            <div class="flow-card"><div class="mt">Hoje vs. Como deveria funcionar</div>
               <div class="flow-steps">
-                <div class="fstep"><div class="fnum done">1</div><div class="finfo"><div class="ftitle">Cliente entra em contato</div><div class="fdesc">WhatsApp, ligação ou e-mail — sem triagem automática</div><div class="fbadge fb-red">⏱ Resposta média: +4h</div></div></div>
-                <div class="fstep"><div class="fnum now">2</div><div class="finfo"><div class="ftitle">Triagem e roteamento</div><div class="fdesc">Hoje: manual. Com IA: chatbot classifica e resolve 70% na hora</div><div class="fbadge fb-blue">🤖 Automatizável agora</div></div></div>
-                <div class="fstep"><div class="fnum todo">3</div><div class="finfo"><div class="ftitle">Resolução + registro no CRM</div><div class="fdesc">Histórico disponível para todo time automaticamente</div><div class="fbadge fb-green">✓ Meta: resposta em &lt;15 min</div></div></div>
+                <div class="fstep"><div class="fnum done">1</div><div class="finfo"><div class="ftitle">Cliente entra em contato</div><div class="fdesc">WhatsApp, ligação ou e-mail — sem triagem automática</div><div class="fbadge fb-red">Resposta média: +4h</div></div></div>
+                <div class="fstep"><div class="fnum now">2</div><div class="finfo"><div class="ftitle">Triagem e roteamento</div><div class="fdesc">Hoje: manual. Com IA: chatbot classifica e resolve 70% na hora</div><div class="fbadge fb-blue">Automatizável agora</div></div></div>
+                <div class="fstep"><div class="fnum todo">3</div><div class="finfo"><div class="ftitle">Resolução + registro no CRM</div><div class="fdesc">Histórico disponível para todo time automaticamente</div><div class="fbadge fb-green">Meta: resposta em &lt;15 min</div></div></div>
               </div>
             </div>
             <div class="tool-spot"><div class="ts-label">Ferramentas para este processo</div>
@@ -569,27 +555,27 @@ body::-webkit-scrollbar{display:none;width:0;height:0;}
             </div>
           </div>
           <div class="proc-col">
-            <div class="mcard" style="flex:1;"><div class="mt">📊 Impacto esperado</div>
-              <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
-                <div style="background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:9px 11px;">
-                  <div style="font-size:7px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;">Antes da automação</div>
-                  <div style="display:flex;flex-direction:column;gap:4px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8.5px;color:var(--mu)">Tempo de resposta</span><span style="font-size:9px;font-weight:700;color:var(--red)">+4 horas</span></div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8.5px;color:var(--mu)">Atendimentos/dia</span><span style="font-size:9px;font-weight:700;color:var(--or)">8–12</span></div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8.5px;color:var(--mu)">Horas em suporte/semana</span><span style="font-size:9px;font-weight:700;color:var(--red)">~20h</span></div>
+            <div class="mcard" style="flex:1;"><div class="mt">Impacto Esperado</div>
+              <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px;">
+                <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;">
+                  <div style="font-size:7px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;">Antes da automação</div>
+                  <div style="display:flex;flex-direction:column;gap:5px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8px;color:var(--mu2)">Tempo de resposta</span><span style="font-size:9px;font-weight:700;color:var(--red)">+4 horas</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8px;color:var(--mu2)">Atendimentos/dia</span><span style="font-size:9px;font-weight:700;color:var(--or)">8–12</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8px;color:var(--mu2)">Horas em suporte/semana</span><span style="font-size:9px;font-weight:700;color:var(--red)">~20h</span></div>
                   </div>
                 </div>
-                <div style="background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.2);border-radius:7px;padding:9px 11px;">
-                  <div style="font-size:7px;color:var(--ac);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;">Depois da automação</div>
-                  <div style="display:flex;flex-direction:column;gap:4px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8.5px;color:var(--mu)">Tempo de resposta</span><span style="font-size:9px;font-weight:700;color:var(--ac)">&lt;2 minutos</span></div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8.5px;color:var(--mu)">Atendimentos/dia</span><span style="font-size:9px;font-weight:700;color:var(--ac)">Ilimitado</span></div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8.5px;color:var(--mu)">Horas em suporte/semana</span><span style="font-size:9px;font-weight:700;color:var(--ac)">~8h (−60%)</span></div>
+                <div style="background:rgba(0,229,160,.04);border:1px solid rgba(0,229,160,.18);border-radius:8px;padding:9px 11px;">
+                  <div style="font-size:7px;color:var(--ac);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;">Depois da automação</div>
+                  <div style="display:flex;flex-direction:column;gap:5px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8px;color:var(--mu2)">Tempo de resposta</span><span style="font-size:9px;font-weight:700;color:var(--ac)">&lt;2 minutos</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8px;color:var(--mu2)">Atendimentos/dia</span><span style="font-size:9px;font-weight:700;color:var(--ac)">Ilimitado</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:8px;color:var(--mu2)">Horas em suporte/semana</span><span style="font-size:9px;font-weight:700;color:var(--ac)">~8h (−60%)</span></div>
                   </div>
                 </div>
-                <div style="background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:8px 11px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:clamp(11px,1.7vw,15px);font-weight:800;color:var(--ac);">R$2.400–R$4.800/mês</div>
-                  <div style="font-size:7.5px;color:var(--mu);margin-top:2px;">em horas recuperadas (12h × R$50–100/h)</div>
+                <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 11px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-size:clamp(11px,1.7vw,16px);font-weight:800;color:var(--ac);">R$2.400–R$4.800/mês</div>
+                  <div style="font-size:7px;color:var(--mu);margin-top:2px;">em horas recuperadas (12h × R$50–100/h)</div>
                 </div>
               </div>
             </div>
@@ -597,24 +583,25 @@ body::-webkit-scrollbar{display:none;width:0;height:0;}
         </div>
       </div>
 
+      <!-- S15: CTA HOOK -->
       <div class="sc sc-hook" id="s15">
         <div class="hkcard">
           <div class="hk-top">
             <div class="hk-ico">🚀</div>
             <div class="hk-inf">
-              <div class="hk-pre">✅ Diagnóstico completo</div>
+              <div class="hk-pre">Diagnóstico completo</div>
               <div class="hk-ttl">Encontramos <span style="color:var(--red)">4 gaps críticos</span><br>na sua operação — e os<br><span style="color:var(--ac)">quick wins para corrigir</span></div>
-              <div class="hk-sub">Com base nas suas respostas, identificamos oportunidades de automação imediata que liberam tempo e melhoram resultados — sem precisar de dev ou grande investimento.</div>
+              <div class="hk-sub">Com base nas suas respostas, identificamos oportunidades de automação imediata que liberam tempo e melhoram resultados — sem dev ou grande investimento.</div>
             </div>
           </div>
           <div class="hk-grid">
             <div class="hkf"><div class="hkf-top"><div class="hkf-ico">⏱</div><div class="hkf-lbl">Tempo desperdiçado</div></div><div class="hkf-val red">+20h/semana</div><div class="hkf-hint">Em tarefas automatizáveis com ferramentas gratuitas</div></div>
-            <div class="hkf"><div class="hkf-top"><div class="hkf-ico">💸</div><div class="hkf-lbl">Leads perdidos</div></div><div class="hkf-val or">~40% do funil</div><div class="hkf-hint">Sem CRM ou follow-up automático, leads esfriam</div></div>
+            <div class="hkf"><div class="hkf-top"><div class="hkf-ico">💸</div><div class="hkf-lbl">Leads perdidos</div></div><div class="hkf-val or">~40% do funil</div><div class="hkf-hint">Sem CRM ou follow-up, leads esfriam antes de converter</div></div>
             <div class="hkf"><div class="hkf-top"><div class="hkf-ico">📊</div><div class="hkf-lbl">Decisões sem dados</div></div><div class="hkf-val yl">0 dashboards</div><div class="hkf-hint">Concorrentes com dados decidem 3× mais rápido</div></div>
             <div class="hkf"><div class="hkf-top"><div class="hkf-ico">💬</div><div class="hkf-lbl">Atendimento manual</div></div><div class="hkf-val or">&gt;4h resposta</div><div class="hkf-hint">74% dos clientes desistem sem resposta em 1 hora</div></div>
           </div>
           <div class="hk-urg">
-            <div class="hku-ttl">⚡ Seus 3 quick wins identificados</div>
+            <div class="hku-ttl">Seus 3 quick wins identificados</div>
             <div class="hku-it">Automatizar atendimento no WhatsApp — resposta em &lt;2 min, sem esforço manual</div>
             <div class="hku-it">CRM ativo com follow-up automático — recupera leads que hoje somem no funil</div>
             <div class="hku-it">Dashboard de KPIs em tempo real — decisões baseadas em dados, não em intuição</div>
@@ -623,113 +610,129 @@ body::-webkit-scrollbar{display:none;width:0;height:0;}
             <div class="hkc-ttl">Quer o plano completo de implementação?</div>
             <div class="hkc-sub">Em 60 minutos você sai com roadmap priorizado, ferramentas configuradas e clareza total sobre o que fazer primeiro.</div>
             <div class="hkc-btn">Agendar Sessão de Implementação — R$497</div>
-            <div class="hkc-fine">Ou acesse o relatório completo em PDF por R$97 →</div>
+            <div class="hkc-fine">Ou acesse o relatório completo em PDF →</div>
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="ctrl">
       <button class="cbtn" id="playbtn" onclick="togglePlay()">▶</button>
-      <div class="tline" onclick="seek(event)"><div class="tfill" id="tfill" style="width:0%"></div></div>
-      <div class="tlbl" id="tlbl">0:00 / 0:59</div>
+      <div class="tline" id="tline" onclick="seek(event)">
+        <div class="tfill" id="tfill" style="width:0%"></div>
+      </div>
+      <div class="tlbl" id="tlbl">0:00 / 1:02</div>
       <button class="sbtn" id="sbtn" onclick="cycleSpeed()">1×</button>
-      <button class="cbtn" onclick="doRestart()">↺</button>
+      <button class="cbtn" onclick="doRestart()" title="Reiniciar">↺</button>
     </div>
 
     <div class="caption-wrap">
       <div class="caption-text" id="cap"></div>
     </div>
-
   </div>
 
   <div class="below">
-    <div class="bi"><span style="color:var(--ac)">●</span> 6 blocos completos de perguntas</div>
-    <div class="bi"><span style="color:var(--ac2)">●</span> Plano 30/60/90 em cena dedicada</div>
-    <div class="bi"><span style="color:var(--ac3)">●</span> Narração abaixo do player</div>
+    <div class="bi"><span>●</span> 6 blocos de perguntas</div>
+    <div class="bi b2"><span>●</span> Plano 30/60/90 em cena dedicada</div>
+    <div class="bi b3"><span>●</span> Loop automático ao final</div>
   </div>
 </div>
 
 <script>
-const TOTAL = 59000;
+const TOTAL = 62000;
 
 const SCENES = [
-  [0,     3100,  's0',  'Página Inicial'],
-  [3100,  5000,  's1',  'B0 — Setor'],
-  [5000,  6800,  's2',  'B0 — Tamanho'],
-  [6800,  8600,  's3',  'B0 — Faturamento'],
-  [8600,  10400, 's4',  'B1 — Infraestrutura: Finanças'],
-  [10400, 12200, 's5',  'B1 — Infraestrutura: CRM'],
-  [12200, 14200, 's6',  'B2 — Processos'],
-  [14200, 16200, 's7',  'B3 — IA & Automação'],
-  [16200, 18200, 's8',  'B4F — Dados'],
-  [18200, 20000, 's9',  'B5 — Visão Estratégica'],
-  [20000, 25500, 's10', 'Gerando Diagnóstico…'],
-  [25500, 35000, 's11', 'Gate — Cadastro'],
-  [35000, 42000, 's12', 'Resultado — Radar + Ferramentas'],
-  [42000, 50000, 's13', 'Plano 30/60/90 dias'],
-  [50000, 55000, 's14', 'Processo Auditado'],
-  [55000, 59000, 's15', 'Achado Crítico + CTA'],
+  [0,     3200,  's0',  'Página Inicial'],
+  [3200,  5100,  's1',  'B0 — Setor'],
+  [5100,  6900,  's2',  'B0 — Tamanho'],
+  [6900,  8700,  's3',  'B0 — Faturamento'],
+  [8700,  10500, 's4',  'B1 — Infraestrutura'],
+  [10500, 12300, 's5',  'B1 — CRM'],
+  [12300, 14300, 's6',  'B2 — Processos'],
+  [14300, 16300, 's7',  'B3 — IA & Automação'],
+  [16300, 18300, 's8',  'B4 — Dados'],
+  [18300, 20100, 's9',  'B5 — Visão Estratégica'],
+  [20100, 25800, 's10', 'Gerando Diagnóstico…'],
+  [25800, 35200, 's11', 'Gate — Cadastro'],
+  [35200, 42500, 's12', 'Resultado — Radar & Ferramentas'],
+  [42500, 50500, 's13', 'Plano 30/60/90 dias'],
+  [50500, 56000, 's14', 'Processo Auditado'],
+  [56000, 62000, 's15', 'Gaps Críticos + CTA'],
 ];
 
 const CAPS = [
-  [200,   3000,  'Welcome ao <strong>MapeIA</strong> — o diagnóstico de IA e automação criado para PMEs brasileiras.'],
-  [3100,  5000,  'O <strong>Bloco 0</strong> mapeia o perfil da empresa: setor, tamanho e faturamento — para personalizar cada recomendação.'],
-  [5000,  6800,  'Cada resposta <strong>afina o diagnóstico</strong>. Em menos de 5 minutos, o sistema identifica onde estão os maiores gaps.'],
-  [6800,  8600,  'O faturamento define o <strong>teto de investimento realista</strong> — só aparecem ferramentas que cabem no seu orçamento.'],
-  [8600,  10400, 'O <strong>Bloco 1</strong> mapeia infraestrutura: como estão finanças, documentos e as ferramentas que a empresa já usa hoje.'],
-  [10400, 12200, 'Sem CRM, <strong>leads e histórico de clientes</strong> se perdem no WhatsApp. Este é o gap mais comum entre PMEs brasileiras.'],
-  [12200, 14200, 'O <strong>Bloco 2</strong> revela onde o tempo é desperdiçado. Mais de 20 horas semanais em tarefas repetitivas é um sinal crítico.'],
-  [14200, 16200, 'O <strong>Bloco 3</strong> mede o uso real de IA — não o que a empresa planeja, mas o que de fato usa hoje no dia a dia.'],
-  [16200, 18200, 'O <strong>Bloco de Dados</strong> é onde a maioria falha: decisões na intuição, sem dashboards, sem métricas confiáveis.'],
-  [18200, 20000, 'Última pergunta. O orçamento declarado <strong>filtra automaticamente</strong> quais ferramentas aparecem no relatório.'],
-  [20000, 25500, 'Com todas as respostas, a IA <strong>calcula o score de maturidade</strong> por área — infraestrutura, processos, dados, atendimento e mais.'],
-  [25500, 30000, 'O score aparece na tela — mas o <strong>diagnóstico completo fica bloqueado</strong> até o cadastro. Uma troca justa pelo valor entregue.'],
-  [30000, 35000, 'Com e-mail e WhatsApp, o relatório é <strong>liberado na hora</strong> — e você tem um lead com contexto completo para converter.'],
-  [35000, 42000, 'O resultado traz o <strong>radar de maturidade</strong> por área com semáforos, os 3 quick wins de impacto imediato e as ferramentas certas.'],
-  [42000, 50000, 'O <strong>plano 30/60/90 dias</strong> detalha cada ação com ferramenta, descrição e custo estimado por fase — sequência priorizada por ROI.'],
-  [50000, 55000, 'O <strong>processo auditado</strong> mostra como está hoje, o que automatizar e o impacto financeiro real — antes e depois.'],
-  [55000, 59000, 'A cena final destaca os <strong>quick wins identificados</strong> e convida o dono da empresa a dar o próximo passo com clareza e confiança.'],
+  [200,   3100,  '<strong>MapeIA Brasil</strong> — diagnóstico de prontidão para IA e automação, criado para PMEs brasileiras.'],
+  [3200,  5000,  'O <strong>Bloco 0</strong> mapeia o perfil da empresa: setor, tamanho e faturamento — para personalizar cada recomendação.'],
+  [5100,  6800,  'Cada resposta <strong>afina o diagnóstico</strong>. Em menos de 5 minutos, o sistema identifica onde estão os maiores gaps.'],
+  [6900,  8600,  'O faturamento define o <strong>teto de investimento realista</strong> — só aparecem ferramentas que cabem no seu orçamento.'],
+  [8700,  10400, 'O <strong>Bloco 1</strong> mapeia infraestrutura: como estão finanças, documentos e as ferramentas que a empresa já usa.'],
+  [10500, 12200, 'Sem CRM, <strong>leads e histórico de clientes</strong> se perdem no WhatsApp. Este é o gap mais comum entre PMEs brasileiras.'],
+  [12300, 14200, 'O <strong>Bloco 2</strong> revela onde o tempo é desperdiçado. Mais de 20h semanais em tarefas repetitivas é um sinal crítico.'],
+  [14300, 16200, 'O <strong>Bloco 3</strong> mede o uso real de IA — não o que a empresa planeja, mas o que de fato usa no dia a dia.'],
+  [16300, 18200, 'O <strong>Bloco de Dados</strong> é onde a maioria falha: decisões na intuição, sem dashboards ou métricas confiáveis.'],
+  [18300, 20000, 'Última pergunta. O orçamento declarado <strong>filtra automaticamente</strong> quais ferramentas aparecem no relatório.'],
+  [20100, 25700, 'Com todas as respostas, a IA <strong>calcula o score de maturidade</strong> por área — infraestrutura, processos, dados, atendimento e mais.'],
+  [25800, 30200, 'O score aparece na tela — mas o <strong>diagnóstico completo fica bloqueado</strong> até o cadastro. Uma troca justa pelo valor entregue.'],
+  [30200, 35100, 'Com e-mail e WhatsApp, o relatório é <strong>liberado na hora</strong> — e você tem um lead com contexto completo para converter.'],
+  [35200, 42400, 'O resultado traz o <strong>radar de maturidade</strong> com semáforos por área, os 3 quick wins de impacto imediato e as ferramentas certas.'],
+  [42500, 50400, 'O <strong>plano 30/60/90 dias</strong> detalha cada ação com ferramenta, descrição e custo estimado — sequência priorizada por ROI.'],
+  [50500, 55900, 'O <strong>processo auditado</strong> mostra o estado atual, o que automatizar e o impacto financeiro real — antes e depois.'],
+  [56000, 62000, 'A cena final destaca os <strong>quick wins identificados</strong> e convida o empresário a dar o próximo passo com clareza e confiança.'],
 ];
 
 const CKF = [
-  [0,    50,82,false],[2600,50,82,true],
-  [3300, 50,64,false],[4400,50,60,true],[4700,72,86,true],
-  [5100, 50,54,true],[6600,72,86,true],
-  [7000, 50,48,true],[8400,72,86,true],
-  [8800, 50,51,true],[10200,72,86,true],
-  [10600,50,47,true],[12000,72,86,true],
-  [12400,50,44,true],[14000,72,86,true],
-  [14400,50,57,true],[16000,72,86,true],
-  [16400,50,44,true],[18000,72,86,true],
-  [18400,50,52,true],[19800,72,86,true],
-  [20500,50,50,false],
-  [25800,50,74,false],[26800,50,74,true],[28200,50,81,true],[30000,50,87,true],[33000,50,94,true],
-  [35500,50,50,false],[42500,50,50,false],
-  [50500,50,50,false],[55500,50,88,true],
-  [59000,55,88,false],
+  [0,50,80,false],[2800,50,80,true],
+  [3400,50,62,false],[4500,50,58,true],[4800,73,84,true],
+  [5300,50,52,true],[7000,73,84,true],
+  [7200,50,46,true],[8500,73,84,true],
+  [8900,50,50,true],[10300,73,84,true],
+  [10700,50,45,true],[12100,73,84,true],
+  [12500,50,42,true],[14100,73,84,true],
+  [14500,50,55,true],[16100,73,84,true],
+  [16500,50,42,true],[18100,73,84,true],
+  [18500,50,50,true],[19900,73,84,true],
+  [20600,50,50,false],
+  [26000,50,72,false],[27000,50,72,true],[28400,50,79,true],[30200,50,85,true],[33200,50,91,true],
+  [35700,50,50,false],[42700,50,50,false],
+  [50700,50,50,false],[56200,50,86,true],
+  [62000,55,86,false],
 ];
 
 const TYPING = [
-  [26900,'gi-name','Carlos Mendes'],
-  [28300,'gi-email','carlos@escritorio.adv.br'],
-  [30100,'gi-wpp','(11) 98765-4321'],
+  [27100,'gi-name','Carlos Mendes'],
+  [28500,'gi-email','carlos@escritorio.adv.br'],
+  [30300,'gi-wpp','(11) 98765-4321'],
 ];
 
-const LSTEPS=[[20300,'ls1'],[21500,'ls2'],[22700,'ls3'],[23900,'ls4']];
+const LSTEPS = [[20500,'ls1'],[21700,'ls2'],[22900,'ls3'],[24100,'ls4']];
+const LBAR_STEPS = [[20200,0],[20500,20],[21700,42],[22900,64],[24100,86],[25600,100]];
 
 let elapsed=0,startTime=null,playing=false,rafId=null;
-let spIdx=0; const speeds=[1,1.5,2,3];
+let spIdx=0;
+const speeds=[1,1.5,2,3];
 
-function showSc(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id)?.classList.add('on');}
-function setLbl(t){const e=document.getElementById('slbl');e.textContent=t;e.classList.add('on');}
+function showSc(id){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  const el=document.getElementById(id);
+  if(el) el.classList.add('on');
+}
+function setLbl(t){
+  const e=document.getElementById('slbl');
+  e.textContent=t;
+  e.classList.add('on');
+}
 
 function updateCap(t){
   const cap=document.getElementById('cap');
   const a=CAPS.find(c=>t>=c[0]&&t<c[1]);
-  if(a){cap.innerHTML=a[2];cap.classList.add('on');}
-  else cap.classList.remove('on');
+  if(a){
+    const scIdx=SCENES.findIndex(s=>t>=s[0]&&t<s[1]);
+    const scNum=scIdx>=0?scIdx+1:1;
+    cap.innerHTML=`<span class="cap-step">${scNum}/${SCENES.length}</span>${a[2]}`;
+    cap.classList.add('on');
+  } else {
+    cap.classList.remove('on');
+  }
 }
 
 function easeOut(t){return 1-Math.pow(1-t,3);}
@@ -742,44 +745,75 @@ function updateCur(t){
   const sp=n[0]-p[0],pct=sp>0?Math.min((t-p[0])/sp,1):1,e=easeOut(pct);
   cur.style.left=lerp(p[1],n[1],e)+'%';
   cur.style.top=lerp(p[2],n[2],e)+'%';
-  cur.classList.toggle('clk',CKF.some(k=>k[3]&&Math.abs(t-k[0])<160));
+  const isClicking=CKF.some(k=>k[3]&&Math.abs(t-k[0])<180);
+  if(isClicking&&!cur.classList.contains('clk')){
+    cur.classList.add('clk');
+    setTimeout(()=>cur.classList.remove('clk'),350);
+  }
 }
 
 function updateTyping(t){
   TYPING.forEach(([st,id,txt])=>{
     const el=document.getElementById(id);if(!el)return;
-    if(t>=st){const c=Math.floor((t-st)*0.009);el.value=txt.substring(0,Math.min(c,txt.length));if(c>=txt.length)el.classList.add('focus');}
-    else{el.value='';el.classList.remove('focus');}
+    if(t>=st){
+      const c=Math.floor((t-st)*0.01);
+      el.value=txt.substring(0,Math.min(c,txt.length));
+      if(c>=txt.length) el.classList.add('focus');
+    } else {
+      el.value='';
+      el.classList.remove('focus');
+    }
   });
 }
 
 function updateLoader(t){
   LSTEPS.forEach(([st,id],i)=>{
     const el=document.getElementById(id);if(!el)return;
-    if(t>=st){el.classList.add('lit');if(i>0)document.getElementById(LSTEPS[i-1][1])?.classList.remove('lit');}
+    if(t>=st) el.classList.add('lit');
     else el.classList.remove('lit');
   });
+  const lbar=document.getElementById('lbar');
+  if(!lbar)return;
+  let pct=0;
+  for(let i=0;i<LBAR_STEPS.length-1;i++){
+    const [t0,p0]=LBAR_STEPS[i],[t1,p1]=LBAR_STEPS[i+1];
+    if(t>=t0&&t<=t1){pct=lerp(p0,p1,Math.min((t-t0)/(t1-t0),1));break;}
+    if(t>t1) pct=p1;
+  }
+  lbar.style.width=pct+'%';
 }
 
 function tick(ts){
   if(!playing)return;
-  if(!startTime)startTime=ts-elapsed/speeds[spIdx];
+  if(!startTime) startTime=ts-elapsed/speeds[spIdx];
   elapsed=(ts-startTime)*speeds[spIdx];
-  if(elapsed>=TOTAL){elapsed=TOTAL;playing=false;document.getElementById('playbtn').textContent='▶';}
+
+  if(elapsed>=TOTAL){
+    elapsed=0;startTime=null;
+    resetAll();
+    showSc('s0');setLbl('Página Inicial');
+    document.getElementById('tfill').style.width='0%';
+    document.getElementById('tlbl').textContent='0:00 / 1:02';
+    rafId=requestAnimationFrame(tick);
+    return;
+  }
+
   const t=elapsed;
   const sc=SCENES.find(s=>t>=s[0]&&t<s[1])||SCENES[SCENES.length-1];
   showSc(sc[2]);setLbl(sc[3]);
   updateCur(t);updateTyping(t);updateCap(t);
-  if(sc[2]==='s10')updateLoader(t);
-  const u=document.getElementById('urlbar');
-  if(t<3100)u.textContent='mapeia.com.br';
-  else if(t<20000)u.textContent='mapeia.com.br/diagnostico';
-  else if(t<25500)u.textContent='mapeia.com.br/processando…';
-  else u.textContent='mapeia.com.br/resultado/completo';
+  if(sc[2]==='s10') updateLoader(t);
+
+  const urlEl=document.getElementById('urlbar');
+  if(t<3200){urlEl.textContent='mapeiabrasil.com';urlEl.classList.remove('active');}
+  else if(t<20100){urlEl.textContent='mapeiabrasil.com/diagnostico';urlEl.classList.add('active');}
+  else if(t<25800){urlEl.textContent='mapeiabrasil.com/processando…';urlEl.classList.add('active');}
+  else{urlEl.textContent='mapeiabrasil.com/resultado';urlEl.classList.add('active');}
+
   document.getElementById('tfill').style.width=(t/TOTAL*100)+'%';
   const s=Math.floor(t/1000),tot=Math.floor(TOTAL/1000);
   document.getElementById('tlbl').textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} / ${Math.floor(tot/60)}:${String(tot%60).padStart(2,'0')}`;
-  if(playing)rafId=requestAnimationFrame(tick);
+  if(playing) rafId=requestAnimationFrame(tick);
 }
 
 function togglePlay(){
@@ -787,33 +821,57 @@ function togglePlay(){
   document.getElementById('playbtn').textContent=playing?'⏸':'▶';
   if(playing){
     if(elapsed>=TOTAL){elapsed=0;startTime=null;resetAll();}
-    startTime=null;rafId=requestAnimationFrame(tick);
-  } else cancelAnimationFrame(rafId);
+    startTime=null;
+    rafId=requestAnimationFrame(tick);
+  } else {
+    cancelAnimationFrame(rafId);
+  }
 }
 
 function seek(e){
   const r=e.currentTarget.getBoundingClientRect();
   elapsed=((e.clientX-r.left)/r.width)*TOTAL;
-  startTime=null;resetAll();
-  if(!playing)requestAnimationFrame(ts=>{startTime=ts-elapsed/speeds[spIdx];tick(ts);});
+  if(elapsed<0) elapsed=0;
+  if(elapsed>TOTAL) elapsed=TOTAL;
+  startTime=null;
+  resetAll();
+  const t=elapsed;
+  const sc=SCENES.find(s=>t>=s[0]&&t<s[1])||SCENES[SCENES.length-1];
+  showSc(sc[2]);setLbl(sc[3]);
+  updateCur(t);updateTyping(t);updateCap(t);
+  if(sc[2]==='s10') updateLoader(t);
+  document.getElementById('tfill').style.width=(t/TOTAL*100)+'%';
+  if(!playing) requestAnimationFrame(ts=>{startTime=ts-elapsed/speeds[spIdx];tick(ts);});
 }
 
-function cycleSpeed(){spIdx=(spIdx+1)%speeds.length;startTime=null;document.getElementById('sbtn').textContent=speeds[spIdx]+'×';}
+function cycleSpeed(){
+  spIdx=(spIdx+1)%speeds.length;
+  startTime=null;
+  document.getElementById('sbtn').textContent=speeds[spIdx]+'×';
+}
 
 function resetAll(){
-  ['gi-name','gi-email','gi-wpp'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.classList.remove('focus');}});
+  ['gi-name','gi-email','gi-wpp'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.value='';el.classList.remove('focus');}
+  });
   LSTEPS.forEach(([,id])=>document.getElementById(id)?.classList.remove('lit'));
+  const lbar=document.getElementById('lbar');
+  if(lbar) lbar.style.width='0%';
   document.getElementById('cap').classList.remove('on');
+  document.getElementById('urlbar').classList.remove('active');
 }
 
 function doRestart(){
-  cancelAnimationFrame(rafId);elapsed=0;startTime=null;playing=false;
+  cancelAnimationFrame(rafId);
+  elapsed=0;startTime=null;playing=false;
   document.getElementById('playbtn').textContent='▶';
   document.getElementById('tfill').style.width='0%';
-  document.getElementById('tlbl').textContent='0:00 / 0:59';
+  document.getElementById('tlbl').textContent='0:00 / 1:02';
   document.getElementById('cur').style.left='50%';
-  document.getElementById('cur').style.top='82%';
-  showSc('s0');setLbl('Página Inicial');resetAll();
+  document.getElementById('cur').style.top='80%';
+  showSc('s0');setLbl('Página Inicial');
+  resetAll();
 }
 
 showSc('s0');setLbl('Página Inicial');
