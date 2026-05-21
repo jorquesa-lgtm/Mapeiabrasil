@@ -401,6 +401,8 @@
           </ul>
           <div style="margin-top:auto;padding-top:8px;">
             <div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--heading);">Grátis</div>
+            <input type="email" id="introEmail" placeholder="Seu e-mail para receber o resultado" autocomplete="email" inputmode="email" maxlength="319" style="width:100%;padding:12px 14px;font-size:13px;background:var(--subtle);color:var(--text);border:1px solid var(--border);border-radius:10px;box-sizing:border-box;margin-top:10px;outline:none;transition:border .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            <p id="introEmailErr" style="font-size:12px;color:var(--red);margin:4px 0 0;min-height:16px;display:none;">Por favor, insira um e-mail válido.</p>
             <button type="button" class="start-btn" id="startBtn" style="width:100%;margin-top:10px;padding:13px 20px;font-size:14px;">Iniciar gratuito &rarr;</button>
           </div>
         </div>
@@ -1844,8 +1846,41 @@ supabase.auth.getSession().then(({ data: { session: s } }) => {
   }
 });
 
-// Free flow
+// Free flow — email collected upfront so Q4 gate is skipped
 document.getElementById('startBtn').addEventListener('click', () => {
+  const emailInput = document.getElementById('introEmail');
+  const emailErr   = document.getElementById('introEmailErr');
+  const email = (emailInput ? emailInput.value.trim().toLowerCase() : '');
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (emailErr) emailErr.style.display = 'block';
+    if (emailInput) emailInput.focus();
+    return;
+  }
+  if (emailErr) emailErr.style.display = 'none';
+
+  // Pre-capture so the mid-quiz email gate (Q4) is automatically skipped
+  state.capturedEmail = email;
+  state.emailCaptured = true;
+  sessionStorage.setItem('mapeia_lead_email', email);
+
+  // Fire the same lead capture as the Q4 gate would have
+  fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      apikey: SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({
+      email,
+      source: 'intro_email_field',
+      plan_interest: 'free',
+    }),
+  }).then(r => r.json()).then(d => {
+    if (d && d.lead_id) state.leadId = d.lead_id;
+  }).catch(() => {});
+
   startQuiz(false);
 });
 
