@@ -73,6 +73,10 @@ export default function DashboardPage({ user }: { user: User }) {
     if (showRefresh) setRefreshing(true);
     else setLoading(true);
 
+    // Retroactively stamp user_id on rows saved anonymously during the diagnostic.
+    // Idempotent — once claimed the UPDATE is a no-op on subsequent loads.
+    await supabase.rpc("claim_my_diagnostics").catch(() => {});
+
     const [profileRes, subRes, reportsByUid, diagsByUid] = await Promise.all([
       supabase.from("user_profiles").select("*").eq("id", user.id).maybeSingle(),
       supabase
@@ -142,15 +146,56 @@ export default function DashboardPage({ user }: { user: User }) {
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
-    // Fallback: if nothing found by user_id, try email lookup on report_data
+    // Fallback: if the claim RPC didn't find anything (e.g. first login before the
+    // migration ran), also query by email directly — covers both report_data (paid)
+    // and diagnostic_responses (free) so no user ever sees an empty dashboard.
     if (!merged.length) {
-      const emailRes = await supabase
-        .from("report_data")
-        .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores)")
-        .eq("email", user.email ?? "")
-        .order("created_at", { ascending: false })
-        .limit(20);
-      merged = (emailRes.data as ReportItem[]) || [];
+      const [emailReports, emailDiags] = await Promise.all([
+        supabase
+          .from("report_data")
+          .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores)")
+          .eq("email", user.email ?? "")
+          .order("created_at", { ascending: false })
+          .limit(20),
+        supabase
+          .from("diagnostic_responses")
+          .select("id, created_at, global_score, maturity_level, sector, area_scores, ai_data, plan_tier, stripe_session_id")
+          .eq("email", user.email ?? "")
+          .order("created_at", { ascending: false })
+          .limit(20),
+      ]);
+
+      const reportsByEmail: ReportItem[] = (emailReports.data as ReportItem[]) || [];
+      const coveredByEmail = new Set(
+        reportsByEmail
+          .map((r) => (r as unknown as { diag_id?: string }).diag_id)
+          .filter(Boolean) as string[]
+      );
+
+      const diagsByEmail: ReportItem[] = (
+        (emailDiags.data as Array<{
+          id: string; created_at: string; global_score: number; maturity_level: number;
+          sector: string; area_scores: Record<string, number>; ai_data: ReportItem["ai_data"];
+          plan_tier: string; stripe_session_id: string;
+        }>) || []
+      )
+        .filter((d) => !coveredByEmail.has(d.id))
+        .map((d) => ({
+          id: d.id,
+          created_at: d.created_at,
+          stripe_session_id: d.stripe_session_id || "",
+          pdf_sent: false,
+          ai_data: d.ai_data || {},
+          _fromDiag: true,
+          global_score: d.global_score,
+          maturity_level: d.maturity_level,
+          sector: d.sector,
+          area_scores: d.area_scores,
+        }));
+
+      merged = [...reportsByEmail, ...diagsByEmail].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
     }
 
     setReports(merged);
