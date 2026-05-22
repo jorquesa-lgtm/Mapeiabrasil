@@ -2665,6 +2665,22 @@ form.addEventListener('submit', async (e) => {
   if (currentPlan === 'premium' || currentPlan === 'subscription') {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Redirecionando para pagamento...';
+
+    // Persist contact info so the premium quiz prefills the email (skipping the
+    // mid-quiz email gate) and the confirmation page can greet the buyer by name.
+    sessionStorage.setItem('mapeia_lead_email', email.toLowerCase());
+    if (name) sessionStorage.setItem('mapeia_lead_name', name);
+    if (company) sessionStorage.setItem('mapeia_lead_company', company);
+
+    // Premium is a one-time report purchase: after paying, the buyer must complete
+    // the full premium quiz to generate the report, so send them straight into it
+    // (create-checkout appends &session_id=... which verify-premium uses to link).
+    // Evolução (subscription) is an add-on for customers who already did Premium,
+    // so it lands on the confirmation page that points to the dashboard.
+    const successUrl = currentPlan === 'premium'
+      ? 'https://mapeiabrasil.com/diagnostico.html?premium=1'
+      : 'https://mapeiabrasil.com/obrigado-premium';
+
     try {
       const checkoutResp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
         method: 'POST',
@@ -2676,7 +2692,7 @@ form.addEventListener('submit', async (e) => {
         body: JSON.stringify({
           plan: currentPlan,
           email,
-          success_url: 'https://mapeiabrasil.com/obrigado-premium',
+          success_url: successUrl,
           cancel_url: 'https://mapeiabrasil.com/',
         }),
       });
