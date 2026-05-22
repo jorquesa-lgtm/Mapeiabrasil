@@ -457,19 +457,18 @@ Deno.serve(async (req: Request) => {
             <h1 style="font-size:22px;color:#f4f8ff;margin-bottom:8px;">Seu relatorio esta pronto!</h1>
             <p style="color:#7a9ec8;margin-bottom:24px;">Ola ${name || ""},</p>
             <p style="color:#c8daf0;margin-bottom:16px;">
-              Seu Relatorio Completo de Maturidade em IA esta disponivel abaixo. Para salvar como PDF,
-              clique em <strong style="color:#00e5c8;">Visualizar Relatorio</strong> e use
-              Arquivo &rarr; Imprimir &rarr; Salvar como PDF no seu navegador.
+              Seu Relatorio Completo de Maturidade em IA esta disponivel no seu painel.
+              Clique no botao abaixo para acessar — seu e-mail ja estara preenchido.
             </p>
             <div style="text-align:center;margin:28px 0;">
-              <a href="${SUPABASE_URL.replace("supabase.co", "supabase.co")}/functions/v1/view-report?id=${report?.id || ""}&email=${encodeURIComponent(email)}"
+              <a href="https://mapeaibrasil.com/painel.html?email=${encodeURIComponent(email)}"
                  style="background:linear-gradient(135deg,#1a7ff0,#00b8d4);color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;text-decoration:none;font-size:15px;">
-                Visualizar Relatorio
+                Acessar Meu Relatorio
               </a>
             </div>
             <p style="font-size:12px;color:#4a6fa0;margin-top:24px;text-align:center;">
-              MapeIA Brasil &mdash; mapeia.com.br<br>
-              Duvidas? <a href="mailto:contato@mapeia.com.br" style="color:#7a9ec8;">contato@mapeia.com.br</a>
+              MapeIA Brasil &mdash; mapeaibrasil.com<br>
+              Duvidas? <a href="mailto:contato@mapeaibrasil.com" style="color:#7a9ec8;">contato@mapeaibrasil.com</a>
             </p>
           </div>`,
       };
