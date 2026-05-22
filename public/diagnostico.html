@@ -401,6 +401,8 @@
           </ul>
           <div style="margin-top:auto;padding-top:8px;">
             <div style="font-family:'Instrument Serif',serif;font-size:26px;color:var(--heading);">Grátis</div>
+            <input type="text" id="introName" placeholder="Seu nome *" autocomplete="given-name" maxlength="200" style="width:100%;padding:12px 14px;font-size:13px;background:var(--subtle);color:var(--text);border:1px solid var(--border);border-radius:10px;box-sizing:border-box;margin-top:10px;outline:none;transition:border .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            <p id="introNameErr" style="font-size:12px;color:var(--red);margin:4px 0 0;min-height:16px;display:none;">Por favor, insira seu nome.</p>
             <input type="email" id="introEmail" placeholder="Seu e-mail para receber o resultado" autocomplete="email" inputmode="email" maxlength="319" style="width:100%;padding:12px 14px;font-size:13px;background:var(--subtle);color:var(--text);border:1px solid var(--border);border-radius:10px;box-sizing:border-box;margin-top:10px;outline:none;transition:border .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             <p id="introEmailErr" style="font-size:12px;color:var(--red);margin:4px 0 0;min-height:16px;display:none;">Por favor, insira um e-mail válido.</p>
             <button type="button" class="start-btn" id="startBtn" style="width:100%;margin-top:10px;padding:13px 20px;font-size:14px;">Iniciar gratuito &rarr;</button>
@@ -1289,6 +1291,7 @@ const state = {
   accessCode: null,  // Friends & family bypass code (alternative to stripeSessionId)
   premiumVerified: false, // true only after server-side Stripe verification
   capturedEmail: '',  // captured at inline email step (after Q4)
+  capturedName: '',   // captured at intro screen name field
   emailCaptured: false, // true once email step was passed
 };
 
@@ -1626,6 +1629,7 @@ document.getElementById('ecContinue').addEventListener('click', () => {
       apikey: SUPABASE_ANON_KEY,
     },
     body: JSON.stringify({
+      name: state.capturedName || '',
       email,
       source: 'diagnostic_email_gate',
       plan_interest: state.isPremium ? 'premium' : 'free',
@@ -1745,6 +1749,7 @@ async function saveFullDiagnostic(whatsapp, company){
         apikey: SUPABASE_ANON_KEY,
       },
       body: JSON.stringify({
+        name: state.capturedName || '',
         email,
         whatsapp: whatsapp || '',
         company: company || '',
@@ -1848,10 +1853,22 @@ supabase.auth.getSession().then(({ data: { session: s } }) => {
 
 // Free flow — email collected upfront so Q4 gate is skipped
 document.getElementById('startBtn').addEventListener('click', () => {
+  const nameInput  = document.getElementById('introName');
+  const nameErr    = document.getElementById('introNameErr');
   const emailInput = document.getElementById('introEmail');
   const emailErr   = document.getElementById('introEmailErr');
+  const name  = (nameInput  ? nameInput.value.trim()  : '');
   const email = (emailInput ? emailInput.value.trim().toLowerCase() : '');
 
+  // Validate name
+  if (!name) {
+    if (nameErr) nameErr.style.display = 'block';
+    if (nameInput) nameInput.focus();
+    return;
+  }
+  if (nameErr) nameErr.style.display = 'none';
+
+  // Validate email
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     if (emailErr) emailErr.style.display = 'block';
     if (emailInput) emailInput.focus();
@@ -1861,10 +1878,12 @@ document.getElementById('startBtn').addEventListener('click', () => {
 
   // Pre-capture so the mid-quiz email gate (Q4) is automatically skipped
   state.capturedEmail = email;
+  state.capturedName  = name;
   state.emailCaptured = true;
   sessionStorage.setItem('mapeia_lead_email', email);
+  sessionStorage.setItem('mapeia_lead_name', name);
 
-  // Fire the same lead capture as the Q4 gate would have
+  // Capture lead immediately — now with name so capture-lead accepts it
   fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
     method: 'POST',
     headers: {
@@ -1873,6 +1892,7 @@ document.getElementById('startBtn').addEventListener('click', () => {
       apikey: SUPABASE_ANON_KEY,
     },
     body: JSON.stringify({
+      name,
       email,
       source: 'intro_email_field',
       plan_interest: 'free',

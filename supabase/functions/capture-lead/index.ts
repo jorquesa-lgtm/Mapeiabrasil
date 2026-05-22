@@ -126,11 +126,10 @@ Deno.serve(async (req: Request) => {
       plan_interest: sanitize(raw.plan_interest, 40) || "free",
     };
 
+    // Name is optional — fall back to the email username so downstream
+    // emails and reports always have something to greet the user with.
     if (!lead.name) {
-      return new Response(JSON.stringify({ error: "name_required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      lead.name = lead.email ? lead.email.split("@")[0] : "";
     }
     if (!lead.email || !isEmail(lead.email)) {
       return new Response(JSON.stringify({ error: "email_invalid" }), {
