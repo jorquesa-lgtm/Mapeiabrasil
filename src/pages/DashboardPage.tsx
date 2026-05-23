@@ -3,6 +3,7 @@ import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 import { LogOut, FileText, Star, Clock, ChevronRight, Download, RefreshCw, Target, Plus, Trash2, Check, Calendar, Flag, Eye, X } from "lucide-react";
 import AtivarSection from "../components/ativar/AtivarSection";
+import CopilotDrawer from "../components/CopilotDrawer";
 
 interface UserProfile {
   name: string;
@@ -1784,6 +1785,26 @@ function EvolucaoUpsell({ userEmail }: { userEmail: string }) {
           <div style={{ fontSize: 12, color: "#4a6fa0", marginTop: 8 }}>Cancele quando quiser</div>
         </div>
       </div>
+    </div>
+      {/* Copilot — context built from the currently selected report */}
+      {(() => {
+        const diag = selectedReport
+          ? ((selectedReport as ReportItem & { diagnostic_responses?: { area_scores?: Record<string,number>; sector?: string; maturity_level?: number; global_score?: number } }).diagnostic_responses ?? selectedReport)
+          : null;
+        const aiD = selectedReport?.ai_data ?? {};
+        if (!diag) return null;
+        const copilotCtx = {
+          company: profile?.company || profile?.name || user.email?.split("@")[0] || "sua empresa",
+          sector: (diag as { sector?: string }).sector ?? selectedReport?.sector ?? "",
+          score: (diag as { global_score?: number }).global_score ?? selectedReport?.global_score ?? 0,
+          maturity: MATURITY[(diag as { maturity_level?: number }).maturity_level ?? selectedReport?.maturity_level ?? 0] ?? "",
+          area_scores: (diag as { area_scores?: Record<string,number> }).area_scores ?? selectedReport?.area_scores ?? {},
+          quick_wins: (aiD as { quick_wins?: Array<{ title: string; description?: string; tool?: string }> }).quick_wins ?? [],
+          roadmap: (aiD as { roadmap?: Record<string, { title: string; actions?: Array<{ title: string; description?: string; tool?: string }> }> }).roadmap ?? {},
+          gaps: (aiD as { gaps?: Array<{ title: string; severity: string; area?: string }> }).gaps ?? [],
+        };
+        return <CopilotDrawer context={copilotCtx} />;
+      })()}
     </div>
   );
 }
