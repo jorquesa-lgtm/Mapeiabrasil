@@ -1,0 +1,180 @@
+{
+  "_kit": {
+    "name": "Kit 4 — Cobrança Amigável Automática",
+    "version": "1.0",
+    "description": "Sequência de 3 mensagens WhatsApp para cobranças em atraso. Tom calibrado por IA — recupera dinheiro sem constranger o cliente.",
+    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "requires": {
+      "make_plan": "Free ou superior",
+      "whatsapp": "Z-API (conta própria)",
+      "crm": "Google Sheets (template incluído)",
+      "ai": "Claude API (opcional — templates prontos disponíveis)"
+    },
+    "config_variables": {
+      "ZAPI_INSTANCE_ID": "Seu Instance ID do Z-API",
+      "ZAPI_TOKEN": "Seu token do Z-API",
+      "SPREADSHEET_ID": "ID do Google Sheets da sua planilha de cobranças",
+      "SHEET_NAME": "Cobranças",
+      "SEU_NOME_EMPRESA": "Nome da sua empresa (aparece nas mensagens)",
+      "ANTHROPIC_API_KEY": "Opcional — para mensagens personalizadas por IA"
+    }
+  },
+  "scenario_a": {
+    "name": "Kit4 — Lembrete de Vencimento",
+    "description": "Roda diariamente. Encontra faturas com vencimento hoje ou passado 1 dia e envia o lembrete 1.",
+    "schedule": "Diário às 8h",
+    "flow": [
+      {
+        "id": 1,
+        "module": "google-sheets:searchRows",
+        "note": "Busca faturas com Status = 'pendente' para verificar as que vencem hoje",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "pendente"]]
+        }
+      },
+      {
+        "id": 2,
+        "module": "builtin:BasicFilter",
+        "note": "Filtra apenas as que vencem hoje (compara coluna E com data atual)",
+        "mapper": {
+          "condition": "{{formatDate(now; 'DD/MM/YYYY')}} = {{1.Vencimento}}"
+        }
+      },
+      {
+        "id": 3,
+        "module": "http:ActionSendData",
+        "note": "Envia Lembrete 1 via Z-API — tom amigável, inclui chave Pix",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{1.WhatsApp}}\",\"message\":\"Olá {{1.Cliente}}! 😊 Passando para lembrar que a fatura {{1.NúmeroFatura}} no valor de R${{1.ValorRS}} vence hoje ({{1.Vencimento}}).\\n\\nPara pagar via Pix:\\n🔑 Chave: {{1.ChavePix}}\\n\\nQualquer dúvida, é só me chamar aqui. Obrigado(a)! — {{SEU_NOME_EMPRESA}}\"}"
+        }
+      },
+      {
+        "id": 4,
+        "module": "google-sheets:updateARow",
+        "note": "Marca Status = lembrete1_enviado e registra horário",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "values": {
+            "Status": "lembrete1_enviado",
+            "Lembrete1_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      }
+    ]
+  },
+  "scenario_b": {
+    "name": "Kit4 — Follow-up de Atraso (3 dias e 7 dias)",
+    "description": "Roda diariamente. Envia lembrete 2 para faturas 3 dias em atraso e aviso final para 7 dias.",
+    "schedule": "Diário às 9h",
+    "flow": [
+      {
+        "id": 1,
+        "module": "google-sheets:searchRows",
+        "note": "Busca faturas com Status = lembrete1_enviado",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "lembrete1_enviado"]]
+        }
+      },
+      {
+        "id": 2,
+        "module": "builtin:BasicFilter",
+        "note": "Filtra com 3+ dias desde lembrete 1",
+        "mapper": {
+          "condition": "{{dateDifference(now; parseDate(1.Lembrete1_Em; 'DD/MM/YYYY HH:mm'); 'days')}} >= 3"
+        }
+      },
+      {
+        "id": 3,
+        "module": "http:ActionSendData",
+        "note": "Envia Lembrete 2 via Z-API — cordial mas direto",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{1.WhatsApp}}\",\"message\":\"Oi {{1.Cliente}}, tudo bem? 👋 Percebemos que a fatura {{1.NúmeroFatura}} (R${{1.ValorRS}}) ainda está em aberto.\\n\\nSe foi só um esquecimento, o Pix está disponível:\\n🔑 Chave: {{1.ChavePix}}\\n\\nTeve algum problema? Me avisa que a gente resolve juntos. 🙏 — {{SEU_NOME_EMPRESA}}\"}"
+        }
+      },
+      {
+        "id": 4,
+        "module": "google-sheets:updateARow",
+        "note": "Marca lembrete2_enviado",
+        "mapper": {
+          "values": {
+            "Status": "lembrete2_enviado",
+            "Lembrete2_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "module": "google-sheets:searchRows",
+        "note": "Agora busca Status = lembrete2_enviado para o aviso final",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "lembrete2_enviado"]]
+        }
+      },
+      {
+        "id": 6,
+        "module": "builtin:BasicFilter",
+        "note": "Filtra com 7+ dias desde lembrete 1",
+        "mapper": {
+          "condition": "{{dateDifference(now; parseDate(5.Lembrete1_Em; 'DD/MM/YYYY HH:mm'); 'days')}} >= 7"
+        }
+      },
+      {
+        "id": 7,
+        "module": "http:ActionSendData",
+        "note": "Envia Aviso Final via Z-API — firme mas respeitoso, abre negociação",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{5.WhatsApp}}\",\"message\":\"Olá {{5.Cliente}}, esse é nosso último aviso sobre a fatura {{5.NúmeroFatura}} (R${{5.ValorRS}}) com vencimento em {{5.Vencimento}}.\\n\\nSe quiser parcelar ou negociar, é só responder — estamos abertos a conversar.\\n\\nPix para pagamento imediato:\\n🔑 Chave: {{5.ChavePix}}\\n\\nPara não receber mais mensagens, responda PARAR. — {{SEU_NOME_EMPRESA}}\"}"
+        }
+      },
+      {
+        "id": 8,
+        "module": "google-sheets:updateARow",
+        "note": "Marca aviso_final_enviado",
+        "mapper": {
+          "values": {
+            "Status": "aviso_final_enviado",
+            "AvisoFinal_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      }
+    ]
+  },
+  "spreadsheet_template": {
+    "sheet_name": "Cobranças",
+    "columns": [
+      {"col": "A", "header": "Cliente",       "example": "Maria Silva",         "required": true},
+      {"col": "B", "header": "Empresa",        "example": "Clínica Bem Estar",   "required": false},
+      {"col": "C", "header": "WhatsApp",       "example": "+5511987654321",      "required": true,  "note": "Formato internacional +55"},
+      {"col": "D", "header": "Valor (R$)",     "example": "1500.00",             "required": true},
+      {"col": "E", "header": "Vencimento",     "example": "15/05/2026",          "required": true,  "note": "Formato DD/MM/AAAA"},
+      {"col": "F", "header": "Chave Pix",      "example": "empresa@pix.com.br",  "required": true},
+      {"col": "G", "header": "Nº Fatura",      "example": "FAT-001",             "required": false},
+      {"col": "H", "header": "Status",         "example": "pendente",            "required": true,  "note": "Dropdown automático"},
+      {"col": "I", "header": "Lembrete1_Em",   "example": "",                    "required": false, "note": "Auto"},
+      {"col": "J", "header": "Lembrete2_Em",   "example": "",                    "required": false, "note": "Auto"},
+      {"col": "K", "header": "AvisoFinal_Em",  "example": "",                    "required": false, "note": "Auto"},
+      {"col": "L", "header": "Pago_Em",        "example": "20/05/2026",          "required": false, "note": "Preencha você"},
+      {"col": "M", "header": "Notas",          "example": "Parcelou em 2x",      "required": false}
+    ],
+    "status_values": ["pendente","lembrete1_enviado","lembrete2_enviado","aviso_final_enviado","pago","em_negociacao","cancelado"]
+  }
+}
