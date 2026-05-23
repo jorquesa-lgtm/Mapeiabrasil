@@ -1,0 +1,95 @@
+{
+  "_kit": {
+    "name": "Kit 1 — Atendente 24h no WhatsApp",
+    "version": "1.0",
+    "description": "IA responde clientes no seu WhatsApp Business automaticamente, 24 horas por dia. Responde FAQs, agenda, e transfere para humano quando necessário.",
+    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "requires": {
+      "make_plan": "Free ou superior",
+      "whatsapp": "Z-API (conta própria) — conecta ao WhatsApp Business existente",
+      "ai": "Claude API — ANTHROPIC_API_KEY obrigatório para este kit"
+    },
+    "config_variables": {
+      "ZAPI_INSTANCE_ID": "Seu Instance ID do Z-API",
+      "ZAPI_TOKEN": "Seu token do Z-API",
+      "ANTHROPIC_API_KEY": "Sua chave da API Anthropic (obrigatório)",
+      "SYSTEM_PROMPT": "Cole aqui o contexto da sua empresa (gerado pela planilha Configuração)",
+      "HUMAN_HANDOFF_NUMBER": "Número do atendente humano para transferências (+5511...)"
+    }
+  },
+  "como_gerar_system_prompt": {
+    "instrucao": "Use os dados da aba Configuração da planilha para montar o system_prompt abaixo. Substitua os campos [COLCHETES] com seus dados reais.",
+    "template": "Você é o atendente virtual da [NOME DA EMPRESA], uma empresa do setor de [SETOR].\n\nHORÁRIO DE ATENDIMENTO: [HORÁRIO]\nENDEREÇO: [ENDEREÇO]\nCONTATO: [TELEFONE]\nSITE: [SITE]\n\nSERVIÇOS QUE OFERECEMOS:\n[SERVIÇOS]\n\nPREÇOS:\n[PREÇOS]\n\nFORMAS DE PAGAMENTO:\n[FORMAS DE PAGAMENTO]\n\nPERGUNTAS FREQUENTES:\nP: [FAQ 1] R: [RESPOSTA 1]\nP: [FAQ 2] R: [RESPOSTA 2]\nP: [FAQ 3] R: [RESPOSTA 3]\n\nREGRAS:\n- Seja sempre cordial, use emojis com moderação\n- Responda apenas sobre os serviços e informações acima\n- Se não souber, diga 'Deixa eu verificar e te retorno em breve'\n- Se o cliente pedir para falar com humano, diga que vai transferir\n- Nunca invente preços ou informações\n- Fora do horário, informe o horário e peça para deixar mensagem\n- Responda sempre em português"
+  },
+  "scenario": {
+    "name": "Kit1 — Atendente 24h WhatsApp",
+    "description": "Webhook ativado pelo Z-API a cada mensagem recebida. Envia para Claude, recebe resposta, devolve ao cliente.",
+    "trigger": "Webhook Z-API (recebe toda mensagem recebida no WhatsApp Business)",
+    "flow": [
+      {
+        "id": 1,
+        "module": "gateway:CustomWebHook",
+        "note": "Recebe a mensagem do Z-API. O Z-API envia um POST para este webhook a cada mensagem recebida.",
+        "output": {
+          "phone": "Número do remetente (ex: 5511987654321)",
+          "message": "Texto da mensagem recebida",
+          "isGroup": "true/false — ignorar se true",
+          "fromMe": "true/false — ignorar se true (mensagem enviada por você)"
+        }
+      },
+      {
+        "id": 2,
+        "module": "builtin:BasicFilter",
+        "note": "Ignora mensagens de grupos e mensagens enviadas por você mesmo",
+        "mapper": {
+          "condition": "{{1.isGroup}} = false AND {{1.fromMe}} = false"
+        }
+      },
+      {
+        "id": 3,
+        "module": "http:ActionSendData",
+        "note": "Chama Claude API para gerar a resposta contextualizada",
+        "mapper": {
+          "url": "https://api.anthropic.com/v1/messages",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "headers": [
+            {"name": "x-api-key", "value": "{{ANTHROPIC_API_KEY}}"},
+            {"name": "anthropic-version", "value": "2023-06-01"}
+          ],
+          "data": "{\"model\":\"claude-haiku-4-5-20251001\",\"max_tokens\":500,\"system\":\"{{SYSTEM_PROMPT}}\",\"messages\":[{\"role\":\"user\",\"content\":\"{{1.message}}\"}]}",
+          "parseResponse": false
+        }
+      },
+      {
+        "id": 4,
+        "module": "regexp:Parser",
+        "note": "Extrai o texto da resposta do Claude",
+        "mapper": {
+          "text": "{{3.data}}",
+          "pattern": "\"text\":\"(?<resposta>[^\"]+)\""
+        }
+      },
+      {
+        "id": 5,
+        "module": "http:ActionSendData",
+        "note": "Envia a resposta de volta para o cliente via Z-API",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{1.phone}}\",\"message\":\"{{ifempty(4.resposta; 'Olá! Recebi sua mensagem e já vou te ajudar. Um momento! 😊')}}\"}"
+        }
+      }
+    ],
+    "notas_importantes": [
+      "O Z-API precisa ser configurado para enviar um webhook POST para a URL do seu cenário Make a cada mensagem recebida.",
+      "Filtre mensagens de grupos (isGroup=true) e mensagens suas (fromMe=true) para não criar loops.",
+      "O system_prompt é o 'cérebro' do atendente — quanto mais detalhado, melhor as respostas.",
+      "Para transferir para humano: adicione um módulo de verificação antes do módulo 5 que detecta palavras como 'atendente', 'humano', 'pessoa' e envia para o HUMAN_HANDOFF_NUMBER.",
+      "Limite de tokens: 500 tokens = ~375 palavras por resposta. Aumente se precisar de respostas mais longas."
+    ]
+  }
+}
