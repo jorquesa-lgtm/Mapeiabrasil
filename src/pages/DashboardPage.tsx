@@ -377,6 +377,59 @@ export default function DashboardPage({ user }: { user: User }) {
           </div>
         )}
 
+        {/* Kit recommendation — based on weakest area */}
+        {reports.length > 0 && selectedReport && (() => {
+          const diagData = (selectedReport as ReportItem & { diagnostic_responses?: { area_scores?: Record<string, number> } }).diagnostic_responses;
+          const scores: Record<string, number> = diagData?.area_scores ?? selectedReport.area_scores ?? {};
+          const weakest = Object.keys(scores).length > 0
+            ? Object.entries(scores).sort(([,a],[,b]) => a - b)[0][0]
+            : null;
+
+          const KIT_MAP: Record<string, { name: string; desc: string; url: string; color: string; emoji: string; price: string }> = {
+            service: { name: "Atendente 24h no WhatsApp", desc: "Seu atendimento está lento ou ausente fora do horário. Este kit instala um atendente IA que responde clientes 24h no seu WhatsApp.", url: "/kits/kit-atendente.html", color: "#1a9ff0", emoji: "🤖", price: "R$250" },
+            sales:   { name: "Follow-up Automático de Leads", desc: "Sua área de vendas está fraca. Este kit envia 3 mensagens WhatsApp personalizadas para leads que não responderam — automaticamente.", url: "/kits/kit-followup.html", color: "#00e5c8", emoji: "💬", price: "R$199" },
+            process: { name: "Agendamento Anti-No-Show", desc: "Seus processos têm gargalos manuais. Este kit elimina no-shows com lembretes automáticos 24h e 1h antes do compromisso.", url: "/kits/kit-agendamento.html", color: "#a78bfa", emoji: "📅", price: "R$199" },
+            data:    { name: "Cobrança Amigável Automática", desc: "Sua gestão financeira precisa de atenção. Este kit envia cobranças automáticas via WhatsApp com Pix — sem você fazer a ligação difícil.", url: "/kits/kit-cobranca.html", color: "#f5c842", emoji: "💰", price: "R$199" },
+            infra:   { name: "Cobrança Amigável Automática", desc: "Sua infraestrutura digital tem lacunas. Comece recuperando receita automaticamente com este kit de cobrança via WhatsApp.", url: "/kits/kit-cobranca.html", color: "#f5c842", emoji: "💰", price: "R$199" },
+            ai:      { name: "Follow-up Automático de Leads", desc: "Você ainda não usa IA nos processos de vendas. Este kit aplica IA diretamente na recuperação de leads — resultado visível em dias.", url: "/kits/kit-followup.html", color: "#00e5c8", emoji: "💬", price: "R$199" },
+          };
+
+          const kit = weakest ? KIT_MAP[weakest] : null;
+          if (!kit) return null;
+
+          return (
+            <div style={{ marginTop: 32, background: "linear-gradient(135deg, #071828, #0d2440)", border: `1px solid ${kit.color}40`, borderRadius: 16, padding: "24px 28px", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 60% 50% at 0% 50%, ${kit.color}08 0%, transparent 70%)`, pointerEvents: "none" }} />
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, flexWrap: "wrap", position: "relative" }}>
+                <div style={{ flex: 1, minWidth: 240 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: kit.color, flexShrink: 0 }} />
+                    <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: kit.color }}>Kit recomendado para você</span>
+                  </div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: "#f4f8ff", marginBottom: 8 }}>
+                    {kit.emoji} {kit.name}
+                  </div>
+                  <div style={{ fontSize: 14, color: "#7a9ec8", lineHeight: 1.6, marginBottom: 16, maxWidth: 480 }}>
+                    {kit.desc}
+                  </div>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    <a href={kit.url} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: kit.color, color: "#04080f", fontFamily: "inherit", fontSize: 14, fontWeight: 700, padding: "10px 20px", borderRadius: 10, textDecoration: "none", border: "none", cursor: "pointer" }}>
+                      Ver kit completo →
+                    </a>
+                    <a href="/kits/" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "transparent", color: "#6b90b8", fontFamily: "inherit", fontSize: 13, fontWeight: 600, padding: "10px 16px", borderRadius: 10, textDecoration: "none", border: "1px solid #1a3050", cursor: "pointer" }}>
+                      Ver todos os kits
+                    </a>
+                  </div>
+                </div>
+                <div style={{ textAlign: "center", flexShrink: 0 }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: kit.color, fontFamily: "monospace", lineHeight: 1 }}>{kit.price}</div>
+                  <div style={{ fontSize: 11, color: "#4a6fa0", marginTop: 4 }}>pagamento único</div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Evolucao upsell */}
         {!isEvolucao && (
           <EvolucaoUpsell userEmail={user.email ?? ""} />
