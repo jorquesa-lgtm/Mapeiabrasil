@@ -1,0 +1,169 @@
+{
+  "_kit": {
+    "name": "Kit 2 — Follow-up Automático de Leads",
+    "version": "1.0",
+    "description": "Sequência automática de 3 mensagens WhatsApp para leads que não responderam. Instale em sua conta Make em menos de 20 minutos.",
+    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "requires": {
+      "make_plan": "Free ou superior",
+      "whatsapp": "Z-API (conta própria) ou Twilio WhatsApp",
+      "crm": "Google Sheets (template incluído)",
+      "ai": "Claude API (opcional — use templates prontos sem IA)"
+    },
+    "config_variables": {
+      "ZAPI_INSTANCE_ID": "Seu Instance ID do Z-API",
+      "ZAPI_TOKEN": "Seu token do Z-API",
+      "SPREADSHEET_ID": "ID do Google Sheets (da URL: docs.google.com/spreadsheets/d/ESTE_ID/)",
+      "SHEET_NAME": "Leads",
+      "ANTHROPIC_API_KEY": "Opcional — para mensagens personalizadas por IA"
+    }
+  },
+  "scenario_a": {
+    "name": "Kit2 — Boas-vindas Imediatas",
+    "description": "Dispara quando um novo lead é adicionado à planilha. Envia mensagem 1 e marca status.",
+    "flow": [
+      {
+        "id": 1,
+        "module": "google-sheets:watchRows",
+        "note": "Monitora nova linha na aba 'Leads'. Configure: seu Spreadsheet ID + aba 'Leads'",
+        "parameters": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "limit": 10
+        }
+      },
+      {
+        "id": 2,
+        "module": "http:ActionSendData",
+        "note": "Envia WhatsApp via Z-API. Substitua INSTANCE_ID e TOKEN pelos seus do Z-API",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{1.WhatsApp}}\",\"message\":\"Ola {{1.Nome}}! Bem-vindo(a) a [SEU NEGOCIO]! Ficamos felizes em receber voce. Aguardamos seu contato para ajudar sua empresa no setor de {{1.Setor}}. Qualquer duvida, responda aqui!\"}",
+          "parseResponse": true
+        }
+      },
+      {
+        "id": 3,
+        "module": "google-sheets:updateARow",
+        "note": "Marca o lead como 'msg1_enviada' e registra o horário",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "values": {
+            "Status": "msg1_enviada",
+            "Msg1_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      }
+    ]
+  },
+  "scenario_b": {
+    "name": "Kit2 — Follow-up 24h e 72h",
+    "description": "Roda diariamente. Envia mensagem 2 para leads com 24-48h sem resposta e mensagem 3 para leads com 72-96h.",
+    "schedule": "Diário às 9h",
+    "flow": [
+      {
+        "id": 1,
+        "module": "google-sheets:getRows",
+        "note": "Lê todos os leads com status msg1_enviada para verificar quais precisam de follow-up",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "msg1_enviada"]]
+        }
+      },
+      {
+        "id": 2,
+        "module": "builtin:BasicFilter",
+        "note": "Filtra leads com 24h+ sem resposta (a partir de Msg1_Em)",
+        "mapper": {
+          "condition": "{{dateDifference(now; parseDate(1.Msg1_Em; 'DD/MM/YYYY HH:mm'); 'hours')}} >= 24"
+        }
+      },
+      {
+        "id": 3,
+        "module": "http:ActionSendData",
+        "note": "Envia follow-up 1 via Z-API",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{1.WhatsApp}}\",\"message\":\"Oi {{1.Nome}}, tudo bem? Passando para saber se voce tem alguma duvida sobre nossos servicos. Estamos aqui para ajudar! Quando quiser conversar, e so responder. 😊\"}"
+        }
+      },
+      {
+        "id": 4,
+        "module": "google-sheets:updateARow",
+        "note": "Marca como msg2_enviada",
+        "mapper": {
+          "values": {
+            "Status": "msg2_enviada",
+            "Msg2_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "module": "google-sheets:getRows",
+        "note": "Agora busca leads com status msg2_enviada para o follow-up final",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "msg2_enviada"]]
+        }
+      },
+      {
+        "id": 6,
+        "module": "builtin:BasicFilter",
+        "note": "Filtra leads com 72h+ desde msg2",
+        "mapper": {
+          "condition": "{{dateDifference(now; parseDate(5.Msg2_Em; 'DD/MM/YYYY HH:mm'); 'hours')}} >= 72"
+        }
+      },
+      {
+        "id": 7,
+        "module": "http:ActionSendData",
+        "note": "Envia follow-up final via Z-API",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{5.WhatsApp}}\",\"message\":\"{{5.Nome}}, ultima mensagem por aqui! 🙂 Se tiver interesse em conversar sobre como podemos ajudar seu negocio, e so responder esta mensagem. Caso contrario, sem problemas! Obrigado pelo seu tempo.\"}"
+        }
+      },
+      {
+        "id": 8,
+        "module": "google-sheets:updateARow",
+        "note": "Marca como sequencia finalizada",
+        "mapper": {
+          "values": {
+            "Status": "finalizado",
+            "Msg3_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      }
+    ]
+  },
+  "spreadsheet_template": {
+    "sheet_name": "Leads",
+    "columns": [
+      {"col": "A", "header": "Nome",         "example": "Maria Silva",          "required": true},
+      {"col": "B", "header": "Empresa",       "example": "Clinica Bem Estar",    "required": false},
+      {"col": "C", "header": "Setor",         "example": "Saude",               "required": false},
+      {"col": "D", "header": "WhatsApp",      "example": "+5511999999999",       "required": true,  "note": "Formato internacional com +55"},
+      {"col": "E", "header": "Email",         "example": "maria@clinica.com",    "required": false},
+      {"col": "F", "header": "Origem",        "example": "Instagram",            "required": false},
+      {"col": "G", "header": "Status",        "example": "novo",                 "required": true,  "note": "Inicia como 'novo'. Sistema atualiza automaticamente."},
+      {"col": "H", "header": "Msg1_Em",       "example": "23/05/2026 09:00",     "required": false, "note": "Preenchido automaticamente pelo cenário A"},
+      {"col": "I", "header": "Msg2_Em",       "example": "",                     "required": false, "note": "Preenchido automaticamente pelo cenário B"},
+      {"col": "J", "header": "Msg3_Em",       "example": "",                     "required": false, "note": "Preenchido automaticamente pelo cenário B"},
+      {"col": "K", "header": "Respondeu",     "example": "Sim",                  "required": false, "note": "Você preenche manualmente quando o lead responder"},
+      {"col": "L", "header": "Notas",         "example": "Interessado em X",     "required": false}
+    ]
+  }
+}
