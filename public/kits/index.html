@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kits de Automação — MapeAI Brasil</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#04080f;--surface:#0a1628;--border:#1a3050;
+    --accent:#00e5c8;--accent2:#1a7ff0;--text:#e8f4ff;--muted:#6b90b8;
+    --green:#00c896;--yellow:#f5c842;--red:#ff4a6b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;line-height:1.6;}
+
+  /* ── nav ── */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(4,8,15,.95);backdrop-filter:blur(12px);z-index:100;}
+  .logo{font-size:18px;font-weight:700;color:var(--text);text-decoration:none;}.logo em{color:var(--accent);font-style:normal;}
+  .nav-links{display:flex;gap:24px;align-items:center;}
+  .nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;}
+  .nav-links a:hover{color:var(--accent);}
+  .nav-cta{background:rgba(0,229,200,.1);border:1px solid rgba(0,229,200,.3);color:var(--accent);font-size:13px;font-weight:600;padding:7px 16px;border-radius:99px;text-decoration:none;transition:all .2s;}
+  .nav-cta:hover{background:rgba(0,229,200,.2);}
+
+  /* ── hero ── */
+  .hero{max-width:960px;margin:0 auto;padding:80px 40px 60px;text-align:center;}
+  .hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(0,229,200,.08);border:1px solid rgba(0,229,200,.2);color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 16px;border-radius:99px;margin-bottom:28px;}
+  .hero h1{font-size:clamp(32px,5.5vw,56px);font-weight:800;line-height:1.1;margin-bottom:20px;}
+  .hero h1 em{color:var(--accent);font-style:normal;}
+  .hero p{font-size:18px;color:var(--muted);max-width:600px;margin:0 auto 40px;}
+  .hero-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;margin-bottom:0;}
+  .hstat{text-align:center;}
+  .hstat-num{font-size:32px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;}
+  .hstat-label{font-size:12px;color:var(--muted);margin-top:2px;}
+
+  /* ── bundle hero ── */
+  .bundle-hero{max-width:960px;margin:60px auto 0;padding:0 40px;}
+  .bundle-card{background:linear-gradient(135deg,#071828,#0d2440);border:1.5px solid rgba(0,229,200,.25);border-radius:24px;padding:48px;position:relative;overflow:hidden;}
+  .bundle-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(0,229,200,.08) 0%,transparent 60%);pointer-events:none;}
+  .bundle-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.3);color:var(--yellow);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:20px;}
+  .bundle-layout{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;}
+  .bundle-title{font-size:clamp(22px,3.5vw,36px);font-weight:700;line-height:1.2;margin-bottom:12px;}
+  .bundle-title span{color:var(--accent);}
+  .bundle-sub{font-size:15px;color:var(--muted);margin-bottom:28px;max-width:480px;}
+  .bundle-includes{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+  .bi{display:flex;align-items:center;gap:12px;font-size:14px;}
+  .bi::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+  .bi .kit-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .bundle-price-box{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:20px;padding:32px;text-align:center;min-width:240px;flex-shrink:0;}
+  .bundle-was{font-size:14px;color:var(--muted);text-decoration:line-through;margin-bottom:4px;}
+  .bundle-price{font-size:52px;font-weight:800;color:var(--yellow);font-family:'JetBrains Mono',monospace;line-height:1;}
+  .bundle-price-label{font-size:13px;color:var(--muted);margin-top:6px;margin-bottom:20px;}
+  .bundle-savings{background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.2);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--green);font-weight:600;margin-bottom:20px;}
+  .btn-bundle{display:block;width:100%;padding:16px;background:linear-gradient(135deg,var(--yellow),#c8a000);color:#04080f;font-family:'Sora',sans-serif;font-size:16px;font-weight:800;border:none;border-radius:12px;cursor:pointer;text-align:center;text-decoration:none;transition:opacity .2s;margin-bottom:10px;}
+  .btn-bundle:hover{opacity:.9;}
+  .bundle-note{font-size:11px;color:var(--muted);}
+
+  /* ── individual kits ── */
+  .kits-section{max-width:960px;margin:80px auto 0;padding:0 40px;}
+  .kits-section-title{text-align:center;margin-bottom:16px;}
+  .kits-section-title h2{font-size:32px;font-weight:700;margin-bottom:8px;}
+  .kits-section-title p{font-size:15px;color:var(--muted);}
+  .kits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px;}
+  @media(max-width:780px){.kits-grid{grid-template-columns:1fr;}.bundle-layout{grid-template-columns:1fr;}.bundle-price-box{min-width:unset;}}
+  .kit-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;}
+  .kit-card:hover{border-color:rgba(0,229,200,.3);transform:translateY(-2px);}
+  .kit-card::before{content:'';position:absolute;inset:0;pointer-events:none;}
+  .kit-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:99px;margin-bottom:14px;}
+  .kit-icon{font-size:32px;margin-bottom:12px;}
+  .kit-name{font-size:17px;font-weight:700;margin-bottom:6px;}
+  .kit-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;flex-grow:1;}
+  .kit-price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .kit-price{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+  .kit-price-label{font-size:11px;color:var(--muted);}
+  .kit-features{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:24px;}
+  .kit-features li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--muted);}
+  .kit-features li::before{content:'✓';flex-shrink:0;font-weight:700;margin-top:1px;}
+  .btn-kit{display:block;width:100%;padding:12px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;text-align:center;text-decoration:none;transition:opacity .2s;}
+  .btn-kit:hover{opacity:.88;}
+  .btn-kit-ghost{display:block;width:100%;padding:10px;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;border:1px solid var(--border);border-radius:10px;text-align:center;text-decoration:none;color:var(--muted);transition:all .2s;margin-top:8px;}
+  .btn-kit-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* kit accent colors */
+  .k1{--kc:#1a9ff0;} .k2{--kc:#00e5c8;} .k3{--kc:#a78bfa;} .k4{--kc:#f5c842;} .k5{--kc:#ec4899;}
+  .kit-card .kit-tag{background:rgba(var(--kc-rgb),.1);border:1px solid rgba(var(--kc-rgb),.25);color:var(--kc);}
+  .kit-card .kit-price{color:var(--kc);}
+  .kit-card .kit-features li::before{color:var(--kc);}
+  .kit-card:hover{border-color:rgba(var(--kc-rgb),.3);}
+
+  /* apply rgb vars per kit */
+  .k1{--kc-rgb:26,159,240;} .k2{--kc-rgb:0,229,200;} .k3{--kc-rgb:167,139,250;} .k4{--kc-rgb:245,200,66;} .k5{--kc-rgb:236,72,153;}
+
+  /* ── FAQ ── */
+  .faq{max-width:720px;margin:80px auto;padding:0 40px;}
+  .faq h2{font-size:28px;font-weight:700;margin-bottom:32px;text-align:center;}
+  .faq-item{border-bottom:1px solid var(--border);padding:20px 0;}
+  .faq-q{font-size:15px;font-weight:600;margin-bottom:8px;}
+  .faq-a{font-size:14px;color:var(--muted);line-height:1.7;}
+
+  /* ── footer ── */
+  footer{border-top:1px solid var(--border);padding:40px;text-align:center;margin-top:80px;}
+  footer p{font-size:13px;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;}
+
+  @media(max-width:720px){nav{padding:16px 20px;}.nav-links{display:none;}.hero,.bundle-hero,.kits-section,.faq{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">MapeIA <em>Brasil</em></a>
+  <div class="nav-links">
+    <a href="/diagnostico.html">Diagnóstico gratuito</a>
+    <a href="/painel.html">Meu painel</a>
+    <a href="https://mapeaibrasil.com/#planos">Planos</a>
+  </div>
+  <a href="/diagnostico.html" class="nav-cta">Iniciar diagnóstico →</a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-pill">🤖 Kits de Automação IA</div>
+  <h1>Automatize sua empresa.<br><em>Sem programar. Sem agência.</em></h1>
+  <p>Blueprints prontos para Make.com + planilhas + guia passo a passo. Você instala em 30 minutos. A automação trabalha para sempre.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-num">5</div><div class="hstat-label">Kits disponíveis</div></div>
+    <div class="hstat"><div class="hstat-num">30min</div><div class="hstat-label">Para instalar cada kit</div></div>
+    <div class="hstat"><div class="hstat-num">R$0</div><div class="hstat-label">De manutenção mensal</div></div>
+    <div class="hstat"><div class="hstat-num">100%</div><div class="hstat-label">Nas suas contas</div></div>
+  </div>
+</div>
+
+<!-- ── BUNDLE ── -->
+<div class="bundle-hero">
+  <div class="bundle-card">
+    <div class="bundle-badge">⚡ Melhor valor</div>
+    <div class="bundle-layout">
+      <div>
+        <h2 class="bundle-title">Pacote Completo —<br><span>todos os 5 kits</span></h2>
+        <p class="bundle-sub">A stack completa de automação para uma PME brasileira. Atendimento 24h, recuperação de leads, zero no-shows, cobranças automáticas e presença constante nas redes — tudo instalado por você, nas suas contas.</p>
+        <div class="bundle-includes">
+          <div class="bi"><span class="kit-dot" style="background:#1a9ff0;"></span>Kit 1 — Atendente 24h no WhatsApp <span style="color:#6b90b8;font-size:12px;margin-left:auto;">R$250</span></div>
+          <div class="bi"><span class="kit-dot" style="background:#00e5c8;"></span>Kit 2 — Follow-up Automático de Leads <span style="color:#6b90b8;font-size:12px;margin-left:auto;">R$199</span></div>
+          <div class="bi"><span class="kit-dot" style="background:#a78bfa;"></span>Kit 3 — Agendamento Anti-No-Show <span style="color:#6b90b8;font-size:12px;margin-left:auto;">R$199</span></div>
+          <div class="bi"><span class="kit-dot" style="background:#f5c842;"></span>Kit 4 — Cobrança Amigável Automática <span style="color:#6b90b8;font-size:12px;margin-left:auto;">R$199</span></div>
+          <div class="bi"><span class="kit-dot" style="background:#ec4899;"></span>Kit 5 — Presença Social Automática <span style="color:#6b90b8;font-size:12px;margin-left:auto;">R$199</span></div>
+        </div>
+      </div>
+      <div class="bundle-price-box">
+        <div class="bundle-was">Valor separado: R$1.046</div>
+        <div class="bundle-price">R$497</div>
+        <div class="bundle-price-label">pagamento único</div>
+        <div class="bundle-savings">Você economiza R$549 (52% off)</div>
+        <a href="https://mapeaibrasil.com/#planos" class="btn-bundle">Quero o Pacote Completo</a>
+        <div class="bundle-note">Acesso imediato a todos os 5 kits</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── INDIVIDUAL KITS ── -->
+<div class="kits-section">
+  <div class="kits-section-title">
+    <h2>Ou escolha o kit certo para você</h2>
+    <p>Cada kit resolve um problema específico. Comece pelo que dói mais.</p>
+  </div>
+
+  <div class="kits-grid">
+
+    <!-- Kit 1 -->
+    <div class="kit-card k1">
+      <div class="kit-tag">Atendimento</div>
+      <div class="kit-icon">🤖</div>
+      <div class="kit-name">Atendente 24h no WhatsApp</div>
+      <div class="kit-desc">IA responde clientes a qualquer hora. FAQs, preços, agendamentos — sem você precisar estar online.</div>
+      <div class="kit-price-row">
+        <div>
+          <div class="kit-price">R$250</div>
+          <div class="kit-price-label">pagamento único</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:#6b90b8;">~R$0,01<br>por atendimento</div>
+      </div>
+      <ul class="kit-features">
+        <li>Blueprint Make pronto para importar</li>
+        <li>Planilha de configuração + 13 FAQs modelo</li>
+        <li>Template de system prompt</li>
+        <li>Responde em 2–5 segundos</li>
+      </ul>
+      <a href="/kits/kit-atendente.html" class="btn-kit" style="background:linear-gradient(135deg,#0a60c0,#1a9ff0);color:#fff;">Ver kit completo →</a>
+      <a href="https://mapeaibrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$250</a>
+    </div>
+
+    <!-- Kit 2 -->
+    <div class="kit-card k2">
+      <div class="kit-tag">Vendas</div>
+      <div class="kit-icon">💬</div>
+      <div class="kit-name">Follow-up Automático de Leads</div>
+      <div class="kit-desc">3 mensagens WhatsApp personalizadas em 24h e 72h. Recupera leads que sumiram sem você fazer nada.</div>
+      <div class="kit-price-row">
+        <div>
+          <div class="kit-price">R$199</div>
+          <div class="kit-price-label">pagamento único</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:#6b90b8;">1 venda<br>paga 10x o kit</div>
+      </div>
+      <ul class="kit-features">
+        <li>2 blueprints Make (boas-vindas + follow-up)</li>
+        <li>Planilha Google Sheets com status</li>
+        <li>Mensagens escritas por Claude IA</li>
+        <li>Funciona 24h mesmo sem internet</li>
+      </ul>
+      <a href="/kits/kit-followup.html" class="btn-kit" style="background:linear-gradient(135deg,#007060,#00e5c8);color:#04080f;">Ver kit completo →</a>
+      <a href="https://mapeaibrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$199</a>
+    </div>
+
+    <!-- Kit 3 -->
+    <div class="kit-card k3">
+      <div class="kit-tag">Agenda</div>
+      <div class="kit-icon">📅</div>
+      <div class="kit-name">Agendamento Anti-No-Show</div>
+      <div class="kit-desc">Lembrete automático 24h e 1h antes. Cliente confirma com "SIM". Sem você precisar ligar para ninguém.</div>
+      <div class="kit-price-row">
+        <div>
+          <div class="kit-price">R$199</div>
+          <div class="kit-price-label">pagamento único</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:#6b90b8;">1 vaga salva<br>já paga o kit</div>
+      </div>
+      <ul class="kit-features">
+        <li>2 blueprints Make (24h + 1h)</li>
+        <li>Planilha com tracking de no-shows</li>
+        <li>Aba de serviços e horários</li>
+        <li>Reduz no-show em até 60%</li>
+      </ul>
+      <a href="/kits/kit-agendamento.html" class="btn-kit" style="background:linear-gradient(135deg,#4c1d95,#a78bfa);color:#fff;">Ver kit completo →</a>
+      <a href="https://mapeaibrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$199</a>
+    </div>
+
+    <!-- Kit 4 -->
+    <div class="kit-card k4">
+      <div class="kit-tag">Financeiro</div>
+      <div class="kit-icon">💰</div>
+      <div class="kit-name">Cobrança Amigável Automática</div>
+      <div class="kit-desc">3 mensagens de cobrança com tom progressivo — amigável, direto, firme. Com Pix em cada mensagem. Sem você fazer a ligação difícil.</div>
+      <div class="kit-price-row">
+        <div>
+          <div class="kit-price">R$199</div>
+          <div class="kit-price-label">pagamento único</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:#6b90b8;">1 cobrança<br>paga 10x o kit</div>
+      </div>
+      <ul class="kit-features">
+        <li>2 blueprints Make (vencimento + atraso)</li>
+        <li>Planilha com chave Pix integrada</li>
+        <li>Templates LGPD-compliant</li>
+        <li>Abre negociação automaticamente</li>
+      </ul>
+      <a href="/kits/kit-cobranca.html" class="btn-kit" style="background:linear-gradient(135deg,#92400e,#f5c842);color:#04080f;">Ver kit completo →</a>
+      <a href="https://mapeaibrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$199</a>
+    </div>
+
+    <!-- Kit 5 -->
+    <div class="kit-card k5">
+      <div class="kit-tag">Marketing</div>
+      <div class="kit-icon">📱</div>
+      <div class="kit-name">Presença Social Automática</div>
+      <div class="kit-desc">Claude escreve legendas de Instagram 3x por semana no tom da sua marca. Você define o tema. O resto é automático.</div>
+      <div class="kit-price-row">
+        <div>
+          <div class="kit-price">R$199</div>
+          <div class="kit-price-label">pagamento único</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:#6b90b8;">~R$1–3<br>por mês de posts</div>
+      </div>
+      <ul class="kit-features">
+        <li>Blueprint Make com gerador de legendas</li>
+        <li>Calendário de conteúdo + 8 tipos de post</li>
+        <li>Perfil de marca para calibrar o IA</li>
+        <li>Instrução de integração com Buffer</li>
+      </ul>
+      <a href="/kits/kit-presenca.html" class="btn-kit" style="background:linear-gradient(135deg,#831843,#ec4899);color:#fff;">Ver kit completo →</a>
+      <a href="https://mapeaibrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$199</a>
+    </div>
+
+    <!-- Bundle card in grid -->
+    <div class="kit-card" style="border-color:rgba(245,200,66,.3);background:linear-gradient(135deg,#071828,#0d2440);">
+      <div class="kit-tag" style="background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.25);color:#f5c842;">⚡ Melhor valor</div>
+      <div class="kit-icon">🎯</div>
+      <div class="kit-name">Pacote Completo</div>
+      <div class="kit-desc">Todos os 5 kits. A stack completa de automação para uma PME. Economize R$549.</div>
+      <div class="kit-price-row">
+        <div>
+          <div class="kit-price" style="color:#f5c842;">R$497</div>
+          <div class="kit-price-label" style="text-decoration:line-through;color:#6b90b8;">R$1.046 separados</div>
+        </div>
+        <div style="background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.2);border-radius:8px;padding:4px 10px;font-size:11px;color:#00c896;font-weight:700;">52% off</div>
+      </div>
+      <ul class="kit-features" style="color:#8aaac8;">
+        <li style="color:#8aaac8;">Kit 1 + Kit 2 + Kit 3 + Kit 4 + Kit 5</li>
+        <li style="color:#8aaac8;">Todos os blueprints, planilhas e guias</li>
+        <li style="color:#8aaac8;">Acesso imediato a tudo</li>
+      </ul>
+      <a href="https://mapeaibrasil.com/#planos" class="btn-kit" style="background:linear-gradient(135deg,#f5c842,#c8a000);color:#04080f;">Quero o Pacote Completo</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── FAQ ── -->
+<div class="faq">
+  <h2>Perguntas frequentes</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">Preciso saber programar?</div>
+    <div class="faq-a">Não. Os kits usam Make.com (arrasta e solta) e Google Sheets. Cada kit tem um guia passo a passo com imagens. Se travar em algum ponto, o copiloto MapeAI no seu painel responde em segundos.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">As automações ficam nas minhas contas ou na MapeAI?</div>
+    <div class="faq-a">100% nas suas contas. Você importa o blueprint no seu Make.com, conecta seu próprio WhatsApp Business via Z-API, e usa sua própria planilha Google. A MapeAI nunca tem acesso às suas contas ou dados de clientes.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Qual é o custo mensal para manter as automações rodando?</div>
+    <div class="faq-a">Make.com gratuito cobre até 1.000 operações/mês — suficiente para a maioria das PMEs. Z-API tem um trial de 5 dias e planos a partir de ~R$49/mês. Os kits 1 e 5 usam Claude API — custo típico de R$1–15/mês dependendo do volume. Os kits 2, 3 e 4 não precisam de IA e têm custo próximo a zero.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">O que é Z-API? Preciso de aprovação Meta?</div>
+    <div class="faq-a">Z-API conecta seu WhatsApp Business existente (o app no celular) ao Make sem precisar de aprovação Meta. É a solução mais usada por PMEs brasileiras pela facilidade. Para volumes maiores ou número oficial verificado, o kit inclui instruções de migração para a API oficial do WhatsApp Cloud.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">E se eu travar na instalação?</div>
+    <div class="faq-a">Cada kit tem um guia passo a passo detalhado. Além disso, o copiloto MapeAI no seu painel conhece cada kit e responde dúvidas específicas. Se ainda assim precisar de ajuda humana, entre em contato pelo WhatsApp.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Posso comprar um kit agora e o resto depois?</div>
+    <div class="faq-a">Sim. Cada kit é vendido separadamente por R$199 (ou R$250 para o Kit 1). O Pacote Completo por R$497 é a opção mais econômica se você quiser os 5 kits — você economiza R$549 vs. comprar um por um.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Fiz o diagnóstico MapeAI. O kit é o próximo passo?</div>
+    <div class="faq-a">Exatamente. O diagnóstico identifica suas áreas mais fracas. O kit correspondente é a implementação prática — a diferença entre saber o problema e resolvê-lo. O relatório premium já recomenda qual kit começa pelo impacto mais alto para o seu setor.</div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>MapeAI Brasil · <a href="/">mapeaibrasil.com</a> · Dúvidas? <a href="https://wa.me/5512996790859">WhatsApp</a></p>
+  <p style="margin-top:8px;font-size:11px;">Os kits são entregues digitalmente. Não incluem implementação por parte da MapeAI Brasil.</p>
+</footer>
+
+</body>
+</html>
