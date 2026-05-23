@@ -1,0 +1,133 @@
+{
+  "_kit": {
+    "name": "Kit 3 — Agendamento + Lembrete Anti-No-Show",
+    "version": "1.0",
+    "description": "Lembretes automáticos de WhatsApp 24h e 1h antes do compromisso. Elimina no-shows sem esforço.",
+    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "requires": {
+      "make_plan": "Free ou superior",
+      "whatsapp": "Z-API (conta própria)",
+      "crm": "Google Sheets (template incluído)"
+    },
+    "config_variables": {
+      "ZAPI_INSTANCE_ID": "Seu Instance ID do Z-API",
+      "ZAPI_TOKEN": "Seu token do Z-API",
+      "SPREADSHEET_ID": "ID do Google Sheets com seus agendamentos",
+      "SHEET_NAME": "Agendamentos",
+      "SEU_NOME_EMPRESA": "Nome da sua empresa"
+    }
+  },
+  "scenario_a": {
+    "name": "Kit3 — Lembrete 24h",
+    "schedule": "Diário às 8h",
+    "description": "Encontra agendamentos de amanhã e envia lembrete 24h antes.",
+    "flow": [
+      {
+        "id": 1,
+        "module": "google-sheets:searchRows",
+        "note": "Busca agendamentos com Status = 'agendado'",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "agendado"]]
+        }
+      },
+      {
+        "id": 2,
+        "module": "builtin:BasicFilter",
+        "note": "Filtra agendamentos para AMANHÃ (Data = data de amanhã no formato DD/MM/AAAA)",
+        "mapper": {
+          "condition": "{{1.Data}} = {{formatDate(addDays(now; 1); 'DD/MM/YYYY')}}"
+        }
+      },
+      {
+        "id": 3,
+        "module": "http:ActionSendData",
+        "note": "Envia lembrete 24h via Z-API",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{1.WhatsApp}}\",\"message\":\"Olá {{1.Cliente}}! 👋 Lembrando que você tem {{1.Serviço}} agendado amanhã ({{1.Data}}) às {{1.Horário}} com {{1.Profissional}} na {{SEU_NOME_EMPRESA}}.\\n\\nPara confirmar, responda SIM. Para cancelar ou remarcar, responda NÃO.\\n\\nTe esperamos! 😊\"}"
+        }
+      },
+      {
+        "id": 4,
+        "module": "google-sheets:updateARow",
+        "note": "Marca lembrete24h_enviado",
+        "mapper": {
+          "values": {
+            "Status": "lembrete24h_enviado",
+            "Lembrete24h_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      }
+    ]
+  },
+  "scenario_b": {
+    "name": "Kit3 — Lembrete 1h",
+    "schedule": "A cada hora (ou diário de manhã cedo)",
+    "description": "Encontra agendamentos de hoje e envia lembrete 1h antes do horário.",
+    "flow": [
+      {
+        "id": 1,
+        "module": "google-sheets:searchRows",
+        "note": "Busca agendamentos de hoje com Status = lembrete24h_enviado",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "lembrete24h_enviado"]]
+        }
+      },
+      {
+        "id": 2,
+        "module": "builtin:BasicFilter",
+        "note": "Filtra agendamentos de HOJE cujo horário é em 1h (aprox)",
+        "mapper": {
+          "condition": "{{1.Data}} = {{formatDate(now; 'DD/MM/YYYY')}} AND {{abs(dateDifference(now; parseDate(concat(1.Data; ' '; 1.Horário); 'DD/MM/YYYY HH:mm'); 'minutes'))}} <= 70 AND {{abs(dateDifference(now; parseDate(concat(1.Data; ' '; 1.Horário); 'DD/MM/YYYY HH:mm'); 'minutes'))}} >= 50"
+        }
+      },
+      {
+        "id": 3,
+        "module": "http:ActionSendData",
+        "note": "Envia lembrete 1h via Z-API",
+        "mapper": {
+          "url": "https://api.z-api.io/instances/{{ZAPI_INSTANCE_ID}}/token/{{ZAPI_TOKEN}}/send-text",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "data": "{\"phone\":\"{{1.WhatsApp}}\",\"message\":\"⏰ Oi {{1.Cliente}}! Seu {{1.Serviço}} é daqui a 1 hora — {{1.Horário}} — com {{1.Profissional}} na {{SEU_NOME_EMPRESA}}.\\n\\nQualquer imprevisto, avisa aqui! Te esperamos 🙂\"}"
+        }
+      },
+      {
+        "id": 4,
+        "module": "google-sheets:updateARow",
+        "note": "Marca lembrete1h_enviado",
+        "mapper": {
+          "values": {
+            "Status": "lembrete1h_enviado",
+            "Lembrete1h_Em": "{{formatDate(now; 'DD/MM/YYYY HH:mm')}}"
+          }
+        }
+      }
+    ]
+  },
+  "spreadsheet_template": {
+    "sheet_name": "Agendamentos",
+    "columns": [
+      {"col": "A", "header": "Cliente",         "required": true},
+      {"col": "B", "header": "WhatsApp",         "required": true,  "note": "+5511999999999"},
+      {"col": "C", "header": "Serviço",          "required": true},
+      {"col": "D", "header": "Data",             "required": true,  "note": "DD/MM/AAAA"},
+      {"col": "E", "header": "Horário",          "required": true,  "note": "HH:MM (ex: 09:00)"},
+      {"col": "F", "header": "Profissional",     "required": false},
+      {"col": "G", "header": "Status",           "required": true,  "note": "Dropdown automático"},
+      {"col": "H", "header": "Lembrete24h_Em",   "required": false, "note": "Auto"},
+      {"col": "I", "header": "Lembrete1h_Em",    "required": false, "note": "Auto"},
+      {"col": "J", "header": "Confirmado",       "required": false, "note": "Sim/Não — você preenche"},
+      {"col": "K", "header": "Compareceu",       "required": false, "note": "Sim/Não — pós atendimento"},
+      {"col": "L", "header": "Notas",            "required": false}
+    ]
+  }
+}

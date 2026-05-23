@@ -1,0 +1,92 @@
+{
+  "_kit": {
+    "name": "Kit 5 — Presença Social Automática",
+    "version": "1.0",
+    "description": "Claude gera legendas de Instagram prontas para publicar baseadas no seu calendário de conteúdo. Consistência sem agência.",
+    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "requires": {
+      "make_plan": "Free ou superior",
+      "ai": "Claude API — ANTHROPIC_API_KEY obrigatório",
+      "crm": "Google Sheets (template incluído)",
+      "opcional": "Buffer ou Later para agendar publicações automaticamente"
+    },
+    "config_variables": {
+      "ANTHROPIC_API_KEY": "Sua chave da API Anthropic",
+      "SPREADSHEET_ID": "ID do Google Sheets com seu calendário de conteúdo",
+      "SHEET_NAME": "Calendário de Conteúdo",
+      "PERFIL_EMPRESA": "Cole aqui o texto da aba 'Perfil da Empresa' da planilha"
+    }
+  },
+  "scenario": {
+    "name": "Kit5 — Gerador de Legendas",
+    "schedule": "3x por semana (ex: Seg, Qua, Sex às 7h) ou diário",
+    "description": "Lê os posts pendentes do calendário, pede ao Claude para gerar a legenda, salva de volta na planilha.",
+    "flow": [
+      {
+        "id": 1,
+        "module": "google-sheets:searchRows",
+        "note": "Busca posts com Status = 'pendente' para gerar legendas",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "filters": [["Status", "pendente"]],
+          "limit": 3
+        }
+      },
+      {
+        "id": 2,
+        "module": "http:ActionSendData",
+        "note": "Claude gera a legenda baseada no perfil e no tema do post",
+        "mapper": {
+          "url": "https://api.anthropic.com/v1/messages",
+          "method": "post",
+          "bodyType": "raw",
+          "contentType": "application/json",
+          "headers": [
+            {"name": "x-api-key", "value": "{{ANTHROPIC_API_KEY}}"},
+            {"name": "anthropic-version", "value": "2023-06-01"}
+          ],
+          "data": "{\"model\":\"claude-haiku-4-5-20251001\",\"max_tokens\":600,\"messages\":[{\"role\":\"user\",\"content\":\"Você é um especialista em marketing digital para pequenas empresas brasileiras.\\n\\nEMPRESA:\\n{{PERFIL_EMPRESA}}\\n\\nCrie uma legenda de {{1.Canal}} para o seguinte post:\\nTipo: {{1.TipodePost}}\\nTema: {{1.TemaIdeia}}\\nData de publicação: {{1.Data}}\\n\\nRegras:\\n- 3-5 parágrafos curtos\\n- Use os emojis definidos no perfil, com moderação\\n- Inclua as hashtags no final\\n- Termine com o CTA padrão da empresa\\n- Tom de voz conforme o perfil\\n- Escreva em português brasileiro\\n\\nRetorne SOMENTE a legenda, sem explicações.\"}]}",
+          "parseResponse": false
+        }
+      },
+      {
+        "id": 3,
+        "module": "regexp:Parser",
+        "note": "Extrai o texto da legenda da resposta do Claude",
+        "mapper": {
+          "text": "{{2.data}}",
+          "pattern": "\"text\":\"(?<legenda>[\\s\\S]+?)\"\\s*\\}"
+        }
+      },
+      {
+        "id": 4,
+        "module": "google-sheets:updateARow",
+        "note": "Salva a legenda gerada de volta na planilha e muda Status para 'legenda_gerada'",
+        "mapper": {
+          "spreadsheetId": "{{SPREADSHEET_ID}}",
+          "sheetId": "{{SHEET_NAME}}",
+          "values": {
+            "Legenda Gerada": "{{3.legenda}}",
+            "Status": "legenda_gerada"
+          }
+        }
+      }
+    ],
+    "proximo_passo_opcional": {
+      "descricao": "Para publicação automática no Instagram, adicione após o módulo 4:",
+      "modulo": "Buffer API ou Later API",
+      "nota": "Buffer: POST https://api.bufferapp.com/1/updates/create com seu profile_id, text (a legenda), e scheduled_at (a data do post). Requer conta Buffer conectada ao Instagram."
+    }
+  },
+  "tipos_de_post_sugeridos": [
+    "Dica profissional",
+    "Bastidores da empresa",
+    "Depoimento de cliente",
+    "Pergunta à audiência",
+    "Dado / estatística do setor",
+    "Oferta / CTA",
+    "Educacional / tutorial",
+    "Data comemorativa"
+  ]
+}
