@@ -347,5 +347,39 @@
   <p style="margin-top:8px;font-size:11px;">Os kits são entregues digitalmente. Não incluem implementação por parte da MapeAI Brasil.</p>
 </footer>
 
+
+<script>
+(function(){
+  const btns = document.querySelectorAll('a[href*="#planos"], a[href*="/#planos"]');
+  btns.forEach(function(btn){
+    if(!btn.textContent.includes('R$')) return;
+    btn.removeAttribute('href');
+    btn.style.cursor='pointer';
+    btn.addEventListener('click', async function(e){
+      e.preventDefault();
+      const orig = btn.textContent;
+      btn.textContent = 'Redirecionando...';
+      btn.style.opacity = '0.7';
+      try {
+        const r = await fetch('https://isfnlejwanzizsrxhpii.supabase.co/functions/v1/create-kit-checkout', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZWtkdndldm9vcXJsdWJjdG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzU4MTEsImV4cCI6MjA2MzU1MTgxMX0.Vd9wEkF5cAuO3CPdMEYKgJyFWfYWgb2QC8-qJqPx9CE'},
+          body: JSON.stringify({kit:'bundle'})
+        });
+        const d = await r.json();
+        if(d.ok && d.url) { window.location.href = d.url; }
+        else {
+          btn.textContent = orig; btn.style.opacity='1';
+          alert('Erro ao iniciar pagamento. Tente novamente ou entre em contato via WhatsApp.');
+        }
+      } catch(err) {
+        btn.textContent = orig; btn.style.opacity='1';
+        alert('Erro de conexão. Verifique sua internet e tente novamente.');
+      }
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
