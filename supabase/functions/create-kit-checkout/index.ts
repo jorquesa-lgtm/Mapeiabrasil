@@ -64,7 +64,7 @@ Deno.serve(async (req: Request) => {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${successUrl}${sep}session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl,
-      metadata: { kit, kit_label: KIT_LABELS[kit] },
+      metadata: { kit, kit_label: KIT_LABELS[kit], plan: `kit_${kit}` },
     };
 
     if (email) {

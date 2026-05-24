@@ -31,10 +31,11 @@ function isEmail(v: string): boolean {
 }
 
 function planLabel(plan: string): string {
-  if (plan === "premium") return "Diagnostico Premium";
+  if (plan === "diagnostic") return "Diagnostico Completo";
+  if (plan === "premium") return "Diagnostico Completo";
   if (plan === "subscription") return "Assinatura Evolucao";
   if (plan === "advisory") return "Advisory Personalizado";
-  return "Diagnostico Express (gratuito)";
+  return "Diagnostico MapeAI";
 }
 
 function buildWelcomeHtml(name: string, plan: string): string {
@@ -43,18 +44,18 @@ function buildWelcomeHtml(name: string, plan: string): string {
   return `<!doctype html><html><body style="font-family:Arial,Helvetica,sans-serif;background:#0b1420;color:#e6eef8;margin:0;padding:32px;">
   <div style="max-width:560px;margin:0 auto;background:#0f1b2c;border:1px solid #1e2d45;border-radius:14px;padding:32px;">
     <div style="font-size:12px;letter-spacing:.12em;color:#35c4a8;text-transform:uppercase;font-weight:700;margin-bottom:10px;">MapeIA Brasil</div>
-    <h1 style="font-family:Georgia,serif;font-size:26px;line-height:1.25;color:#ffffff;margin:0 0 12px;">Oi, ${firstName}! Recebemos seus dados.</h1>
+    <h1 style="font-family:Georgia,serif;font-size:26px;line-height:1.25;color:#ffffff;margin:0 0 12px;">Oi, ${firstName}! Bom te ver por aqui.</h1>
     <p style="font-size:15px;line-height:1.6;color:#b9c7d8;margin:0 0 16px;">
-      Voce se cadastrou para o <strong style="color:#ffffff;">${label}</strong>.
-      Em instantes voce recebera o link para iniciar o diagnostico e, assim que concluir,
-      o relatorio com o seu score de maturidade digital chega aqui no seu e-mail.
+      Voce esta respondendo o <strong style="color:#ffffff;">${label}</strong> da MapeAI Brasil.
+      Complete as 33 perguntas — ao final, voce podera desbloquear seu relatorio completo com score de maturidade,
+      3 quick wins priorizados e um roadmap 30/60/90 dias construido para o seu negocio.
     </p>
     <p style="font-size:15px;line-height:1.6;color:#b9c7d8;margin:0 0 24px;">
-      Se precisar de algo antes disso, responda este e-mail ou fale com a gente no WhatsApp.
+      Se precisar de ajuda durante o diagnostico, responda este e-mail ou fale com a gente pelo WhatsApp.
     </p>
     <a href="https://wa.me/5512996790859" style="display:inline-block;background:linear-gradient(135deg,#35c4a8,#2aa88f);color:#0a0f1a;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:10px;font-size:14px;">Falar no WhatsApp</a>
     <p style="font-size:12px;color:#6b7a8c;margin-top:28px;line-height:1.5;">
-      Voce recebeu este e-mail porque solicitou o diagnostico em mapeia.com.br.<br>
+      Voce recebeu este e-mail porque solicitou o diagnostico em mapeaibrasil.com.<br>
       Seus dados estao protegidos segundo a LGPD.
     </p>
   </div>

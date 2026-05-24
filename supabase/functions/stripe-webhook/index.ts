@@ -75,6 +75,17 @@ Deno.serve(async (req: Request) => {
       const sessionId: string = session.id || "";
       const plan: string = session.metadata?.plan || (subscriptionId ? "subscription" : "premium");
       const diagId: string | null = session.metadata?.diag_id || null;
+      const kitId: string | null = session.metadata?.kit || null;
+
+      // Kit purchases: log to subscriptions then skip all diagnostic logic
+      if (kitId) {
+        await supabase.from("subscriptions").upsert(
+          { email: customerEmail, stripe_customer_id: customerId, stripe_session_id: sessionId, plan, status: "active" },
+          { onConflict: "stripe_session_id" },
+        );
+        console.log(`[webhook] kit purchase logged: ${plan} for ${customerEmail}`);
+        return new Response(JSON.stringify({ ok: true, kit: kitId }), { status: 200 });
+      }
 
       // Upsert subscription record
       await supabase.from("subscriptions").upsert(
