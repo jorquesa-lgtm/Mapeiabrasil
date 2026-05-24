@@ -1830,7 +1830,7 @@ if (pwBuyBtn) pwBuyBtn.addEventListener('click', async () => {
         email: state.capturedEmail || '',
         diag_id: state.diagId || undefined,
         success_url: 'https://mapeaibrasil.com/diagnostico.html?paid=1',
-        cancel_url: 'https://mapeaibrasil.com/diagnostico.html?paid=1',
+        cancel_url: 'https://mapeaibrasil.com/diagnostico.html?cancelled=1',
       }),
     });
     const data = await resp.json();
@@ -2039,8 +2039,32 @@ if (accessCodeApply) {
 (function boot(){
   const params = new URLSearchParams(window.location.search);
   const isPaidReturn = params.get('paid') === '1';
+  const isCancelledReturn = params.get('cancelled') === '1';
   const sessionId = params.get('session_id');
   const accessCode = sessionStorage.getItem('mapeia_access_code');
+
+  // Cancelled Stripe payment — if the diagnostic is still in sessionStorage, show paywall again
+  if (isCancelledReturn) {
+    params.delete('cancelled');
+    window.history.replaceState({}, '', window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
+    const savedMeta = sessionStorage.getItem('mapeia_diag_meta');
+    if (savedMeta) {
+      try {
+        const meta = JSON.parse(savedMeta);
+        state.diagId = meta.diag_id;
+        state.globalScore = meta.global_score ?? 0;
+        state.areaScores = meta.area_scores || {};
+        state.answers = meta.answers || {};
+        state.capturedName = sessionStorage.getItem('mapeia_lead_name') || '';
+        state.capturedEmail = sessionStorage.getItem('mapeia_lead_email') || '';
+      } catch (_) {}
+      showPaywall(); // show paywall again — they can retry payment
+      return;
+    }
+    // No saved diag — send to intro
+    showScreen('intro');
+    return;
+  }
 
   // Returning from Stripe (or with an access code) after completing the quiz:
   // the quiz is DONE — restore the saved diagnostic, verify, and show the report.
