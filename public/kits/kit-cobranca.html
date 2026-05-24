@@ -198,6 +198,9 @@
         <a href="https://docs.google.com/spreadsheets/d/1_MODELO_KIT4_MAPEIA/copy" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);color:var(--accent);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;margin-top:4px;">
           📋 Abrir Planilha Modelo
         </a>
+        <a href="/kits/kit-cobranca-planilha.xlsx" download style="display:inline-flex;align-items:center;gap:8px;background:rgba(26,127,240,.08);border:1px solid rgba(26,127,240,.25);color:#6ab4ff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;margin-top:8px;">
+          ⬇ Baixar Planilha (.xlsx)
+        </a>
       </div>
     </div>
 
@@ -391,7 +394,9 @@ Para não receber mais mensagens, responda PARAR. — [Sua Empresa]</div>
 (function(){
   const btns = document.querySelectorAll('a[href*="#planos"], a[href*="/#planos"]');
   btns.forEach(function(btn){
-    if(!btn.textContent.includes('R$')) return;
+    // Only intercept actual purchase buttons, not the nav 'Planos' link
+    const isBuyBtn = /btn-(p|primary|bundle|kit|secondary)/.test(btn.className) || btn.textContent.includes('R$') || btn.textContent.toLowerCase().includes('pacote');
+    if(!isBuyBtn) return;
     btn.removeAttribute('href');
     btn.style.cursor='pointer';
     btn.addEventListener('click', async function(e){

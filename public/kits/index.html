@@ -352,7 +352,9 @@
 (function(){
   const btns = document.querySelectorAll('a[href*="#planos"], a[href*="/#planos"]');
   btns.forEach(function(btn){
-    if(!btn.textContent.includes('R$')) return;
+    // Only intercept actual purchase buttons, not the nav 'Planos' link
+    const isBuyBtn = /btn-(p|primary|bundle|kit|secondary)/.test(btn.className) || btn.textContent.includes('R$') || btn.textContent.toLowerCase().includes('pacote');
+    if(!isBuyBtn) return;
     btn.removeAttribute('href');
     btn.style.cursor='pointer';
     btn.addEventListener('click', async function(e){
