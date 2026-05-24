@@ -349,7 +349,7 @@ export default function DashboardPage({ user }: { user: User }) {
                       </div>
                       <div style={{ fontSize: 11, color: "#4a6fa0" }}>
                         {new Date(r.created_at).toLocaleDateString("pt-BR")}
-                        {r._fromDiag && <span style={{ marginLeft: 6, fontSize: 10, color: "#2a4a6f", background: "#0d1d35", border: "1px solid #1a3355", borderRadius: 4, padding: "1px 5px" }}>Grátis</span>}
+
                       </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1329,10 +1329,10 @@ function EmptyState() {
       </div>
       <div style={{ fontSize: 18, fontWeight: 700, color: "#f4f8ff", marginBottom: 8 }}>Nenhum relatório ainda</div>
       <div style={{ fontSize: 14, color: "#7a9ec8", marginBottom: 24, maxWidth: 380, margin: "0 auto 24px" }}>
-        Complete um diagnóstico gratuito para receber seu relatório personalizado de maturidade em IA.
+        Complete o diagnóstico para receber seu relatório personalizado de maturidade em IA.
       </div>
       <a href="/diagnostico.html" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg,#1a7ff0,#00b8d4)", color: "#fff", padding: "12px 28px", borderRadius: 10, textDecoration: "none", fontSize: 14, fontWeight: 600 }}>
-        Começar diagnóstico gratuito
+        Começar diagnóstico
       </a>
     </div>
   );
