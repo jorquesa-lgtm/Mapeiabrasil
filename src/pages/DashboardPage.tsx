@@ -466,6 +466,32 @@ export default function DashboardPage({ user }: { user: User }) {
           </div>
         </div>
       </div>
+
+      {/* Copilot — fixed injection inside DashboardPage return */}
+      {(() => {
+        const diagD = selectedReport
+          ? ((selectedReport as ReportItem & { diagnostic_responses?: { area_scores?: Record<string,number>; sector?: string; maturity_level?: number; global_score?: number } }).diagnostic_responses ?? selectedReport)
+          : null;
+        const aiD = selectedReport?.ai_data ?? {};
+        if (!diagD) return null;
+        const quickWins = (aiD as { quick_wins?: Array<{ title: string; description?: string; tool?: string }> }).quick_wins ?? [];
+        const roadmap   = (aiD as { roadmap?: Record<string, { title: string; actions?: Array<{ title: string; description?: string; tool?: string }> }> }).roadmap ?? {};
+        const gaps      = (aiD as { gaps?: Array<{ title: string; severity: string; area?: string }> }).gaps ?? [];
+        const areaScores = (diagD as { area_scores?: Record<string,number> }).area_scores ?? selectedReport?.area_scores ?? {};
+        const hasContext = Object.keys(areaScores).length > 0 || quickWins.length > 0;
+        if (!hasContext) return null;
+        const copilotCtx = {
+          company: profile?.company || profile?.name || user.email?.split("@")[0] || "sua empresa",
+          sector: (diagD as { sector?: string }).sector ?? selectedReport?.sector ?? "",
+          score: (diagD as { global_score?: number }).global_score ?? selectedReport?.global_score ?? 0,
+          maturity: MATURITY[(diagD as { maturity_level?: number }).maturity_level ?? selectedReport?.maturity_level ?? 0] ?? "",
+          area_scores: areaScores,
+          quick_wins: quickWins,
+          roadmap,
+          gaps,
+        };
+        return <CopilotDrawer context={copilotCtx} />;
+      })()}
     </div>
   );
 }
@@ -1785,36 +1811,6 @@ function EvolucaoUpsell({ userEmail }: { userEmail: string }) {
           <div style={{ fontSize: 12, color: "#4a6fa0", marginTop: 8 }}>Cancele quando quiser</div>
         </div>
       </div>
-    </div>
-      {/* Copilot — context built from the currently selected report */}
-      {(() => {
-        const diag = selectedReport
-          ? ((selectedReport as ReportItem & { diagnostic_responses?: { area_scores?: Record<string,number>; sector?: string; maturity_level?: number; global_score?: number } }).diagnostic_responses ?? selectedReport)
-          : null;
-        const aiD = selectedReport?.ai_data ?? {};
-        if (!diag) return null;
-        const quickWins = (aiD as { quick_wins?: Array<{ title: string; description?: string; tool?: string }> }).quick_wins ?? [];
-        const roadmap   = (aiD as { roadmap?: Record<string, { title: string; actions?: Array<{ title: string; description?: string; tool?: string }> }> }).roadmap ?? {};
-        const gaps      = (aiD as { gaps?: Array<{ title: string; severity: string; area?: string }> }).gaps ?? [];
-        const areaScores = (diag as { area_scores?: Record<string,number> }).area_scores ?? selectedReport?.area_scores ?? {};
-
-        // Only show copilot when there is enough context to be useful
-        // (needs at least area scores OR quick wins from the diagnostic AI)
-        const hasContext = Object.keys(areaScores).length > 0 || quickWins.length > 0;
-        if (!hasContext) return null;
-
-        const copilotCtx = {
-          company: profile?.company || profile?.name || user.email?.split("@")[0] || "sua empresa",
-          sector: (diag as { sector?: string }).sector ?? selectedReport?.sector ?? "",
-          score: (diag as { global_score?: number }).global_score ?? selectedReport?.global_score ?? 0,
-          maturity: MATURITY[(diag as { maturity_level?: number }).maturity_level ?? selectedReport?.maturity_level ?? 0] ?? "",
-          area_scores: areaScores,
-          quick_wins: quickWins,
-          roadmap,
-          gaps,
-        };
-        return <CopilotDrawer context={copilotCtx} />;
-      })()}
     </div>
   );
 }
