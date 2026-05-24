@@ -4,39 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Compra confirmada — MapeAI Brasil</title>
-  <link rel="stylesheet" href="/kits/shared.css">
+<style>
+  :root {
+  --bg:        #fbfbfd;
+  --surface:   #ffffff;
+  --subtle:    #f5f5f7;
+  --border:    #e8e8ed;
+  --muted:     #86868b;
+  --soft:      #6e6e73;
+  --text:      #1d1d1f;
+  --accent:    #0077cc;
+  --accent2:   #005fa3;
+  --teal:      #0a8a7a;
+  --teal2:     #0d9e8c;
+  --green:     #0d7a5f;
+  --red:       #d63031;
+  --yellow:    #f5c842;
+  --gold:      #8b6914;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04),0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04);
+}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--border);}
+  .logo{font-size:18px;font-weight:700;color:var(--text);text-decoration:none;}.logo em{color:var(--accent);font-style:normal;}
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 24px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:48px 40px;max-width:520px;width:100%;text-align:center;position:relative;overflow:hidden;}
+  .card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(0,229,200,.06) 0%,transparent 60%);pointer-events:none;}
+  .check{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#00b8a0,#00e5c8);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 8px 32px rgba(0,229,200,.3);}
+  h1{font-size:26px;font-weight:700;margin-bottom:10px;}
+  .sub{font-size:15px;color:var(--muted);margin-bottom:32px;line-height:1.6;}
+  .kit-name{display:inline-block;background:rgba(0,229,200,.08);border:1px solid rgba(0,229,200,.2);color:var(--accent);font-size:13px;font-weight:700;padding:6px 16px;border-radius:99px;margin-bottom:28px;}
+  .steps{text-align:left;display:flex;flex-direction:column;gap:14px;margin-bottom:32px;}
+  .step{display:flex;gap:14px;align-items:flex-start;}
+  .step-num{width:28px;height:28px;border-radius:50%;background:rgba(0,229,200,.1);border:1px solid rgba(0,229,200,.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);}
+  .step-text{font-size:13px;color:var(--muted);line-height:1.6;padding-top:3px;}
+  .step-text strong{color:var(--text);}
+  .actions{display:flex;flex-direction:column;gap:10px;}
+  .btn-primary{display:block;padding:14px;background:linear-gradient(135deg,#00b8a0,#00e5c8);color:#04080f;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:12px;cursor:pointer;text-align:center;text-decoration:none;transition:opacity .2s;}
+  .btn-primary:hover{opacity:.88;}
+  .btn-secondary{display:block;padding:12px;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;border:1px solid var(--border);border-radius:12px;text-align:center;text-decoration:none;transition:all .2s;}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+  footer{border-top:1px solid var(--border);padding:24px 40px;text-align:center;font-size:12px;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<nav class="kit-nav" id="kitNav">
-  <div class="kit-nav-inner">
-    <a href="/" class="kit-nav-logo">
-      <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Brasil">
-      <span class="kit-nav-logo-text">MapeIA Brasil</span>
+<nav style="position:sticky;top:0;z-index:1000;background:rgba(251,251,253,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.07);font-family:'DM Sans',sans-serif;">
+  <div style="max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 28px;">
+    <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;">
+      <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Brasil" style="height:32px;width:auto;">
+      <span style="font-size:14px;font-weight:700;color:#1d1d1f;letter-spacing:-.01em;">MapeIA Brasil</span>
     </a>
-    <ul class="kit-nav-links">
-      <li><a href="/#como-funciona">Como funciona</a></li>
-      <li><a href="/#planos">Planos</a></li>
-      <li><a href="/kits/" class="active">Kits IA ⚡</a></li>
-      <li><a href="/#faq">FAQ</a></li>
-      <li><a href="/#contato">Contato</a></li>
-    </ul>
-    <div class="kit-nav-right">
-      <a href="/diagnostico.html" class="kit-nav-cta">Iniciar diagnóstico</a>
+    <div style="display:flex;align-items:center;gap:4px;" id="kitNavLinks">
+      <a href="/#como-funciona" style="font-size:13.5px;font-weight:500;color:#555;text-decoration:none;padding:6px 12px;border-radius:8px;">Como funciona</a>
+      <a href="/#planos"        style="font-size:13.5px;font-weight:500;color:#555;text-decoration:none;padding:6px 12px;border-radius:8px;">Planos</a>
+      <a href="/kits/"          style="font-size:13.5px;font-weight:600;color:#0077cc;text-decoration:none;padding:6px 12px;border-radius:8px;">Kits IA ⚡</a>
+      <a href="/#faq"           style="font-size:13.5px;font-weight:500;color:#555;text-decoration:none;padding:6px 12px;border-radius:8px;">FAQ</a>
+      <a href="/#contato"       style="font-size:13.5px;font-weight:500;color:#555;text-decoration:none;padding:6px 12px;border-radius:8px;">Contato</a>
     </div>
-    <button class="kit-nav-hamburger" id="kitHamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+      <a href="/diagnostico.html" style="background:#0077cc;color:#fff;padding:9px 18px;border-radius:980px;font-size:13.5px;font-weight:700;text-decoration:none;white-space:nowrap;">Iniciar diagnóstico</a>
+      <button onclick="document.getElementById('kitMobileDrawer').style.display=document.getElementById('kitMobileDrawer').style.display==='flex'?'none':'flex';" style="display:none;flex-direction:column;gap:4.5px;background:none;border:none;cursor:pointer;padding:6px;" id="kitHamBtn">
+        <span style="display:block;width:22px;height:2px;background:#1d1d1f;border-radius:2px;"></span>
+        <span style="display:block;width:22px;height:2px;background:#1d1d1f;border-radius:2px;"></span>
+        <span style="display:block;width:22px;height:2px;background:#1d1d1f;border-radius:2px;"></span>
+      </button>
+    </div>
   </div>
 </nav>
-<div class="kit-nav-drawer" id="kitDrawer">
-  <a href="/#como-funciona">Como funciona</a>
-  <a href="/#planos">Planos</a>
-  <a href="/kits/">Kits IA ⚡</a>
-  <a href="/#faq">FAQ</a>
-  <a href="/#contato">Contato</a>
-  <a href="/diagnostico.html" class="kit-nav-cta">Iniciar diagnóstico →</a>
+<div id="kitMobileDrawer" style="display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(251,251,253,.98);z-index:999;flex-direction:column;padding:20px 28px;overflow-y:auto;">
+  <a href="/#como-funciona" style="font-size:17px;font-weight:500;color:#1d1d1f;text-decoration:none;padding:14px 0;border-bottom:1px solid #e8e8ed;">Como funciona</a>
+  <a href="/#planos"        style="font-size:17px;font-weight:500;color:#1d1d1f;text-decoration:none;padding:14px 0;border-bottom:1px solid #e8e8ed;">Planos</a>
+  <a href="/kits/"          style="font-size:17px;font-weight:600;color:#0077cc;text-decoration:none;padding:14px 0;border-bottom:1px solid #e8e8ed;">Kits IA ⚡</a>
+  <a href="/#faq"           style="font-size:17px;font-weight:500;color:#1d1d1f;text-decoration:none;padding:14px 0;border-bottom:1px solid #e8e8ed;">FAQ</a>
+  <a href="/#contato"       style="font-size:17px;font-weight:500;color:#1d1d1f;text-decoration:none;padding:14px 0;border-bottom:1px solid #e8e8ed;">Contato</a>
+  <a href="/diagnostico.html" style="margin-top:20px;background:#0077cc;color:#fff;padding:14px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;text-align:center;">Iniciar diagnóstico →</a>
 </div>
+<style>
+@media(max-width:720px){
+  #kitNavLinks{display:none!important;}
+  #kitHamBtn{display:flex!important;}
+}
+</style>
 
 <main>
   <div class="card">
@@ -97,23 +149,10 @@ if (kit && KIT_LABELS[kit]) {
 }
 </script>
 <script>
-(function(){
-  var btn=document.getElementById('kitHamburger');
-  var drw=document.getElementById('kitDrawer');
-  if(!btn||!drw)return;
-  btn.addEventListener('click',function(){
-    btn.classList.toggle('open');
-    drw.classList.toggle('open');
-    document.body.style.overflow=drw.classList.contains('open')?'hidden':'';
-  });
-  drw.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click',function(){
-      btn.classList.remove('open');
-      drw.classList.remove('open');
-      document.body.style.overflow='';
-    });
-  });
-})();
+// Close mobile drawer on link click
+document.querySelectorAll('#kitMobileDrawer a').forEach(function(a){
+  a.addEventListener('click',function(){document.getElementById('kitMobileDrawer').style.display='none';});
+});
 </script>
 </body>
 </html>
