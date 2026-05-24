@@ -1117,7 +1117,7 @@ footer {
       </h1>
 
       <p class="hero-sub reveal reveal-delay-1">
-        O Diagnóstico Express é seu retrato. O Premium é seu plano de ação.
+        Responda 33 perguntas e desbloqueie seu plano de ação completo por R$499.
       </p>
 
       <div class="hero-support-points reveal reveal-delay-1">
@@ -1805,11 +1805,6 @@ footer {
   display: flex; flex-direction: column;
   position: relative;
 }
-.pc-express {
-  background: var(--subtle);
-  border: 0.5px solid var(--line);
-  padding: 28px;
-}
 .pc-premium {
   background: rgba(0,119,204,.05);
   border: 1.5px solid var(--accent);
@@ -1888,35 +1883,20 @@ footer {
   <div class="container">
     <div class="sec-header reveal">
       <div class="sec-tag">Planos</div>
-      <h2>Escolha o nível<br>certo para você</h2>
+      <h2>Um diagnóstico.<br>Um plano de ação.</h2>
       <p>Responda o diagnóstico e desbloqueie seu plano de ação completo.</p>
     </div>
 
     <div class="pricing-grid-new reveal">
 
-      <!-- CARD 1: EXPRESS -->
-      <div class="pc pc-express">
-        <div class="pc-name">Passo 1 &middot; Responda</div>
-        <div class="pc-price free">Grátis</div>
-        <div class="pc-price-period">sem cartão &middot; ~10 minutos</div>
-        <div class="pc-sub">Responda 33 perguntas sobre o seu negócio. Leva cerca de 10 minutos.</div>
-        <div class="pc-divider"></div>
-        <div class="pc-features">
-          <div class="pc-fi"><span class="pc-fi-check green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pc-fi-text">Questionário completo de 33 perguntas</span></div>
-          <div class="pc-fi"><span class="pc-fi-check green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pc-fi-text">Mapeamento das 7 áreas do seu negócio</span></div>
-          <div class="pc-fi"><span class="pc-fi-check green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pc-fi-text">Análise do seu site e setor em tempo real</span></div>
-        </div>
-        <a href="/diagnostico.html" class="btn-pc-text" data-source="pricing_start">Começar diagnóstico &rarr;</a>
-        <div class="pc-fine">O resultado é desbloqueado no Passo 2</div>
-      </div>
 
       <!-- CARD 2: PREMIUM (dominant) -->
       <div class="pc pc-premium">
-        <span class="pc-rec-badge">SEU PLANO</span>
-        <div class="pc-name">Passo 2 &middot; Desbloqueie</div>
+        <span class="pc-rec-badge">MAIS POPULAR</span>
+        <div class="pc-name">Diagnóstico Completo</div>
         <div class="pc-price large">R$499</div>
         <div class="pc-price-period">Pagamento único &middot; Acesso imediato</div>
-        <div class="pc-sub">Desbloqueie seu relatório completo e o plano de ação.</div>
+        <div class="pc-sub">Responda 33 perguntas e receba seu plano de ação completo — score, quick wins e roadmap executável.</div>
         <div class="pc-divider"></div>
         <div class="pc-features">
           <div class="pc-fi"><span class="pc-fi-check accent"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pc-fi-text"><strong>Seu score de maturidade + radar das 7 áreas</strong></span></div>
@@ -1928,7 +1908,7 @@ footer {
           <div class="pc-fi"><span class="pc-fi-check accent"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><span class="pc-fi-text">PDF exportável com sua marca</span></div>
         </div>
         <a href="/diagnostico.html" class="btn-pc-primary" data-source="pricing_unlock" style="text-decoration:none;display:block;text-align:center;">Fazer diagnóstico &rarr;</a>
-        <div class="pc-fine">Você desbloqueia ao final do diagnóstico</div>
+        <div class="pc-fine">Responda agora · desbloqueie ao final</div>
       </div>
 
       <!-- CARD 3: EVOLUÇÃO -->
@@ -2949,7 +2929,7 @@ const translations = {
     'plans-title': 'Escolha o nível<br>certo para você',
     'plans-sub': 'Responda o diagnóstico e desbloqueie seu plano de ação completo.',
     'plan1-name': 'Camada 1 &middot; Express',
-    'plan1-title': 'Passo 1 · Responda',
+    'plan1-title': 'Diagnóstico Completo',
     'plan1-sub': 'Primeiro contato: entenda em minutos onde sua empresa está na jornada digital.',
     'plan1-period': 'acesso imediato',
     'plan1-note': 'Sem cartão. Sem cadastro prévio.',
@@ -2958,7 +2938,7 @@ const translations = {
     'plan1-f3': '<strong>Nível (1 a 5)</strong> com descrição do estágio',
     'plan1-f4': '<strong>1 quick win</strong> prioritário para começar hoje',
     'plan1-f5': 'Resultado entregue por e-mail',
-    'plan1-cta': 'Começar diagnóstico &rarr;',
+    'plan1-cta': 'Fazer diagnóstico &rarr;',
     'plan1-fine': 'Leva menos de 5 minutos',
     'plan2-badge': 'Mais completo',
     'plan2-name': 'Camada 2 &middot; Premium',
@@ -3216,7 +3196,7 @@ const translations = {
     'faq1-q': 'Do I need to be a technology expert to take the diagnostic?',
     'faq1-a': 'No. The questionnaire was designed for business owners and managers without a technical background. Questions are in plain language and the result explains everything in a practical, actionable way.',
     'faq2-q': 'How does paying for the diagnostic work?',
-    'faq2-a': 'Express (free) delivers the global score, maturity level 1–5 and one priority quick win &mdash; enough to know where you stand and where to start. Premium (R$499) delivers the full actionable package: 7-area radar with traffic lights, top 3 prioritized quick wins, recommended tools, 30/60/90-day plan, critical process analysis, industry benchmark and a branded PDF. If you want to leave with a concrete plan to execute, go straight to Premium.',
+    'faq2-a': 'Taking the diagnostic is free &mdash; 33 questions, about 10 minutes. At the end, we analyze everything and generate your full report. To unlock the result (7-area radar, top 3 quick wins, 30/60/90 plan, process audit and industry benchmark), the investment is a one-time R$499. You only pay after answering — when you already know the diagnostic was built for your company.',
     'faq3-q': 'Is the result truly personalized or generic?',
     'faq3-a': 'It is AI-generated based on your specific answers &mdash; industry, size, current tools and budget. Two business owners from the same sector who answer differently receive completely distinct diagnostics.',
     'faq4-q': 'How long does it take to implement the recommendations?',
