@@ -633,6 +633,17 @@
         <p class="bench-ctx" id="benchCtx"></p>
       </div>
 
+      <!-- Kit recommendations (premium only, populated by renderKitRecommendations) -->
+      <div class="kit-recs" id="kitRecs" style="display:none;margin:32px 0;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Baseado no seu diagnóstico</div>
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:4px;color:var(--heading);">Kits recomendados para você</h3>
+        <p style="font-size:14px;color:var(--secondary);margin-bottom:20px;">Cada kit automatiza exatamente o gap identificado no seu diagnóstico.</p>
+        <div id="kitRecsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;"></div>
+        <div style="margin-top:16px;text-align:center;">
+          <a href="/kits/" style="font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;">Ver todos os 5 kits de automação →</a>
+        </div>
+      </div>
+
       <!-- Dashboard CTA -->
       <div class="dash-cta" id="dashCta">
         <div class="dash-cta-title">Seu relatório está salvo no painel</div>
@@ -2384,6 +2395,7 @@ function renderResult(){
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       if (s?.user) document.getElementById('dashCta')?.classList.add('visible');
     });
+    renderKitRecommendations();
   }
 
   renderAreaBars();
@@ -2391,6 +2403,54 @@ function renderResult(){
   renderRoadmap();
   renderProcessAudit();
 }
+
+function renderKitRecommendations() {
+  const grid = document.getElementById('kitRecsGrid');
+  const container = document.getElementById('kitRecs');
+  if (!grid || !container) return;
+
+  const KIT_MAP = {
+    service: { id: 'kit1', name: 'Atendente 24h no WhatsApp',       emoji: '🤖', url: '/kits/kit-atendente.html',  price: 'R$250/mês', color: '#1a9ff0', reason: 'Seu atendimento está abaixo da média. Este kit responde clientes 24h automaticamente.' },
+    sales:   { id: 'kit2', name: 'Follow-up Automático de Leads',    emoji: '💬', url: '/kits/kit-followup.html',  price: 'R$199/mês', color: '#0077cc', reason: 'Sua área de vendas precisa de atenção. Este kit recupera leads automaticamente via WhatsApp.' },
+    process: { id: 'kit3', name: 'Agendamento Anti-No-Show',          emoji: '📅', url: '/kits/kit-agendamento.html', price: 'R$199/mês', color: '#7c3aed', reason: 'Seus processos têm gargalos. Este kit elimina no-shows com lembretes automáticos.' },
+    data:    { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199/mês', color: '#d97706', reason: 'Sua gestão financeira precisa de automação. Este kit envia cobranças via WhatsApp com Pix.' },
+    infra:   { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199/mês', color: '#d97706', reason: 'Sua infraestrutura digital tem lacunas. Comece automatizando a cobrança de clientes.' },
+    ai:      { id: 'kit5', name: 'Presença Social Automática',        emoji: '📱', url: '/kits/kit-presenca.html',  price: 'R$199/mês', color: '#db2777', reason: 'Você ainda não usa IA no marketing. Este kit gera conteúdo para redes sociais automaticamente.' },
+  };
+
+  // Sort areas by score ascending (weakest first) and pick top 2
+  const sorted = Object.entries(state.areaScores || {})
+    .sort((a, b) => a[1] - b[1])
+    .slice(0, 3);
+
+  const seen = new Set();
+  const recs = [];
+  for (const [area, score] of sorted) {
+    const kit = KIT_MAP[area];
+    if (!kit || seen.has(kit.id)) continue;
+    seen.add(kit.id);
+    recs.push({ ...kit, area, score });
+    if (recs.length >= 2) break;
+  }
+
+  if (recs.length === 0) return;
+
+  grid.innerHTML = recs.map(kit => `
+    <div style="background:#fff;border:1.5px solid ${kit.color}22;border-radius:16px;padding:22px;box-shadow:0 4px 12px rgba(0,0,0,.06);position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${kit.color};"></div>
+      <div style="font-size:28px;margin-bottom:10px;">${kit.emoji}</div>
+      <div style="font-size:15px;font-weight:700;color:#1d1d1f;margin-bottom:6px;">${kit.name}</div>
+      <div style="font-size:12px;color:#86868b;margin-bottom:12px;line-height:1.5;">${kit.reason}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <span style="font-size:13px;font-weight:700;color:${kit.color};">${kit.price}</span>
+        <span style="font-size:11px;background:${kit.color}15;color:${kit.color};padding:3px 8px;border-radius:99px;font-weight:600;">Score: ${kit.score}/100</span>
+      </div>
+      <a href="${kit.url}" style="display:block;width:100%;padding:10px;background:${kit.color};color:#fff;border-radius:10px;text-align:center;text-decoration:none;font-size:13px;font-weight:700;box-sizing:border-box;">Ver kit →</a>
+    </div>`).join('');
+
+  container.style.display = 'block';
+}
+
 
 function renderAreaBars(){
   const container = document.getElementById('areaRows');
