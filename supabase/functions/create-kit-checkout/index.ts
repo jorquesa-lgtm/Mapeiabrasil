@@ -5,15 +5,20 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Map kit IDs to Stripe price secret names.
-// Jorge: add these 6 secrets to bolt.new Secrets after creating the Stripe products.
+// Price IDs — confirmed live in Stripe (BRL, recurring monthly).
+// Env secrets take priority; hardcoded IDs are the fallback.
+const KIT_PRICE_DEFAULTS: Record<string, string> = {
+  kit1:   "price_1TafZv3ZopExAYorc9oKjs8c",   // R$250/mo — Atendente 24h
+  kit2:   "price_1TafaA3ZopExAYoruX85gX5Z",   // R$199/mo — Follow-up de Leads
+  kit3:   "price_1TafaN3ZopExAYorlTdfy4aJ",   // R$199/mo — Agendamento Anti-No-Show
+  kit4:   "price_1Tafaa3ZopExAYornmIJhp1C",   // R$199/mo — Cobrança Amigável
+  kit5:   "price_1Tafao3ZopExAYorfYjqKLVu",   // R$199/mo — Presença Social
+  bundle: "price_1Tafb43ZopExAYoriJ0BaK0U",   // R$699/mo — Pacote Completo
+};
 const KIT_PRICE_SECRETS: Record<string, string> = {
-  kit1:   "STRIPE_KIT1_PRICE",   // R$250 — Atendente 24h
-  kit2:   "STRIPE_KIT2_PRICE",   // R$199 — Follow-up de Leads
-  kit3:   "STRIPE_KIT3_PRICE",   // R$199 — Agendamento Anti-No-Show
-  kit4:   "STRIPE_KIT4_PRICE",   // R$199 — Cobrança Amigável
-  kit5:   "STRIPE_KIT5_PRICE",   // R$199 — Presença Social
-  bundle: "STRIPE_BUNDLE_PRICE", // R$497 — Pacote Completo
+  kit1: "STRIPE_KIT1_PRICE", kit2: "STRIPE_KIT2_PRICE",
+  kit3: "STRIPE_KIT3_PRICE", kit4: "STRIPE_KIT4_PRICE",
+  kit5: "STRIPE_KIT5_PRICE", bundle: "STRIPE_BUNDLE_PRICE",
 };
 
 const KIT_LABELS: Record<string, string> = {
@@ -49,13 +54,9 @@ Deno.serve(async (req: Request) => {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) return json({ ok: false, error: "stripe_not_configured" }, 500);
 
-    const priceId = Deno.env.get(KIT_PRICE_SECRETS[kit]);
+    const priceId = Deno.env.get(KIT_PRICE_SECRETS[kit]) || KIT_PRICE_DEFAULTS[kit];
     if (!priceId) {
-      return json({
-        ok: false,
-        error: "kit_price_not_configured",
-        hint: `Add secret ${KIT_PRICE_SECRETS[kit]} in bolt.new Secrets`,
-      }, 500);
+      return json({ ok: false, error: "kit_price_not_configured" }, 500);
     }
 
     const sep = successUrl.includes("?") ? "&" : "?";
