@@ -2073,6 +2073,31 @@ if (accessCodeApply) {
     return;
   }
 
+  // Access code in sessionStorage (from landing page modal) — keep it for quiz
+  if (accessCode) {
+    state.accessCode = accessCode;
+    state.isPremium   = true; // access code skips payment
+    // Pre-fill intro form from sessionStorage if modal already collected these
+    const storedEmail = sessionStorage.getItem('mapeia_lead_email') || '';
+    const storedName  = sessionStorage.getItem('mapeia_lead_name')  || '';
+    if (storedEmail) { state.capturedEmail = storedEmail; state.emailCaptured = true; }
+    if (storedName)  { state.capturedName  = storedName; }
+    // Pre-fill the form fields so the user doesn't re-enter them
+    window.addEventListener('DOMContentLoaded', () => {
+      const ni = document.getElementById('introName');
+      const ei = document.getElementById('introEmail');
+      if (ni && storedName)  ni.value = storedName;
+      if (ei && storedEmail) ei.value = storedEmail;
+    });
+    // params.delete('premium') cleans the URL
+    params.delete('premium');
+    const qs = params.toString();
+    window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
+    // Don't auto-start — show the intro so they confirm name/email, then quiz runs
+    // with state.accessCode already set (see startBtn handler which calls startQuiz(true))
+    return; // stay on intro
+  }
+
   // Fresh start — sector pre-select from homepage chips
   const presetSector = params.get('sector');
   if (presetSector) {
@@ -2144,10 +2169,26 @@ async function handlePaidReturn(sessionId, accessCode){
     renderResult();
     showScreen('result');
   } else if (state.aiData) {
-    // Payment not confirmed yet — show paywall again
+    // Payment not confirmed yet (e.g. session still processing) — show paywall again
     showPaywall();
+  } else if (state.premiumVerified) {
+    // Paid but sessionStorage was cleared (browser closed between quiz and return).
+    // The report is saved in the dashboard — redirect them there.
+    const savedEmail = sessionStorage.getItem('mapeia_lead_email') || '';
+    const dashUrl = '/painel.html' + (savedEmail ? '?email=' + encodeURIComponent(savedEmail) : '');
+    document.body.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#04080f;font-family:sans-serif;text-align:center;padding:40px">
+      <div>
+        <div style="font-size:48px;margin-bottom:16px">✅</div>
+        <h2 style="color:#e8f4ff;font-size:22px;margin-bottom:8px">Pagamento confirmado!</h2>
+        <p style="color:#6b90b8;font-size:15px;margin-bottom:24px">Seu diagnóstico está pronto no painel.</p>
+        <a href="${dashUrl}" style="display:inline-block;background:linear-gradient(135deg,#00b8a0,#00e5c8);color:#04080f;font-weight:700;padding:14px 28px;border-radius:12px;text-decoration:none;font-size:15px">
+          Acessar meu diagnóstico →
+        </a>
+      </div>
+    </div>`;
+    window.history.replaceState({}, '', '/painel.html');
   } else {
-    // No saved diagnostic to show — send them to start over
+    // No diagnostic and payment not confirmed — send to intro to start over
     showScreen('intro');
   }
 }
