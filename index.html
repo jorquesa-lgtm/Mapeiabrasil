@@ -94,52 +94,99 @@ body::before {
 body::after { display: none; }
 
 /* NAV */
+/* ── NAV ─────────────────────────────────────────────────────────────── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: rgba(251,251,253,.88);
+  background: rgba(251,251,253,.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
+  border-bottom: 1px solid rgba(0,0,0,.07);
 }
 .nav-inner {
-  max-width: 1120px; margin: 0 auto;
+  max-width: 1160px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
-  height: 64px;
+  height: 60px; padding: 0 28px;
 }
+
+/* Logo */
 .nav-logo {
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none; flex-shrink: 0;
 }
-.logo-mark {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), var(--teal));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 800; color: #fff;
-  font-family: 'DM Sans', sans-serif;
-}
+.nav-logo img { height: 32px; width: auto; display: block; }
 .logo-text {
   font-family: 'DM Sans', sans-serif;
-  font-size: 15px; font-weight: 600;
-  color: var(--text); letter-spacing: -0.01em;
+  font-size: 14px; font-weight: 700;
+  color: var(--text); letter-spacing: -.01em;
 }
-.logo-text span { color: var(--accent); }
+
+/* Center links */
 .nav-links {
-  display: flex; align-items: center; gap: 28px;
-  list-style: none;
+  display: flex; align-items: center; gap: 4px;
+  list-style: none; margin: 0; padding: 0;
 }
-.nav-links a {
-  font-size: 14px; font-weight: 500; color: var(--soft);
-  text-decoration: none; transition: color .2s;
+.nav-links li a {
+  font-size: 13.5px; font-weight: 500; color: #555;
+  text-decoration: none; padding: 6px 12px;
+  border-radius: 8px; transition: color .15s, background .15s;
+  white-space: nowrap;
 }
-.nav-links a:hover { color: var(--text); }
-.nav-cta {
-  background: var(--accent); color: #fff !important;
-  padding: 8px 20px; border-radius: 980px;
-  font-weight: 600 !important; font-size: 14px !important;
-  transition: background .2s, transform .2s !important;
+.nav-links li a:hover { color: var(--text); background: rgba(0,0,0,.04); }
+.nav-links li a.nav-kits {
+  color: #0066cc; font-weight: 600;
 }
-.nav-cta:hover { background: var(--accent2) !important; transform: translateY(-1px); }
+.nav-links li a.nav-kits:hover { background: rgba(0,102,204,.06); }
+
+/* Right side: CTA + language */
+.nav-right {
+  display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+}
+.nav-cta-btn {
+  background: var(--accent); color: #fff;
+  padding: 9px 18px; border-radius: 980px;
+  font-size: 13.5px; font-weight: 700;
+  text-decoration: none; white-space: nowrap;
+  transition: background .2s, box-shadow .2s;
+  box-shadow: 0 2px 8px rgba(0,102,204,.25);
+}
+.nav-cta-btn:hover {
+  background: #0055bb;
+  box-shadow: 0 4px 16px rgba(0,102,204,.35);
+}
+
+/* Hamburger (mobile) */
+.nav-hamburger {
+  display: none; flex-direction: column; gap: 4.5px;
+  cursor: pointer; background: none; border: none;
+  padding: 6px; border-radius: 6px;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: all .25s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile drawer */
+.nav-mobile-drawer {
+  display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+  background: rgba(251,251,253,.98); z-index: 999;
+  flex-direction: column; padding: 20px 28px;
+  overflow-y: auto;
+}
+.nav-mobile-drawer.open { display: flex; }
+.nav-mobile-drawer a {
+  font-size: 17px; font-weight: 500; color: var(--text);
+  text-decoration: none; padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.nav-mobile-drawer a.nav-kits { color: #0066cc; font-weight: 600; }
+.nav-mobile-drawer .nav-cta-btn {
+  margin-top: 20px; text-align: center; display: block;
+  font-size: 15px; padding: 14px;
+}
 
 /* LANGUAGE SELECTOR */
 .nav-actions {
@@ -861,6 +908,8 @@ footer {
 /* RESPONSIVE */
 @media(max-width: 768px) {
   .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-right .nav-cta-btn { display: none; }
   .hero-stats { gap: 20px; }
   .hstat-div { display: none; }
 }
@@ -1009,24 +1058,22 @@ footer {
 </head>
 <body>
 
-<nav>
+<nav id="mainNav">
   <div class="nav-inner">
     <a href="#" class="nav-logo">
-      <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Logo" style="height: 44px; width: auto; border-radius: 0; display: block;">
-      <div class="logo-text">Brasil</div>
+      <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Brasil">
+      <div class="logo-text">MapeIA Brasil</div>
     </a>
+
     <ul class="nav-links">
       <li><a href="#como-funciona" data-i18n-text="como-funciona">Como funciona</a></li>
-      <li><a href="#o-que-voce-recebe" data-i18n-text="o-que-voce-recebe">O que você recebe</a></li>
-      <li><a href="#ferramenta" data-i18n-text="a-ferramenta">A ferramenta</a></li>
       <li><a href="#planos" data-i18n-text="planos">Planos</a></li>
-      <li><a href="#exemplo-relatorio">Ver exemplo</a></li>
+      <li><a href="/kits/" class="nav-kits">Kits IA ⚡</a></li>
       <li><a href="#faq" data-i18n-text="faq">FAQ</a></li>
-      <li><a href="/kits/" style="color:#00e5c8;font-weight:600;">Kits IA ⚡</a></li>
       <li><a href="#contato" data-i18n-text="contato">Contato</a></li>
-      <li><a href="#planos" class="nav-cta" data-i18n-text="iniciar-diagnostico">Iniciar diagnóstico</a></li>
     </ul>
-    <div class="nav-actions">
+    <div class="nav-right">
+      <a href="/diagnostico.html" class="nav-cta-btn" data-i18n-text="iniciar-diagnostico">Iniciar diagnóstico</a>
       <div class="lang-selector" id="langSelector">
         <button class="lang-btn" aria-label="Selecionar idioma">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -1040,8 +1087,23 @@ footer {
         </div>
       </div>
     </div>
+
+    <!-- Hamburger (mobile) -->
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer">
+  <a href="#como-funciona" data-i18n-text="como-funciona">Como funciona</a>
+  <a href="#planos" data-i18n-text="planos">Planos</a>
+  <a href="/kits/" class="nav-kits">Kits IA ⚡</a>
+  <a href="#faq" data-i18n-text="faq">FAQ</a>
+  <a href="#contato" data-i18n-text="contato">Contato</a>
+  <a href="/diagnostico.html" class="nav-cta-btn">Iniciar diagnóstico →</a>
+</div>
 
 <section class="hero">
   <div class="hero-inner">
@@ -3493,6 +3555,28 @@ document.addEventListener('DOMContentLoaded', function() {
     <path d="M16 4.5C9.649 4.5 4.5 9.649 4.5 16c0 2.27.638 4.393 1.745 6.2l.283.467-1.204 4.393 4.522-1.183.452.267A11.46 11.46 0 0016 27.5c6.351 0 11.5-5.149 11.5-11.5S22.351 4.5 16 4.5zm5.805 15.77c-.247.694-1.456 1.327-2.003 1.41-.512.076-1.16.108-1.87-.118a17.1 17.1 0 01-1.695-.626c-2.98-1.286-4.926-4.28-5.074-4.48-.147-.198-1.196-1.59-1.196-3.033 0-1.443.757-2.154 1.025-2.449.267-.296.582-.37.776-.37h.554c.178 0 .42-.067.657.5.247.593.84 2.05.914 2.2.074.149.124.323.025.52-.1.198-.149.32-.297.494-.147.173-.31.387-.443.52-.148.148-.302.309-.13.605.172.296.765 1.263 1.642 2.045 1.128 1.005 2.08 1.317 2.376 1.465.297.148.47.124.643-.074.173-.198.74-.864 .937-1.16.198-.297.395-.247.666-.148.272.1 1.727.815 2.023.963.297.148.494.222.568.346.074.123.074.716-.173 1.41z" fill="#25D366"/>
   </svg>
 </a>
+
+
+<script>
+// Nav hamburger
+(function(){
+  const btn = document.getElementById('navHamburger');
+  const drawer = document.getElementById('navMobileDrawer');
+  if(!btn || !drawer) return;
+  btn.addEventListener('click', function(){
+    btn.classList.toggle('open');
+    drawer.classList.toggle('open');
+    document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+  });
+  drawer.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      btn.classList.remove('open');
+      drawer.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
