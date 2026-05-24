@@ -77,13 +77,20 @@ Deno.serve(async (req: Request) => {
       const diagId: string | null = session.metadata?.diag_id || null;
       const kitId: string | null = session.metadata?.kit || null;
 
-      // Kit purchases: log to subscriptions then skip all diagnostic logic
+      // Kit subscriptions: log with stripe_subscription_id so lifecycle events can match
       if (kitId) {
         await supabase.from("subscriptions").upsert(
-          { email: customerEmail, stripe_customer_id: customerId, stripe_session_id: sessionId, plan, status: "active" },
+          {
+            email: customerEmail,
+            stripe_customer_id: customerId,
+            stripe_session_id: sessionId,
+            stripe_subscription_id: subscriptionId,  // critical for cancel/update matching
+            plan,
+            status: "active",
+          },
           { onConflict: "stripe_session_id" },
         );
-        console.log(`[webhook] kit purchase logged: ${plan} for ${customerEmail}`);
+        console.log(`[webhook] kit subscription created: ${plan} for ${customerEmail}`);
         return new Response(JSON.stringify({ ok: true, kit: kitId }), { status: 200 });
       }
 

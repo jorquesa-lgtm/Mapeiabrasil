@@ -17,6 +17,8 @@ interface DiagnosticContext {
   roadmap: Record<string, { title: string; actions?: Array<{ title: string; description?: string; tool?: string }> }>;
   gaps: Array<{ title: string; severity: string; area?: string }>;
   kit_recommended?: string;
+  kit_subscriptions?: string[];
+  email?: string;
 }
 
 interface CopilotDrawerProps {
@@ -58,11 +60,18 @@ export default function CopilotDrawer({ context }: CopilotDrawerProps) {
       if (!hasGreeted && context) {
         const greeting: Message = {
           role: "assistant",
-          content: `Olá! Sou o Copiloto de Implementação da MapeAI Brasil — seu guia exclusivo para implementar as automações identificadas no diagnóstico de **${context.company}**.
-
-Sei que seu score global é **${context.score}/100** e conheço seus quick wins, gaps e o plano 30/60/90 da sua empresa.
-
-Estou aqui só para isso: te ajudar a colocar em prática cada recomendação, passo a passo. Por onde quer começar?`,
+          content: (() => {
+            const kitMap: Record<string, string> = {
+              kit_kit1:"Atendente 24h", kit_kit2:"Follow-up de Leads",
+              kit_kit3:"Agendamento Anti-No-Show", kit_kit4:"Cobrança Amigável",
+              kit_kit5:"Presença Social", kit_bundle:"Pacote Completo",
+            };
+            const kitNames = (context.kit_subscriptions ?? []).map(p => kitMap[p] || p).filter(Boolean);
+            const kitLine = kitNames.length > 0
+              ? `\n\nVejo que você assinou: **${kitNames.join(", ")}**. Conheço cada passo de instalação e estou pronto para guiar você.`
+              : "";
+            return `Olá! Sou o Copiloto de Implementação da MapeAI Brasil para **${context.company}**.\n\nConheço o diagnóstico completo — score **${context.score}/100**, seus gaps e o plano 30/60/90.${kitLine}\n\nEstou aqui para te guiar passo a passo. Por onde quer começar?`;
+          })(),
         };
         setMessages([greeting]);
         setHasGreeted(true);

@@ -208,6 +208,16 @@ export default function DashboardPage({ user }: { user: User }) {
 
   useEffect(() => { loadData(); }, [user.id]);
 
+  // Fetch active kit subscriptions for this user
+  useEffect(() => {
+    if (!user?.email) return;
+    supabase
+      .rpc("get_kit_subscriptions", { p_email: user.email })
+      .then(({ data }) => {
+        if (data) setKitSubscriptions((data as Array<{ plan: string }>).map(r => r.plan));
+      });
+  }, [user?.email]);
+
   async function handleSignOut() {
     await supabase.auth.signOut();
   }
@@ -489,6 +499,8 @@ export default function DashboardPage({ user }: { user: User }) {
           quick_wins: quickWins,
           roadmap,
           gaps,
+          kit_subscriptions: kitSubscriptions,
+          email: user.email ?? "",
         };
         return <CopilotDrawer context={copilotCtx} />;
       })()}

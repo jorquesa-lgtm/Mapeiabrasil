@@ -60,10 +60,14 @@ Deno.serve(async (req: Request) => {
 
     const sep = successUrl.includes("?") ? "&" : "?";
     const sessionPayload: Record<string, unknown> = {
-      mode: "payment",
+      mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${successUrl}${sep}session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl,
+      // subscription_data carries metadata for recurring payments
+      subscription_data: {
+        metadata: { kit, kit_label: KIT_LABELS[kit], plan: `kit_${kit}` },
+      },
       metadata: { kit, kit_label: KIT_LABELS[kit], plan: `kit_${kit}` },
     };
 
