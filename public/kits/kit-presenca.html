@@ -4,94 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kit Presença Social — MapeAI Brasil</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{--bg:#04080f;--surface:#0a1628;--border:#1a3050;--accent:#ec4899;--accent2:#00e5c8;--text:#e8f4ff;--muted:#6b90b8;--green:#00c896;--yellow:#f5c842;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;line-height:1.6;}
-  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--border);}
-  .logo{font-size:18px;font-weight:700;color:var(--text);text-decoration:none;}.logo em{color:var(--accent2);font-style:normal;}
-  .nav-badge{background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.3);color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;}
-  .hero{padding:64px 40px 40px;max-width:880px;margin:0 auto;}
-  .kit-label{display:inline-flex;align-items:center;gap:8px;background:rgba(236,72,153,.08);border:1px solid rgba(236,72,153,.25);color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:24px;}
-  h1{font-size:clamp(26px,4.5vw,42px);font-weight:700;line-height:1.15;margin-bottom:16px;}
-  h1 span{color:var(--accent);}
-  .hero-sub{font-size:17px;color:var(--muted);max-width:580px;margin-bottom:32px;}
-  .stats{display:flex;gap:32px;flex-wrap:wrap;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border);}
-  .stat-num{font-size:28px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;}
-  .stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
-  .main{max-width:880px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start;}
-  @media(max-width:720px){.main{grid-template-columns:1fr;}nav,.hero{padding-left:20px;padding-right:20px;}.main{padding:0 20px 60px;}}
-  .steps-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:24px;}
-  .step{display:flex;gap:20px;margin-bottom:28px;}
-  .step-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:rgba(236,72,153,.08);border:1.5px solid rgba(236,72,153,.3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);}
-  .step-body h3{font-size:15px;font-weight:600;margin-bottom:6px;}
-  .step-body p{font-size:14px;color:var(--muted);line-height:1.7;}
-  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(236,72,153,.06);border:1px solid rgba(236,72,153,.2);color:var(--accent);padding:2px 7px;border-radius:4px;}
-  .btn-dl{display:inline-flex;align-items:center;gap:8px;background:rgba(26,127,240,.08);border:1px solid rgba(26,127,240,.25);color:#6ab4ff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;margin-top:8px;}
-  .btn-sheet{display:inline-flex;align-items:center;gap:8px;background:rgba(236,72,153,.08);border:1px solid rgba(236,72,153,.2);color:var(--accent);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;margin-top:8px;}
-  .section{margin-top:40px;padding-top:40px;border-top:1px solid var(--border);}
-  .section h2{font-size:18px;font-weight:700;margin-bottom:8px;}
-  .section .sub{font-size:14px;color:var(--muted);margin-bottom:20px;}
-
-  /* post types grid */
-  .post-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
-  .post-chip{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px 16px;}
-  .post-chip .emoji{font-size:18px;margin-bottom:6px;}
-  .post-chip .name{font-size:13px;font-weight:600;margin-bottom:4px;}
-  .post-chip .desc{font-size:12px;color:var(--muted);}
-
-  /* example legend */
-  .legend-box{background:#0d1d35;border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-top:12px;position:relative;}
-  .legend-tag{position:absolute;top:14px;right:14px;background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.2);color:var(--accent);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;}
-  .legend-topic{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:10px;}
-  .legend-text{font-size:14px;color:#c8daf0;line-height:1.85;white-space:pre-line;}
-  .legend-hashtags{font-size:12px;color:#3a6090;margin-top:12px;line-height:1.8;}
-
-  /* flow */
-  .flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-top:16px;}
-  .flow-box{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;text-align:center;}
-  .flow-box .icon{font-size:18px;margin-bottom:4px;}
-  .flow-box .lbl{color:var(--muted);font-size:11px;margin-top:2px;}
-  .flow-box.hi{border-color:rgba(236,72,153,.4);background:rgba(236,72,153,.06);}
-  .flow-box.hi .lbl{color:var(--accent);}
-  .flow-arrow{color:var(--border);padding:0 8px;font-size:16px;flex-shrink:0;}
-
-  /* test */
-  .test-box{background:rgba(0,200,150,.05);border:1px solid rgba(0,200,150,.2);border-radius:12px;padding:18px 22px;margin-top:28px;}
-  .test-box h3{font-size:13px;font-weight:700;color:var(--green);margin-bottom:12px;}
-  .test-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
-  .test-list li{font-size:13px;color:var(--muted);padding-left:18px;position:relative;}
-  .test-list li::before{content:'→';position:absolute;left:0;color:var(--green);}
-
-  /* sidebar */
-  .sidebar{position:sticky;top:32px;}
-  .kit-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden;}
-  .kit-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(236,72,153,.05) 0%,transparent 60%);pointer-events:none;}
-  .kit-card h3{font-size:16px;font-weight:700;margin-bottom:6px;}
-  .price{font-size:32px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;margin:12px 0;}
-  .price span{font-size:14px;color:var(--muted);font-family:'Sora',sans-serif;}
-  .includes{margin:20px 0;display:flex;flex-direction:column;gap:10px;}
-  .inc{display:flex;align-items:flex-start;gap:10px;font-size:13px;}
-  .inc::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px;}
-  .inc.muted{color:var(--muted);}
-  .inc.muted::before{content:'○';color:var(--border);}
-  .btn-p{display:block;width:100%;padding:14px;background:linear-gradient(135deg,#9d174d,#ec4899);color:#fff;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:12px;cursor:pointer;text-align:center;text-decoration:none;transition:opacity .2s;margin-bottom:12px;}
-  .btn-p:hover{opacity:.88;}
-  .btn-s{display:block;width:100%;padding:12px;background:transparent;color:var(--muted);font-family:'Sora',sans-serif;font-size:14px;font-weight:600;border:1px solid var(--border);border-radius:12px;text-align:center;text-decoration:none;transition:all .2s;}
-  .btn-s:hover{border-color:var(--accent2);color:var(--accent2);}
-  .divider{height:1px;background:var(--border);margin:20px 0;}
-  .req-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin-bottom:8px;}
-  .req-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-  .req-dot.free{background:var(--green);}.req-dot.paid{background:var(--yellow);}.req-dot.req{background:#ec4899;}
-</style>
+  <link rel="stylesheet" href="/kits/shared.css">
 </head>
 <body>
 
-<nav>
-  <a href="/" class="logo">MapeIA <em>Brasil</em></a>
-  <span class="nav-badge">Kit de Automação</span>
+<nav class="kit-nav" id="kitNav">
+  <div class="kit-nav-inner">
+    <a href="/" class="kit-nav-logo">
+      <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Brasil">
+      <span class="kit-nav-logo-text">MapeIA Brasil</span>
+    </a>
+    <ul class="kit-nav-links">
+      <li><a href="/#como-funciona">Como funciona</a></li>
+      <li><a href="/#planos">Planos</a></li>
+      <li><a href="/kits/" class="active">Kits IA ⚡</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+      <li><a href="/#contato">Contato</a></li>
+    </ul>
+    <div class="kit-nav-right">
+      <a href="/diagnostico.html" class="kit-nav-cta">Iniciar diagnóstico</a>
+    </div>
+    <button class="kit-nav-hamburger" id="kitHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+<div class="kit-nav-drawer" id="kitDrawer">
+  <a href="/#como-funciona">Como funciona</a>
+  <a href="/#planos">Planos</a>
+  <a href="/kits/">Kits IA ⚡</a>
+  <a href="/#faq">FAQ</a>
+  <a href="/#contato">Contato</a>
+  <a href="/diagnostico.html" class="kit-nav-cta">Iniciar diagnóstico →</a>
+</div>
 
 <div class="hero">
   <div class="kit-label">Kit 5 — Presença Social</div>
@@ -106,47 +51,47 @@
 
 
     <!-- VIDEO SECTION -->
-    <div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #1a3050;">
-      <div style="display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6b90b8;margin-bottom:16px;">
-        <span style="width:6px;height:6px;border-radius:50%;background:#00e5c8;display:inline-block;"></span>
+    <div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #e8e8ed;">
+      <div style="display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#86868b;margin-bottom:16px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:#0a8a7a;display:inline-block;"></span>
         Ver o kit funcionando
       </div>
       <h2 style="font-size:22px;font-weight:700;margin-bottom:8px;">Veja em 2 minutos</h2>
-      <p style="font-size:14px;color:#6b90b8;margin-bottom:20px;">Tela em branco toda vez que precisa postar — e como o kit resolve em tempo real.</p>
+      <p style="font-size:14px;color:#86868b;margin-bottom:20px;">Tela em branco toda vez que precisa postar — e como o kit resolve em tempo real.</p>
 
       <!-- Loom embed placeholder — substitua o src pelo link do seu vídeo Loom -->
-      <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;border:1px solid #1a3050;background:#0a1628;">
+      <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;border:1px solid #e8e8ed;background:#ffffff;">
         <!-- Cole aqui o iframe do Loom após gravar o vídeo:
              <iframe src="https://www.loom.com/embed/SEU_VIDEO_ID" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
         -->
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
-          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(0,229,200,.2),rgba(26,127,240,.2));border:2px solid rgba(0,229,200,.3);display:flex;align-items:center;justify-content:center;cursor:pointer;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:#00e5c8;margin-left:3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(0,119,204,.15),rgba(26,127,240,.2));border:2px solid rgba(0,229,200,.3);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:#0a8a7a;margin-left:3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           </div>
           <div style="text-align:center;">
-            <div style="font-size:14px;font-weight:600;color:#e8f4ff;margin-bottom:4px;">Vídeo em breve</div>
-            <div style="font-size:12px;color:#6b90b8;">Grave com Loom e cole o embed acima</div>
+            <div style="font-size:14px;font-weight:600;color:#1d1d1f;margin-bottom:4px;">Vídeo em breve</div>
+            <div style="font-size:12px;color:#86868b;">Grave com Loom e cole o embed acima</div>
           </div>
         </div>
       </div>
 
       <!-- O que o vídeo mostra -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;">
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">0:00</div>
-          <div style="font-size:11px;color:#6b90b8;">O problema</div>
+        <div style="background:rgba(0,0,0,.02);border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#0a8a7a;font-weight:700;margin-bottom:4px;">0:00</div>
+          <div style="font-size:11px;color:#86868b;">O problema</div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">0:20</div>
-          <div style="font-size:11px;color:#6b90b8;">Kit funcionando</div>
+        <div style="background:rgba(0,0,0,.02);border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#0a8a7a;font-weight:700;margin-bottom:4px;">0:20</div>
+          <div style="font-size:11px;color:#86868b;">Kit funcionando</div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">1:20</div>
-          <div style="font-size:11px;color:#6b90b8;">Instalação</div>
+        <div style="background:rgba(0,0,0,.02);border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#0a8a7a;font-weight:700;margin-bottom:4px;">1:20</div>
+          <div style="font-size:11px;color:#86868b;">Instalação</div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">1:50</div>
-          <div style="font-size:11px;color:#6b90b8;">Posts por semana</div>
+        <div style="background:rgba(0,0,0,.02);border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#0a8a7a;font-weight:700;margin-bottom:4px;">1:50</div>
+          <div style="font-size:11px;color:#86868b;">Posts por semana</div>
         </div>
       </div>
     </div>
@@ -338,5 +283,24 @@ Quer saber como? Clique no link da bio e faça o diagnóstico gratuito da sua cl
 })();
 </script>
 
+<script>
+(function(){
+  var btn=document.getElementById('kitHamburger');
+  var drw=document.getElementById('kitDrawer');
+  if(!btn||!drw)return;
+  btn.addEventListener('click',function(){
+    btn.classList.toggle('open');
+    drw.classList.toggle('open');
+    document.body.style.overflow=drw.classList.contains('open')?'hidden':'';
+  });
+  drw.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){
+      btn.classList.remove('open');
+      drw.classList.remove('open');
+      document.body.style.overflow='';
+    });
+  });
+})();
+</script>
 </body>
 </html>
