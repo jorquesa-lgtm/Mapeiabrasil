@@ -53,11 +53,11 @@
   .bundle-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(0,229,200,.08) 0%,transparent 60%);pointer-events:none;}
   .bundle-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.3);color:var(--yellow);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:20px;}
   .bundle-layout{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;}
-  .bundle-title{font-size:clamp(22px,3.5vw,36px);font-weight:700;line-height:1.2;margin-bottom:12px;}
+  .bundle-title{font-size:clamp(22px,3.5vw,36px);font-weight:700;line-height:1.2;margin-bottom:12px;color:#fff;}
   .bundle-title span{color:var(--accent);}
   .bundle-sub{font-size:15px;color:var(--muted);margin-bottom:28px;max-width:480px;}
   .bundle-includes{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
-  .bi{display:flex;align-items:center;gap:12px;font-size:14px;}
+  .bi{display:flex;align-items:center;gap:12px;font-size:14px;color:#c8dce8;}
   .bi::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
   .bi .kit-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
   .bundle-price-box{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:20px;padding:32px;text-align:center;min-width:240px;flex-shrink:0;}
@@ -128,7 +128,7 @@
       <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Brasil" style="height:32px;width:auto;">
       <span style="font-size:14px;font-weight:700;color:#1d1d1f;letter-spacing:-.01em;">MapeIA Brasil</span>
     </a>
-    <div style="display:flex;align-items:center;gap:4px;" id="kitNavLinks">
+    <div id="kitNavLinks" style="align-items:center;gap:4px;">
       <a href="/#como-funciona" style="font-size:13.5px;font-weight:500;color:#555;text-decoration:none;padding:6px 12px;border-radius:8px;">Como funciona</a>
       <a href="/#planos"        style="font-size:13.5px;font-weight:500;color:#555;text-decoration:none;padding:6px 12px;border-radius:8px;">Planos</a>
       <a href="/kits/index.html"          style="font-size:13.5px;font-weight:600;color:#0077cc;text-decoration:none;padding:6px 12px;border-radius:8px;">Kits IA ⚡</a>
@@ -137,7 +137,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
       <a href="/diagnostico.html" id="kitNavCta" style="background:#0077cc;color:#fff;padding:9px 18px;border-radius:980px;font-size:13.5px;font-weight:700;text-decoration:none;white-space:nowrap;">Iniciar diagnóstico</a>
-      <button onclick="document.getElementById('kitMobileDrawer').style.display=document.getElementById('kitMobileDrawer').style.display==='flex'?'none':'flex';" style="flex-direction:column;gap:4.5px;background:none;border:none;cursor:pointer;padding:6px;" id="kitHamBtn">
+      <button onclick="document.getElementById('kitMobileDrawer').style.display=document.getElementById('kitMobileDrawer').style.display==='flex'?'none':'flex';" id="kitHamBtn" style="flex-direction:column;gap:4.5px;background:none;border:none;cursor:pointer;padding:6px;">
         <span style="display:block;width:22px;height:2px;background:#1d1d1f;border-radius:2px;"></span>
         <span style="display:block;width:22px;height:2px;background:#1d1d1f;border-radius:2px;"></span>
         <span style="display:block;width:22px;height:2px;background:#1d1d1f;border-radius:2px;"></span>
