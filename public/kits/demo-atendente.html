@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo - Kit Atendente 24h</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#070e1d;font-family:'DM Sans',sans-serif;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
+.viewport{position:relative;width:100%;max-width:1280px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+/* Phone */
+.phone{width:340px;height:620px;background:#0b141a;border-radius:36px;border:3px solid #1a2a3a;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:28px;background:#070e1d;border-radius:0 0 18px 18px;z-index:10}
+.wa-header{background:#1f2c34;padding:12px 16px 10px;display:flex;align-items:center;gap:10px;padding-top:34px}
+.wa-header .avatar{width:36px;height:36px;border-radius:50%;background:#00e5c8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#070e1d}
+.wa-header .info{flex:1}
+.wa-header .name{font-size:15px;font-weight:600;font-family:'Syne',sans-serif}
+.wa-header .status{font-size:11px;color:#8696a0}
+.chat-area{height:calc(100% - 84px - 50px);overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:4px;scroll-behavior:smooth}
+.chat-area::-webkit-scrollbar{width:3px}
+.chat-area::-webkit-scrollbar-thumb{background:#1a2a3a;border-radius:3px}
+.wa-input{height:50px;background:#1f2c34;display:flex;align-items:center;padding:6px 10px;gap:8px}
+.wa-input .field{flex:1;background:#2a3942;border-radius:20px;padding:8px 14px;font-size:13px;color:#8696a0}
+.wa-input .send{width:36px;height:36px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center}
+.wa-input .send svg{fill:#fff;width:18px;height:18px}
+/* Bubbles */
+.msg{max-width:85%;padding:7px 10px 4px;border-radius:8px;font-size:13.5px;line-height:1.4;position:relative;opacity:0;transform:translateY(16px);animation:slideUp .35s ease forwards;word-wrap:break-word}
+.msg.user{background:#005c4b;align-self:flex-end;border-top-right-radius:2px}
+.msg.bot{background:#1f2c34;align-self:flex-start;border-top-left-radius:2px}
+.msg .ts{display:block;text-align:right;font-size:10px;color:#8696a0;margin-top:2px;font-family:'JetBrains Mono',monospace}
+.msg .sender{font-size:12px;color:#00e5c8;font-weight:600;margin-bottom:2px}
+@keyframes slideUp{to{opacity:1;transform:translateY(0)}}
+/* Typing */
+.typing{display:flex;gap:4px;padding:10px 14px;align-self:flex-start;background:#1f2c34;border-radius:8px;border-top-left-radius:2px;opacity:0;transform:translateY(16px);animation:slideUp .3s ease forwards}
+.typing span{width:7px;height:7px;background:#8696a0;border-radius:50%;animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+/* Time divider */
+.time-div{text-align:center;font-size:11px;color:#8696a0;background:#1a2a3a;padding:4px 12px;border-radius:6px;align-self:center;margin:6px 0;font-family:'JetBrains Mono',monospace;opacity:0;transform:translateY(10px);animation:slideUp .3s ease forwards}
+/* Dashboard overlay */
+.dashboard{position:absolute;inset:0;background:rgba(7,14,29,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:0;pointer-events:none;transition:opacity .5s;z-index:20;padding:20px}
+.dashboard.show{opacity:1;pointer-events:auto}
+.dashboard h2{font-family:'Syne',sans-serif;font-size:20px;color:#00e5c8;font-weight:700}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:90%}
+.dash-card{background:#0e1a2e;border:1px solid #1a3a5a;border-radius:12px;padding:14px;text-align:center}
+.dash-card .val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#00e5c8}
+.dash-card .lbl{font-size:11px;color:#8696a0;margin-top:4px}
+/* Final stats */
+.final-stats{position:absolute;inset:0;background:rgba(7,14,29,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;opacity:0;pointer-events:none;transition:opacity .5s;z-index:25;padding:20px}
+.final-stats.show{opacity:1}
+.final-stats h2{font-family:'Syne',sans-serif;font-size:18px;color:#fff}
+.final-stats .accent{color:#00e5c8}
+.stat-row{display:flex;align-items:center;gap:10px;width:80%}
+.stat-bar-bg{flex:1;height:8px;background:#1a2a3a;border-radius:4px;overflow:hidden}
+.stat-bar{height:100%;background:#00e5c8;border-radius:4px;width:0;transition:width 1s ease}
+.stat-label{font-size:12px;width:120px;text-align:right;color:#8696a0}
+.stat-val{font-size:13px;font-weight:700;width:50px;color:#00e5c8;font-family:'JetBrains Mono',monospace}
+/* Controls */
+.controls{width:100%;max-width:1280px;background:#0e1a2e;border:1px solid #1a2a3a;border-radius:0 0 12px 12px;padding:10px 20px;display:flex;align-items:center;gap:14px}
+.btn{background:none;border:none;color:#fff;cursor:pointer;padding:4px;display:flex;align-items:center}
+.btn:hover{color:#00e5c8}
+.timeline-wrap{flex:1;display:flex;align-items:center;gap:10px}
+.timeline{flex:1;height:4px;background:#1a2a3a;border-radius:2px;position:relative;cursor:pointer}
+.timeline-fill{height:100%;background:#00e5c8;border-radius:2px;width:0%;transition:width .1s linear}
+.timeline-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:#00e5c8;border-radius:50%;left:0%;transition:left .1s linear}
+.time-label{font-size:12px;font-family:'JetBrains Mono',monospace;color:#8696a0;min-width:38px}
+.speed-btn{font-size:12px;font-family:'JetBrains Mono',monospace;color:#8696a0;background:#1a2a3a;border:none;padding:3px 8px;border-radius:4px;cursor:pointer}
+.speed-btn:hover,.speed-btn.active{color:#00e5c8;background:#0e2a3a}
+.caption-bar{width:100%;max-width:1280px;background:#0a1322;padding:10px 20px;text-align:center;font-size:13px;color:#8696a0;min-height:40px;border-radius:0 0 8px 8px;margin-top:2px}
+.caption-bar span{color:#00e5c8}
+</style>
+</head>
+<body>
+<div class="viewport">
+  <div class="phone" id="phone">
+    <div class="phone-notch"></div>
+    <div class="wa-header">
+      <div class="avatar">SH</div>
+      <div class="info">
+        <div class="name">Studio Hair - Bot</div>
+        <div class="status" id="headerStatus">online</div>
+      </div>
+    </div>
+    <div class="chat-area" id="chat"></div>
+    <div class="wa-input">
+      <div class="field" id="inputField">Mensagem</div>
+      <div class="send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></div>
+    </div>
+    <div class="dashboard" id="dashboard">
+      <h2>Relatorio Noturno</h2>
+      <div class="dash-grid">
+        <div class="dash-card"><div class="val">2</div><div class="lbl">Atendimentos</div></div>
+        <div class="dash-card"><div class="val">1</div><div class="lbl">Agendamento</div></div>
+        <div class="dash-card"><div class="val">3s</div><div class="lbl">Tempo medio</div></div>
+        <div class="dash-card"><div class="val">23h</div><div class="lbl">Fora do horario</div></div>
+      </div>
+    </div>
+    <div class="final-stats" id="finalStats">
+      <h2>Kit Atendente <span class="accent">24h</span></h2>
+      <div class="stat-row"><div class="stat-label">Respostas</div><div class="stat-bar-bg"><div class="stat-bar" id="bar1"></div></div><div class="stat-val">100%</div></div>
+      <div class="stat-row"><div class="stat-label">Agendamentos</div><div class="stat-bar-bg"><div class="stat-bar" id="bar2"></div></div><div class="stat-val">50%</div></div>
+      <div class="stat-row"><div class="stat-label">Satisfacao</div><div class="stat-bar-bg"><div class="stat-bar" id="bar3"></div></div><div class="stat-val">98%</div></div>
+      <div class="stat-row"><div class="stat-label">Tempo medio</div><div class="stat-bar-bg"><div class="stat-bar" id="bar4"></div></div><div class="stat-val">3s</div></div>
+    </div>
+  </div>
+</div>
+<div class="controls">
+  <button class="btn" id="playBtn" title="Play/Pause"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" id="playIcon"><path d="M6 4l15 8-15 8z"/></svg></button>
+  <div class="timeline-wrap">
+    <span class="time-label" id="curTime">0:00</span>
+    <div class="timeline" id="timeline">
+      <div class="timeline-fill" id="tlFill"></div>
+      <div class="timeline-thumb" id="tlThumb"></div>
+    </div>
+    <span class="time-label" id="totTime">1:00</span>
+  </div>
+  <button class="speed-btn active" id="speedBtn" data-speed="1">1x</button>
+  <button class="btn" id="restartBtn" title="Reiniciar"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.96 7.96 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+</div>
+<div class="caption-bar" id="caption">Pressione play para iniciar a demonstracao</div>
+
+<script>
+const DURATION=60000,chat=document.getElementById('chat'),caption=document.getElementById('caption'),
+  tlFill=document.getElementById('tlFill'),tlThumb=document.getElementById('tlThumb'),
+  curTimeEl=document.getElementById('curTime'),playBtn=document.getElementById('playBtn'),
+  playIcon=document.getElementById('playIcon'),speedBtn=document.getElementById('speedBtn'),
+  inputField=document.getElementById('inputField'),headerStatus=document.getElementById('headerStatus'),
+  dashboard=document.getElementById('dashboard'),finalStats=document.getElementById('finalStats');
+let playing=false,elapsed=0,speed=1,lastTick=0,scheduledEvents=[],firedSet=new Set(),rafId=null;
+
+const EVENTS=[
+  {t:0,type:'divider',text:'HOJE'},
+  {t:500,type:'user',sender:'Maria Santos',text:'Oi, voces estao abertos? Quero saber o preco do corte feminino',ts:'22:47',caption:'Cliente envia mensagem as <span>22:47</span> — fora do horario comercial'},
+  {t:5500,type:'typing',duration:2000,caption:'Bot responde <span>automaticamente</span> em 3 segundos'},
+  {t:7500,type:'bot',text:'Ola Maria! Bem-vinda a Studio Hair. Estamos abertos de seg a sab, 9h as 20h. O corte feminino custa a partir de R$89. Quer agendar?',ts:'22:47'},
+  {t:11000,type:'user',sender:'Maria Santos',text:'Sim! Pode ser amanha as 14h?',ts:'22:48',caption:'Cliente quer agendar — bot consulta a <span>agenda</span>'},
+  {t:16000,type:'typing',duration:1500},
+  {t:17500,type:'bot',text:'Perfeito! Tenho horario disponivel amanha (terca) as 14h com a Kelly. Confirmo?\n\n1. Sim, confirmar\n2. Ver outros horarios',ts:'22:48',caption:'Bot oferece <span>opcoes estruturadas</span> para confirmar'},
+  {t:21000,type:'user',sender:'Maria Santos',text:'1',ts:'22:48'},
+  {t:21000,type:'input',text:'1. Sim, confirmar'},
+  {t:24500,type:'typing',duration:1500},
+  {t:26000,type:'bot',text:'Agendado! Maria Santos, terca 14h, corte feminino com Kelly.\n\nEndereco: Rua das Flores, 123.\nAte amanha! ✓',ts:'22:49',caption:'Agendamento <span>confirmado</span> automaticamente'},
+  {t:30500,type:'divider',text:'23:15'},
+  {t:31500,type:'user',sender:'Pedro Costa',text:'Quanto custa hidratacao?',ts:'23:15',caption:'Novo cliente as <span>23:15</span> — dono do salao dormindo'},
+  {t:36000,type:'typing',duration:2500,caption:'Bot atende <span>24 horas</span>, sem perder nenhum cliente'},
+  {t:38500,type:'bot',text:'Oi Pedro! A hidratacao profunda custa R$120 (cabelo curto) ou R$150 (cabelo longo). Inclui diagnostico capilar. Quer agendar?',ts:'23:15'},
+  {t:42500,type:'dashboard',caption:'<span>Relatorio automatico</span> — resumo dos atendimentos noturnos'},
+  {t:49000,type:'final',caption:'Kit Atendente 24h — <span>nunca perca um cliente</span>'},
+];
+
+function fmt(ms){const s=Math.floor(ms/1000),m=Math.floor(s/60);return m+':'+(s%60<10?'0':'')+(s%60)}
+function updateTimeline(){
+  const p=Math.min(elapsed/DURATION,1)*100;
+  tlFill.style.width=p+'%';tlThumb.style.left=p+'%';curTimeEl.textContent=fmt(elapsed);
+}
+
+function addMsg(cls,html,ts,sender){
+  removeTyping();
+  const d=document.createElement('div');d.className='msg '+cls;
+  let inner='';
+  if(sender)inner+='<span class="sender">'+sender+'</span>';
+  inner+=html.replace(/\n/g,'<br>');
+  if(ts)inner+='<span class="ts">'+ts+'</span>';
+  d.innerHTML=inner;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
+}
+function addDivider(text){
+  const d=document.createElement('div');d.className='time-div';d.textContent=text;
+  chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
+}
+function showTyping(){
+  removeTyping();
+  const d=document.createElement('div');d.className='typing';d.id='typingInd';
+  d.innerHTML='<span></span><span></span><span></span>';
+  chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('typingInd');if(t)t.remove();}
+
+function fireEvent(ev){
+  if(ev.caption)caption.innerHTML=ev.caption;
+  switch(ev.type){
+    case'divider':addDivider(ev.text);break;
+    case'user':addMsg('user',ev.text,ev.ts,ev.sender);break;
+    case'typing':showTyping();setTimeout(()=>{if(playing||!firedSet.size)removeTyping();},ev.duration/speed);break;
+    case'bot':addMsg('bot',ev.text,ev.ts);break;
+    case'input':inputField.textContent=ev.text;setTimeout(()=>{inputField.textContent='Mensagem';},1500/speed);break;
+    case'dashboard':dashboard.classList.add('show');break;
+    case'final':dashboard.classList.remove('show');finalStats.classList.add('show');
+      setTimeout(()=>{
+        document.getElementById('bar1').style.width='100%';
+        document.getElementById('bar2').style.width='50%';
+        document.getElementById('bar3').style.width='98%';
+        document.getElementById('bar4').style.width='5%';
+      },200);
+      break;
+  }
+}
+
+function tick(now){
+  if(!lastTick)lastTick=now;
+  const dt=(now-lastTick)*speed;lastTick=now;elapsed+=dt;
+  if(elapsed>=DURATION){elapsed=0;resetState();firedSet.clear();lastTick=0;}
+  updateTimeline();
+  EVENTS.forEach((ev,i)=>{if(!firedSet.has(i)&&elapsed>=ev.t){firedSet.add(i);fireEvent(ev);}});
+  if(playing)rafId=requestAnimationFrame(tick);
+}
+
+function resetState(){
+  chat.innerHTML='';removeTyping();
+  dashboard.classList.remove('show');finalStats.classList.remove('show');
+  ['bar1','bar2','bar3','bar4'].forEach(id=>{document.getElementById(id).style.width='0';});
+  caption.innerHTML='Reiniciando demonstracao...';inputField.textContent='Mensagem';
+}
+
+function play(){playing=true;lastTick=0;playIcon.innerHTML='<rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/>';rafId=requestAnimationFrame(tick);}
+function pause(){playing=false;if(rafId)cancelAnimationFrame(rafId);playIcon.innerHTML='<path d="M6 4l15 8-15 8z"/>';}
+function togglePlay(){playing?pause():play();}
+
+playBtn.addEventListener('click',togglePlay);
+document.getElementById('restartBtn').addEventListener('click',()=>{
+  pause();elapsed=0;firedSet.clear();resetState();
+  caption.innerHTML='Pressione play para iniciar a demonstracao';updateTimeline();
+  setTimeout(()=>play(),400);
+});
+
+speedBtn.addEventListener('click',()=>{
+  const speeds=[1,1.5,2,0.5];let i=speeds.indexOf(speed);
+  speed=speeds[(i+1)%speeds.length];speedBtn.textContent=speed+'x';
+});
+
+document.getElementById('timeline').addEventListener('click',e=>{
+  const r=e.currentTarget.getBoundingClientRect();
+  const p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+  const target=p*DURATION;
+  elapsed=0;firedSet.clear();resetState();
+  EVENTS.forEach((ev,i)=>{if(ev.t<=target){firedSet.add(i);fireEvent(ev);}});
+  elapsed=target;updateTimeline();
+  if(!playing)play();
+});
+
+setTimeout(()=>play(),700);
+</script>
+</body>
+</html>

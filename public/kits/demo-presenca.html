@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Demo — Kit Presenca Social</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#070e1d;--surface:#0e1a2e;--card:#121e34;--border:rgba(255,255,255,.08);--muted:rgba(255,255,255,.4);--text:#e8ecf4;--pink:rgba(236,72,153,1);--pinkDim:rgba(236,72,153,.25);--teal:#14b8a6;--blue:#3b82f6;--yellow:#eab308;--purple:#a855f7;--offer:#ec4899;--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow:hidden}
+/* Player shell */
+.player{position:relative;width:100%;max-width:960px;margin:0 auto;aspect-ratio:16/9;background:var(--bg);overflow:hidden;border-radius:12px;border:1px solid var(--border)}
+.viewport{position:relative;width:100%;height:calc(100% - 64px);overflow:hidden}
+/* Caption bar */
+.caption-bar{height:32px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px}
+.caption-dot{width:6px;height:6px;border-radius:50%;background:var(--pink)}
+.caption-text{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden}
+/* Controls */
+.controls{height:32px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:10px}
+.btn-play{background:none;border:none;color:var(--text);cursor:pointer;font-size:14px;display:flex;align-items:center}
+.progress-wrap{flex:1;height:3px;background:rgba(255,255,255,.1);border-radius:2px;cursor:pointer;position:relative}
+.progress-fill{height:100%;background:var(--pink);border-radius:2px;width:0%;transition:width .3s linear}
+.time{font-size:10px;color:var(--muted);font-family:var(--mono);min-width:60px;text-align:right}
+/* Scenes */
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .5s ease;pointer-events:none;padding:24px}
+.scene.active{opacity:1;pointer-events:auto}
+/* Calendar grid */
+.calendar{width:100%;max-width:700px}
+.cal-title{font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:16px;text-align:center;color:var(--text)}
+.cal-title span{color:var(--pink)}
+.cal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.cal-day{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;opacity:0;transform:translateY(12px);transition:all .4s ease}
+.cal-day.show{opacity:1;transform:translateY(0)}
+.cal-day.hl{border-color:var(--pink);box-shadow:0 0 20px rgba(236,72,153,.15)}
+.day-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.day-type{font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px;min-height:32px}
+.badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px}
+.badge-tip{background:rgba(20,184,166,.15);color:var(--teal)}
+.badge-back{background:rgba(59,130,246,.15);color:var(--blue)}
+.badge-test{background:rgba(234,179,8,.15);color:var(--yellow)}
+.badge-caro{background:rgba(168,85,247,.15);color:var(--purple)}
+.badge-offer{background:rgba(236,72,153,.15);color:var(--offer)}
+/* Content card */
+.content-card{width:100%;max-width:680px;display:flex;gap:20px;align-items:flex-start}
+.card-preview{width:260px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-header{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.handle{font-size:11px;font-weight:600;color:var(--text)}
+.card-body{padding:14px;font-size:11px;line-height:1.7;color:var(--text);min-height:140px}
+.card-body .typing-cursor{display:inline-block;width:2px;height:13px;background:var(--pink);animation:blink .6s infinite;vertical-align:middle;margin-left:2px}
+.card-hashtags{padding:0 14px 10px;font-size:10px;color:rgba(236,72,153,.7);font-family:var(--mono);line-height:1.8;opacity:0;transition:opacity .4s}
+.card-hashtags.show{opacity:1}
+.card-cta{padding:8px 14px;border-top:1px solid var(--border);font-size:10px;font-weight:600;color:var(--pink);opacity:0;transition:opacity .4s}
+.card-cta.show{opacity:1}
+.card-meta{flex:1;display:flex;flex-direction:column;gap:12px}
+.meta-badge{align-self:flex-start}
+.meta-info{font-size:12px;color:var(--muted);line-height:1.7}
+.meta-info strong{color:var(--text)}
+.gen-indicator{display:flex;align-items:center;gap:8px;font-size:11px;font-family:var(--mono);color:var(--pink)}
+.gen-spinner{width:14px;height:14px;border:2px solid var(--pinkDim);border-top-color:var(--pink);border-radius:50%;animation:spin .8s linear infinite}
+/* Full week scene */
+.full-week{width:100%;max-width:720px}
+.fw-title{font-family:var(--display);font-size:18px;font-weight:700;text-align:center;margin-bottom:14px;color:var(--text)}
+.fw-title span{color:var(--pink)}
+.fw-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.fw-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;opacity:0;transform:scale(.92);transition:all .35s ease}
+.fw-item.show{opacity:1;transform:scale(1)}
+.fw-day{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
+.fw-text{font-size:9px;color:rgba(255,255,255,.55);line-height:1.5;margin:6px 0}
+.fw-check{font-size:14px;color:var(--teal);margin-top:4px}
+/* Dashboard */
+.dashboard{width:100%;max-width:640px;text-align:center}
+.dash-title{font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:20px;color:var(--text)}
+.dash-title span{color:var(--pink)}
+.dash-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 10px;opacity:0;transform:translateY(14px);transition:all .4s ease}
+.dash-card.show{opacity:1;transform:translateY(0)}
+.dash-num{font-size:28px;font-weight:700;font-family:var(--mono);color:var(--pink);line-height:1.2}
+.dash-label{font-size:10px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.04em;line-height:1.4}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){.content-card{flex-direction:column}.card-preview{width:100%}.dash-grid{grid-template-columns:repeat(2,1fr)}.dash-num{font-size:20px}.cal-grid,.fw-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="player">
+ <div class="viewport">
+  <!-- S1: Calendar overview -->
+  <div class="scene active" id="s1">
+   <div class="calendar">
+    <div class="cal-title">Calendário Semanal de <span>Conteúdo</span></div>
+    <div class="cal-grid" id="calGrid"></div>
+   </div>
+  </div>
+  <!-- S2: Monday content card -->
+  <div class="scene" id="s2">
+   <div class="content-card">
+    <div class="card-preview">
+     <div class="card-header"><div class="avatar">M</div><div class="handle">mapeia.ai</div></div>
+     <div class="card-body" id="s2Body"></div>
+     <div class="card-hashtags" id="s2Hash">#automacao #pme #produtividade #ia #mapeiabrasil</div>
+     <div class="card-cta" id="s2Cta">Salve este post para quando precisar!</div>
+    </div>
+    <div class="card-meta">
+     <div class="meta-badge"><span class="badge badge-tip">Dica rapida</span></div>
+     <div class="gen-indicator" id="s2Gen"><div class="gen-spinner"></div>Gerando legenda...</div>
+     <div class="meta-info"><strong>Segunda-feira</strong><br>Formato: Dica rapida<br>Tom: Educativo + CTA<br>Palavras: ~45</div>
+    </div>
+   </div>
+  </div>
+  <!-- S3: Tuesday backstage -->
+  <div class="scene" id="s3">
+   <div class="content-card">
+    <div class="card-preview">
+     <div class="card-header"><div class="avatar">M</div><div class="handle">mapeia.ai</div></div>
+     <div class="card-body" id="s3Body"></div>
+     <div class="card-hashtags" id="s3Hash">#bastidores #iabrasil #pme #automacao #mapeiabrasil</div>
+     <div class="card-cta" id="s3Cta">Acompanhe os bastidores nos Stories!</div>
+    </div>
+    <div class="card-meta">
+     <div class="meta-badge"><span class="badge badge-back">Bastidores</span></div>
+     <div class="gen-indicator" id="s3Gen"><div class="gen-spinner"></div>Gerando legenda...</div>
+     <div class="meta-info"><strong>Terca-feira</strong><br>Formato: Bastidores<br>Tom: Autenticidade<br>Palavras: ~35</div>
+    </div>
+   </div>
+  </div>
+  <!-- S4: Wednesday testimonial -->
+  <div class="scene" id="s4">
+   <div class="content-card">
+    <div class="card-preview">
+     <div class="card-header"><div class="avatar">M</div><div class="handle">mapeia.ai</div></div>
+     <div class="card-body" id="s4Body"></div>
+     <div class="card-hashtags" id="s4Hash">#depoimento #resultado #clientefeliz #automacao #mapeiabrasil</div>
+     <div class="card-cta" id="s4Cta">Quer resultados assim? Link na bio!</div>
+    </div>
+    <div class="card-meta">
+     <div class="meta-badge"><span class="badge badge-test">Depoimento</span></div>
+     <div class="gen-indicator" id="s4Gen"><div class="gen-spinner"></div>Gerando legenda...</div>
+     <div class="meta-info"><strong>Quarta-feira</strong><br>Formato: Depoimento<br>Tom: Prova social<br>Palavras: ~40</div>
+    </div>
+   </div>
+  </div>
+  <!-- S5: Full week -->
+  <div class="scene" id="s5">
+   <div class="full-week">
+    <div class="fw-title">Semana <span>Completa</span></div>
+    <div class="fw-grid" id="fwGrid"></div>
+   </div>
+  </div>
+  <!-- S6: Dashboard -->
+  <div class="scene" id="s6">
+   <div class="dashboard">
+    <div class="dash-title">Resultado da <span>Semana</span></div>
+    <div class="dash-grid" id="dashGrid"></div>
+   </div>
+  </div>
+ </div>
+ <div class="caption-bar"><div class="caption-dot"></div><div class="caption-text" id="captionText">Kit Presenca Social — IA gera legendas diarias com hashtags e CTA</div></div>
+ <div class="controls">
+  <button class="btn-play" id="btnPlay" aria-label="Play/Pause">&#9654;</button>
+  <div class="progress-wrap" id="progWrap"><div class="progress-fill" id="progFill"></div></div>
+  <div class="time" id="timeLabel">0:00 / 0:50</div>
+ </div>
+</div>
+<script>
+(function(){
+const DURATION=50000;
+const days=[
+ {day:'Seg',type:'Dica rapida',badge:'tip',text:'3 sinais de que seu negocio precisa de automacao:\n1. Voce responde clientes manualmente no WhatsApp\n2. Perde leads por falta de follow-up\n3. Gasta +20h/semana em tarefas repetitivas.\nQual desses e o seu? Comenta aqui!'},
+ {day:'Ter',type:'Bastidores',badge:'back',text:'O que rola nos bastidores: Hoje gravamos o novo modulo de atendimento automatico. A cada semana, nossa IA fica mais inteligente para ajudar PMEs brasileiras.'},
+ {day:'Qua',type:'Depoimento',badge:'test',text:'O que nosso cliente disse:\n"Antes eu perdia 4h por dia respondendo WhatsApp. Agora o bot resolve 90% e eu foco no que importa."\n— Maria, Studio Hair'},
+ {day:'Qui',type:'Carrossel educativo',badge:'caro',text:'5 automacoes que toda PME deveria ter em 2026. Arraste para ver todas!'},
+ {day:'Sex',type:'Oferta da semana',badge:'offer',text:'Oferta exclusiva: Kit Presenca Social com 50% OFF so esta semana. Link na bio!'}
+];
+const captions=[
+ 'Visao geral do calendario semanal de conteudo',
+ 'IA gerando legenda de segunda-feira — Dica rapida',
+ 'Hashtags e CTA adicionados automaticamente',
+ 'Terca-feira — Post de bastidores gerado',
+ 'Quarta-feira — Depoimento de cliente',
+ 'Todos os 5 dias preenchidos com conteudo',
+ 'Dashboard de resultados da semana'
+];
+
+let t=0,playing=true,raf=null,lastTs=0;
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+
+// Build calendar
+const calGrid=$('#calGrid');
+days.forEach(d=>{
+ const el=document.createElement('div');
+ el.className='cal-day';
+ el.innerHTML=`<div class="day-label">${d.day}</div><div class="day-type">${d.type}</div><div><span class="badge badge-${d.badge}">${d.type}</span></div>`;
+ calGrid.appendChild(el);
+});
+
+// Build full-week
+const fwGrid=$('#fwGrid');
+days.forEach(d=>{
+ const el=document.createElement('div');
+ el.className='fw-item';
+ el.innerHTML=`<div class="fw-day">${d.day}</div><span class="badge badge-${d.badge}">${d.type}</span><div class="fw-text">${d.text.substring(0,60)}...</div><div class="fw-check">&#10003;</div>`;
+ fwGrid.appendChild(el);
+});
+
+// Build dashboard
+const dashData=[
+ {num:'5',label:'posts / semana'},{num:'20',label:'posts / mes'},
+ {num:'10min',label:'tempo de geracao'},{num:'0h',label:'criacao manual'},
+ {num:'100%',label:'tom da marca mantido'}
+];
+const dashGrid=$('#dashGrid');
+dashData.forEach(d=>{
+ const el=document.createElement('div');
+ el.className='dash-card';
+ el.innerHTML=`<div class="dash-num">${d.num}</div><div class="dash-label">${d.label}</div>`;
+ dashGrid.appendChild(el);
+});
+
+function typeText(el,text,startT,durT,cb){
+ const charDelay=durT/text.length;
+ let idx=0,done=false;
+ return function update(now){
+  if(done)return;
+  const elapsed=now-startT;
+  const target=Math.min(Math.floor(elapsed/charDelay),text.length);
+  if(target>idx){
+   idx=target;
+   let display=text.substring(0,idx).replace(/\n/g,'<br>');
+   el.innerHTML=display+(idx<text.length?'<span class="typing-cursor"></span>':'');
+  }
+  if(idx>=text.length&&!done){done=true;if(cb)cb();}
+ };
+}
+
+let typers=[];
+function scheduleType(el,text,startMs,durMs,cb){
+ typers.push({el,text,startMs,durMs,cb,fn:null,started:false,done:false});
+}
+
+scheduleType($('#s2Body'),days[0].text,5500,5500);
+scheduleType($('#s3Body'),days[1].text,18500,3000);
+scheduleType($('#s4Body'),days[2].text,26500,3000);
+
+// Scenes: s1=cal(0-5), s2=mon(5-18), s3=tue(18-26), s4=wed(26-34), s5=fullweek(34-42), s6=dash(42-50)
+function getScene(ms){
+ if(ms<5000)return 0;
+ if(ms<18000)return 1;
+ if(ms<26000)return 2;
+ if(ms<34000)return 3;
+ if(ms<42000)return 4;
+ return 5;
+}
+
+function getCaptionIdx(ms){
+ if(ms<5000)return 0;
+ if(ms<12000)return 1;
+ if(ms<18000)return 2;
+ if(ms<26000)return 3;
+ if(ms<34000)return 4;
+ if(ms<42000)return 5;
+ return 6;
+}
+
+function updateScene(ms){
+ const idx=getScene(ms);
+ const scenes=$$('.scene');
+ scenes.forEach((s,i)=>s.classList.toggle('active',i===idx));
+
+ // Caption
+ $('#captionText').textContent=captions[getCaptionIdx(ms)];
+
+ // S1: calendar days appear staggered
+ if(idx===0){
+  const calDays=calGrid.querySelectorAll('.cal-day');
+  calDays.forEach((d,i)=>{
+   d.classList.toggle('show',ms>400+i*600);
+   d.classList.remove('hl');
+  });
+ }
+
+ // S2 (idx=1): Monday card 5-18s — typing then hashtags
+ if(idx===1){
+  const calDays=calGrid.querySelectorAll('.cal-day');
+  calDays.forEach((d,i)=>{d.classList.add('show');d.classList.toggle('hl',i===0);});
+  if(ms>11500){$('#s2Gen').style.display='none';}
+  if(ms>12000){$('#s2Hash').classList.add('show');$('#s2Cta').classList.add('show');}
+ }
+
+ // S3 (idx=2): Tuesday 18-26s
+ if(idx===2){
+  if(ms>22000)$('#s3Gen').style.display='none';
+  if(ms>23000){$('#s3Hash').classList.add('show');$('#s3Cta').classList.add('show');}
+ }
+
+ // S4 (idx=3): Wednesday 26-34s
+ if(idx===3){
+  if(ms>30000)$('#s4Gen').style.display='none';
+  if(ms>31000){$('#s4Hash').classList.add('show');$('#s4Cta').classList.add('show');}
+ }
+
+ // S5 (idx=4): Full week 34-42s
+ if(idx===4){
+  const items=fwGrid.querySelectorAll('.fw-item');
+  items.forEach((it,i)=>it.classList.toggle('show',ms>34500+i*1200));
+ }
+
+ // S6 (idx=5): Dashboard 42-50s
+ if(idx===5){
+  const cards=dashGrid.querySelectorAll('.dash-card');
+  cards.forEach((c,i)=>c.classList.toggle('show',ms>42500+i*900));
+ }
+
+ // Typers
+ typers.forEach(tp=>{
+  if(ms>=tp.startMs&&!tp.started){
+   tp.started=true;
+   tp.fn=typeText(tp.el,tp.text,tp.startMs,tp.durMs,tp.cb);
+  }
+  if(tp.fn&&!tp.done)tp.fn(ms);
+ });
+
+ // Progress
+ const pct=Math.min(ms/DURATION*100,100);
+ $('#progFill').style.width=pct+'%';
+ const sSec=Math.floor(ms/1000),sMin=Math.floor(sSec/60),sRem=sSec%60;
+ $('#timeLabel').textContent=`${sMin}:${String(sRem).padStart(2,'0')} / 0:50`;
+}
+
+function resetState(){
+ t=0;lastTs=0;
+ typers.forEach(tp=>{tp.started=false;tp.done=false;tp.fn=null;tp.el.innerHTML='';});
+ ['#s2Hash','#s2Cta','#s3Hash','#s3Cta','#s4Hash','#s4Cta'].forEach(s=>{$(s).classList.remove('show');});
+ ['#s2Gen','#s3Gen','#s4Gen'].forEach(s=>{$(s).style.display='';});
+ fwGrid.querySelectorAll('.fw-item').forEach(it=>it.classList.remove('show'));
+ dashGrid.querySelectorAll('.dash-card').forEach(c=>c.classList.remove('show'));
+ calGrid.querySelectorAll('.cal-day').forEach(d=>{d.classList.remove('show','hl');});
+}
+
+function tick(ts){
+ if(!lastTs)lastTs=ts;
+ if(playing){
+  t+=ts-lastTs;
+  if(t>=DURATION){resetState();}
+  updateScene(t);
+ }
+ lastTs=ts;
+ raf=requestAnimationFrame(tick);
+}
+
+$('#btnPlay').addEventListener('click',()=>{
+ playing=!playing;
+ $('#btnPlay').innerHTML=playing?'&#9646;&#9646;':'&#9654;';
+});
+
+$('#progWrap').addEventListener('click',e=>{
+ const rect=e.currentTarget.getBoundingClientRect();
+ const pct=(e.clientX-rect.left)/rect.width;
+ resetState();
+ t=pct*DURATION;
+ lastTs=0;
+ updateScene(t);
+});
+
+// Auto-play
+updateScene(0);
+raf=requestAnimationFrame(tick);
+$('#btnPlay').innerHTML='&#9646;&#9646;';
+})();
+</script>
+</body>
+</html>

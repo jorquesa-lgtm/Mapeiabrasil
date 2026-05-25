@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Demo — Kit Cobrança Amigável</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#070e1d;--surface:#0e1a2e;--gold:rgba(245,200,66,1);--gold-dim:rgba(245,200,66,.15);--teal:#00d4aa;--red:#ff4a6b;--yellow:#f5c842;--green:#34d399;--text:#e8f0ff;--muted:#7a8faa;--wa-green:#075e54;--wa-dark:#1a2e35}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.viewport{position:relative;width:min(96vw,960px);aspect-ratio:16/9;background:var(--surface);border-radius:16px;overflow:hidden;border:1px solid rgba(245,200,66,.12);box-shadow:0 0 60px rgba(245,200,66,.06)}
+.scene{position:absolute;inset:0;display:flex;opacity:0;pointer-events:none;transition:opacity .5s}
+.scene.active{opacity:1;pointer-events:auto}
+.sheet-wrap{flex:1;display:flex;flex-direction:column;padding:24px 28px}
+.sheet-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sheet-title svg{width:18px;height:18px;fill:var(--gold)}
+table.sheet{width:100%;border-collapse:collapse;font-size:12px}
+table.sheet th{text-align:left;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.06)}
+table.sheet td{padding:10px;border-bottom:1px solid rgba(255,255,255,.04);font-family:'JetBrains Mono',monospace;font-size:11px}
+table.sheet tr{transition:background .4s}
+table.sheet tr.hl{background:rgba(245,200,66,.08)}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;font-family:'DM Sans',sans-serif}
+.chip-red{background:rgba(255,74,107,.15);color:#ff8095}
+.chip-yellow{background:rgba(245,200,66,.15);color:#f5c842}
+.chip-green{background:rgba(52,211,153,.15);color:#34d399}
+.phone-wrap{width:260px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:16px}
+.phone{width:228px;height:100%;background:var(--wa-dark);border-radius:20px;border:2px solid rgba(255,255,255,.08);display:flex;flex-direction:column;overflow:hidden}
+.phone-header{background:var(--wa-green);padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:#fff}
+.phone-avatar{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.phone-chat{flex:1;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;background:#0b141a}
+.bubble{max-width:92%;padding:8px 10px;border-radius:8px;font-size:10.5px;line-height:1.5;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;word-wrap:break-word}
+.bubble.show{opacity:1;transform:translateY(0)}
+.bubble.sent{background:#005c4b;color:#e8f0ff;align-self:flex-start;border-top-left-radius:0}
+.bubble.recv{background:#1a2e35;color:#c8dce8;align-self:flex-end;border-top-right-radius:0}
+.bubble .pix-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.25);padding:3px 8px;border-radius:6px;font-size:9px;color:var(--teal);font-weight:700;margin-top:6px}
+.bubble .pix-badge::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.msg-tag{display:inline-block;padding:3px 8px;border-radius:99px;font-size:9px;font-weight:700;margin-bottom:6px;font-family:'JetBrains Mono',monospace}
+.tag-teal{background:rgba(0,212,170,.15);color:var(--teal)}
+.tag-yellow{background:rgba(245,200,66,.15);color:var(--yellow)}
+.tag-red{background:rgba(255,74,107,.15);color:var(--red)}
+.dash-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px}
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:560px;margin-bottom:20px}
+.dash-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;text-align:center;opacity:0;transform:scale(.9);transition:opacity .4s,transform .4s}
+.dash-card.show{opacity:1;transform:scale(1)}
+.dash-num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;margin-bottom:4px}
+.dash-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.roi-card{background:linear-gradient(135deg,rgba(245,200,66,.08),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.2);border-radius:14px;padding:20px 28px;max-width:480px;width:100%;text-align:center;opacity:0;transform:translateY(12px);transition:opacity .5s,transform .5s}
+.roi-card.show{opacity:1;transform:translateY(0)}
+.roi-card h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:12px}
+.roi-row{display:flex;justify-content:center;gap:32px;margin-bottom:6px}
+.roi-item{text-align:center}
+.roi-item .old{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--red);text-decoration:line-through;opacity:.7}
+.roi-item .new{font-family:'JetBrains Mono',monospace;font-size:22px;color:var(--green);font-weight:700}
+.roi-item .lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.roi-big{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--gold);margin-top:10px}
+.roi-big-lbl{font-size:11px;color:var(--muted)}
+.controls{display:flex;align-items:center;gap:14px;margin-top:12px;width:min(96vw,960px)}
+.btn-play{width:32px;height:32px;border-radius:50%;border:1px solid var(--gold-dim);background:rgba(245,200,66,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);flex-shrink:0}
+.btn-play svg{width:14px;height:14px;fill:currentColor}
+.progress-bar{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;cursor:pointer}
+.progress-fill{height:100%;background:var(--gold);width:0%;transition:width .3s linear}
+.time-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);min-width:70px;text-align:right}
+.caption-bar{width:min(96vw,960px);margin-top:8px;min-height:28px;text-align:center;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;opacity:.8}
+</style>
+</head>
+<body>
+
+<div class="viewport" id="viewport">
+  <!-- Scene 1: Spreadsheet + WhatsApp -->
+  <div class="scene active" id="s-sheet">
+    <div class="sheet-wrap">
+      <div class="sheet-title">
+        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h4v3H7V7zm5 0h5v3h-5V7zm-5 4h4v3H7v-3zm5 0h5v3h-5v-3zm-5 4h4v3H7v-3zm5 0h5v3h-5v-3z"/></svg>
+        Planilha de Cobranças
+      </div>
+      <table class="sheet">
+        <thead><tr><th>Nome</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr id="row-maria"><td>Maria Santos</td><td>R$ 450,00</td><td>15/jan</td><td><span class="chip chip-red" id="st-maria">Vencido</span></td></tr>
+          <tr id="row-carlos"><td>Carlos Lima</td><td>R$ 890,00</td><td>12/jan</td><td><span class="chip chip-red" id="st-carlos">Vencido</span></td></tr>
+          <tr id="row-ana"><td>Ana Costa</td><td>R$ 320,00</td><td>18/jan</td><td><span class="chip chip-yellow" id="st-ana">Vence hoje</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-header">
+          <div class="phone-avatar" id="ph-avatar">W</div>
+          <span id="ph-name">WhatsApp</span>
+        </div>
+        <div class="phone-chat" id="chat1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: Dashboard + ROI -->
+  <div class="scene" id="s-dash">
+    <div class="dash-wrap">
+      <div class="sheet-title" style="margin-bottom:20px">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--gold)"><path d="M3 13h2v8H3v-8zm4-4h2v12H7V9zm4-6h2v18h-2V3zm4 8h2v10h-2V11zm4-3h2v13h-2V8z"/></svg>
+        Resultado da Cobrança
+      </div>
+      <div class="dash-grid">
+        <div class="dash-card" id="dc1"><div class="dash-num" style="color:var(--gold)">3</div><div class="dash-label">Cobranças enviadas</div></div>
+        <div class="dash-card" id="dc2"><div class="dash-num" style="color:var(--green)">2</div><div class="dash-label">Pagaram</div></div>
+        <div class="dash-card" id="dc3"><div class="dash-num" style="color:var(--green)">R$ 1.210</div><div class="dash-label">Recuperados</div></div>
+        <div class="dash-card" id="dc4"><div class="dash-num" style="color:var(--yellow)">1</div><div class="dash-label">Prometeu pagar</div></div>
+        <div class="dash-card" id="dc5"><div class="dash-num" style="color:var(--teal)">0</div><div class="dash-label">Inadimplentes</div></div>
+        <div class="dash-card" id="dc6"><div class="dash-num" style="color:var(--gold)">67%</div><div class="dash-label">Taxa de recuperação</div></div>
+      </div>
+      <div class="roi-card" id="roi">
+        <h3>ROI do Kit Cobrança</h3>
+        <div class="roi-row">
+          <div class="roi-item"><div class="old">35%</div><div class="lbl">Antes</div></div>
+          <div class="roi-item"><div class="new">8%</div><div class="lbl">Depois</div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin:6px 0">inadimplência</div>
+        <div class="roi-big">R$ 3.600/mês</div>
+        <div class="roi-big-lbl">recuperados com automação</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <div class="btn-play" id="btnPlay" title="Play/Pause">
+    <svg id="iconPlay" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+    <svg id="iconPause" viewBox="0 0 24 24" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+  </div>
+  <div class="progress-bar" id="progBar"><div class="progress-fill" id="progFill"></div></div>
+  <div class="time-label" id="timeLabel">0:00 / 0:55</div>
+</div>
+<div class="caption-bar" id="caption"></div>
+
+<script>
+(function(){
+const DUR = 55;
+let t = 0, playing = true, lastF = 0;
+const $ = id => document.getElementById(id);
+const fill = $('progFill'), tLbl = $('timeLabel'), cap = $('caption');
+const iPlay = $('iconPlay'), iPause = $('iconPause');
+const chat = $('chat1');
+
+function fmt(s){return Math.floor(s/60)+':'+(''+(Math.floor(s)%60)).padStart(2,'0')}
+function setScene(id){document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
+function clrChat(){chat.innerHTML=''}
+function hlRow(id){document.querySelectorAll('table.sheet tbody tr').forEach(r=>r.classList.remove('hl'));if(id) $(id).classList.add('hl')}
+function setSt(id,txt,cls){const e=$(id);e.textContent=txt;e.className='chip '+cls}
+function setPh(a,n){$('ph-avatar').textContent=a;$('ph-name').textContent=n}
+
+function bubble(type,html){
+  const b=document.createElement('div');
+  b.className='bubble '+type;b.innerHTML=html;
+  chat.appendChild(b);
+  requestAnimationFrame(()=>b.classList.add('show'));
+  chat.scrollTop=chat.scrollHeight;
+}
+
+const E=[
+  // 0-5: spreadsheet visible
+  {at:.3,fn(){setScene('s-sheet');clrChat();hlRow(null);setPh('W','WhatsApp');cap.textContent='Planilha de cobranças — faturas pendentes'}},
+  // 5-12: Ana (M1)
+  {at:5,fn(){hlRow('row-ana');setPh('A','Ana Costa');cap.textContent='Ana Costa — fatura vence hoje (M1)'}},
+  {at:6,fn(){bubble('sent','<span class="msg-tag tag-teal">M1 — Dia do vencimento</span><br>Oi Ana! Tudo bem? Sua fatura de R$320,00 vence hoje. Pague via Pix:<br><span class="pix-badge">Pix empresa@pix.com</span><br><br>Se já pagou, desconsidere. Obrigado!')}},
+  // 12-16: Ana replies
+  {at:12,fn(){bubble('recv','Paguei agora!');cap.textContent='Ana confirma pagamento via Pix'}},
+  {at:13.5,fn(){setSt('st-ana','Pago','chip-green');bubble('sent','Pagamento confirmado! Obrigado, Ana!')}},
+  // 16-24: Maria (M2)
+  {at:16,fn(){clrChat();hlRow('row-maria');setPh('M','Maria Santos');cap.textContent='Maria Santos — fatura vencida há 3 dias (M2)'}},
+  {at:17,fn(){bubble('sent','<span class="msg-tag tag-yellow">M2 — +3 dias</span><br>Oi Maria! Sua fatura de R$450,00 venceu há 3 dias. Aconteceu algum imprevisto? Estou aqui para ajudar.<br><span class="pix-badge">Pix empresa@pix.com</span>')}},
+  // 24-28: Maria replies
+  {at:24,fn(){bubble('recv','Desculpa! Pago amanhã sem falta.');cap.textContent='Maria promete pagar amanhã'}},
+  {at:25.5,fn(){setSt('st-maria','Prometeu pagar','chip-yellow')}},
+  // 28-36: Carlos (M3)
+  {at:28,fn(){clrChat();hlRow('row-carlos');setPh('C','Carlos Lima');cap.textContent='Carlos Lima — fatura pendente há 7 dias (M3)'}},
+  {at:29,fn(){bubble('sent','<span class="msg-tag tag-red">M3 — +7 dias</span><br>Carlos, sua fatura de R$890,00 está pendente há 7 dias. Precisamos regularizar para manter seus benefícios ativos.<br><br>Opções:<br>1. Pagar agora <span class="pix-badge">Pix</span><br>2. Falar com financeiro')}},
+  // 36-40: Carlos pays
+  {at:36,fn(){bubble('recv','1');cap.textContent='Carlos escolhe pagar via Pix'}},
+  {at:37.5,fn(){bubble('sent','Pix recebido! Fatura quitada. Obrigado, Carlos!');setSt('st-carlos','Pago','chip-green');cap.textContent='Pagamento de Carlos confirmado'}},
+  // 40-50: Dashboard
+  {at:40,fn(){setScene('s-dash');hlRow(null);cap.textContent='Resultado: 3 cobranças enviadas'}},
+  {at:41,fn(){$('dc1').classList.add('show')}},
+  {at:42,fn(){$('dc2').classList.add('show')}},
+  {at:43,fn(){$('dc3').classList.add('show')}},
+  {at:44,fn(){$('dc4').classList.add('show')}},
+  {at:45,fn(){$('dc5').classList.add('show')}},
+  {at:46,fn(){$('dc6').classList.add('show');cap.textContent='Taxa de recuperação: 67% — R$1.210 recuperados'}},
+  // 50-55: ROI
+  {at:50,fn(){$('roi').classList.add('show');cap.textContent='ROI: inadimplência de 35% para 8% — R$3.600/mês recuperados'}},
+];
+
+let fired=new Array(E.length).fill(false);
+
+function reset(){
+  t=0;fired.fill(false);
+  setScene('s-sheet');clrChat();hlRow(null);setPh('W','WhatsApp');
+  setSt('st-ana','Vence hoje','chip-yellow');
+  setSt('st-maria','Vencido','chip-red');
+  setSt('st-carlos','Vencido','chip-red');
+  cap.textContent='';
+  document.querySelectorAll('.dash-card').forEach(c=>c.classList.remove('show'));
+  $('roi').classList.remove('show');
+}
+
+function tick(now){
+  if(!lastF)lastF=now;
+  const dt=(now-lastF)/1000;lastF=now;
+  if(playing){
+    t+=dt;
+    if(t>=DUR){reset()}
+    for(let i=0;i<E.length;i++){if(!fired[i]&&t>=E[i].at){fired[i]=true;E[i].fn()}}
+    fill.style.width=(t/DUR*100)+'%';
+    tLbl.textContent=fmt(t)+' / '+fmt(DUR);
+  }
+  requestAnimationFrame(tick);
+}
+
+$('btnPlay').addEventListener('click',()=>{
+  playing=!playing;
+  iPlay.style.display=playing?'none':'block';
+  iPause.style.display=playing?'block':'none';
+});
+
+$('progBar').addEventListener('click',e=>{
+  const r=e.currentTarget.getBoundingClientRect();
+  const p=(e.clientX-r.left)/r.width;
+  reset();t=p*DUR;
+  for(let i=0;i<E.length;i++){if(E[i].at<=t){fired[i]=true;E[i].fn()}}
+});
+
+reset();
+iPlay.style.display='none';iPause.style.display='block';
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
