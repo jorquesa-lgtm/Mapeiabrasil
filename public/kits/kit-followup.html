@@ -161,10 +161,14 @@
   <a href="/diagnostico.html" style="margin-top:20px;background:#0077cc;color:#fff;padding:14px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;text-align:center;">Iniciar diagnóstico →</a>
 </div>
 <style>
-@media(max-width:720px){
-  #kitNavLinks{display:none!important;}
-  #kitHamBtn{display:flex!important;}
-}
+  /* Hamburger hidden on desktop, shown on mobile */
+  #kitHamBtn{display:none;}
+  @media(max-width:720px){
+    #kitNavLinks{display:none!important;}
+    #kitNavCta{display:none!important;}
+    #kitHamBtn{display:flex!important;}
+    #kitNavInner{padding:0 16px!important;}
+  }
 </style>
 
 <div class="hero">
