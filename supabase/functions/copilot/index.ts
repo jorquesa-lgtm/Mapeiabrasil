@@ -265,18 +265,38 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    const DAILY_LIMIT = 50;
+    const userEmail = context.email ?? "";
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD UTC
+
+    // Rate limit check — only enforced when we have a service role key
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+
+    if (userEmail && supabaseUrl && supabaseKey) {
+      const sb = createClient(supabaseUrl, supabaseKey);
+      const { data: usageCount } = await sb
+        .rpc("increment_copilot_usage", { p_email: userEmail, p_date: today });
+
+      if (usageCount && usageCount > DAILY_LIMIT) {
+        return new Response(
+          JSON.stringify({
+            reply: `Você atingiu o limite de ${DAILY_LIMIT} mensagens por dia no Copiloto. Seu limite é renovado todos os dias à meia-noite. Se precisar de mais suporte, entre em contato em mapeaibrasil.com. 🙏`,
+            rate_limited: true,
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     // Check active kit subscriptions for this email
     let kitPlans: string[] = context.kit_subscriptions ?? [];
 
     // If not passed from client, look up in DB (fallback)
-    if (kitPlans.length === 0 && context.email) {
-      const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
-      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-      if (supabaseUrl && supabaseKey) {
-        const sb = createClient(supabaseUrl, supabaseKey);
-        const { data } = await sb.rpc("get_kit_subscriptions", { p_email: context.email });
-        kitPlans = (data ?? []).map((r: { plan: string }) => r.plan);
-      }
+    if (kitPlans.length === 0 && userEmail && supabaseUrl && supabaseKey) {
+      const sb = createClient(supabaseUrl, supabaseKey);
+      const { data } = await sb.rpc("get_kit_subscriptions", { p_email: userEmail });
+      kitPlans = (data ?? []).map((r: { plan: string }) => r.plan);
     }
 
     const systemPrompt = buildSystemPrompt(context, kitPlans);
