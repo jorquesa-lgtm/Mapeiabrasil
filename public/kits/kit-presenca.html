@@ -101,6 +101,16 @@
   .req-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin-bottom:8px;}
   .req-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
   .req-dot.free{background:var(--green);}.req-dot.paid{background:var(--yellow);}.req-dot.req{background:#ec4899;}
+
+/* ── Mobile video demo container ───────────────────── */
+@media(max-width:720px){
+  .demo-iframe-wrap{
+    padding-bottom:100%!important; /* 1:1 square on mobile — enough height for phone mockup */
+  }
+  .demo-ts-grid{
+    grid-template-columns:repeat(2,1fr)!important; /* 2x2 on very small screens */
+  }
+}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -157,16 +167,16 @@
 
 
     <!-- VIDEO SECTION -->
-    <div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #1a3050;">
-      <div style="display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6b90b8;margin-bottom:16px;">
-        <span style="width:6px;height:6px;border-radius:50%;background:#00e5c8;display:inline-block;"></span>
+    <div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border);">
+      <div style="display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--teal2);display:inline-block;"></span>
         Ver o kit funcionando
       </div>
       <h2 style="font-size:22px;font-weight:700;margin-bottom:8px;">Veja em 2 minutos</h2>
       <p style="font-size:14px;color:#6b90b8;margin-bottom:20px;">Tela em branco toda vez que precisa postar — e como o kit resolve em tempo real.</p>
 
       <!-- Kit 5 — Demo interativo HTML -->
-      <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;border:1px solid #1a3050;box-shadow:0 8px 32px rgba(0,0,0,.4);">
+      <div class="demo-iframe-wrap" style="position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-md);">
         <iframe
           src="/kits/demo-presenca.html"
           title="Kit 5 — Presença Social — Demo Interativo"
@@ -177,22 +187,22 @@
       </div>
 
       <!-- O que o vídeo mostra -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;">
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">0:00</div>
-          <div style="font-size:11px;color:#6b90b8;">O problema</div>
+      <div class="demo-ts-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:16px;">
+        <div style="background:#f5f5f7;border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;margin-bottom:4px;">0:00</div>
+          <div style="font-size:11px;color:var(--muted);">O problema</div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">0:20</div>
-          <div style="font-size:11px;color:#6b90b8;">Kit funcionando</div>
+        <div style="background:#f5f5f7;border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;margin-bottom:4px;">0:20</div>
+          <div style="font-size:11px;color:var(--muted);">Kit funcionando</div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">1:20</div>
-          <div style="font-size:11px;color:#6b90b8;">Instalação</div>
+        <div style="background:#f5f5f7;border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;margin-bottom:4px;">1:20</div>
+          <div style="font-size:11px;color:var(--muted);">Instalação</div>
         </div>
-        <div style="background:rgba(255,255,255,.02);border:1px solid #1a3050;border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00e5c8;font-weight:700;margin-bottom:4px;">1:50</div>
-          <div style="font-size:11px;color:#6b90b8;">Posts por semana</div>
+        <div style="background:#f5f5f7;border:1px solid #e8e8ed;border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;margin-bottom:4px;">1:50</div>
+          <div style="font-size:11px;color:var(--muted);">Posts por semana</div>
         </div>
       </div>
     </div>

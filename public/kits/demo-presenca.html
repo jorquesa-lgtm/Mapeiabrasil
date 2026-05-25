@@ -81,6 +81,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow:hid
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:600px){.content-card{flex-direction:column}.card-preview{width:100%}.dash-grid{grid-template-columns:repeat(2,1fr)}.dash-num{font-size:20px}.cal-grid,.fw-grid{grid-template-columns:repeat(3,1fr)}}
+
+@media(max-width:480px){
+  .viewport{aspect-ratio:auto!important;min-height:420px;}
+  .phone{width:260px!important;height:480px!important;border-radius:28px!important;}
+  .phone-notch{width:100px!important;}
+}
 </style>
 </head>
 <body>

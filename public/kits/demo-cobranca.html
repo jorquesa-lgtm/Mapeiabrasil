@@ -62,6 +62,12 @@ table.sheet tr.hl{background:rgba(245,200,66,.08)}
 .progress-fill{height:100%;background:var(--gold);width:0%;transition:width .3s linear}
 .time-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);min-width:70px;text-align:right}
 .caption-bar{width:min(96vw,960px);margin-top:8px;min-height:28px;text-align:center;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;opacity:.8}
+
+@media(max-width:480px){
+  .viewport{aspect-ratio:auto!important;min-height:420px;}
+  .phone{width:260px!important;height:480px!important;border-radius:28px!important;}
+  .phone-notch{width:100px!important;}
+}
 </style>
 </head>
 <body>

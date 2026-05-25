@@ -87,6 +87,12 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
 #time-display{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-width:70px;text-align:right}
 #caption-bar{background:rgba(14,26,46,.92);border-top:1px solid var(--border);padding:8px 24px;text-align:center;font-size:12px;color:var(--muted);min-height:34px;flex-shrink:0}
 #caption-bar span{color:var(--accent);font-weight:600}
+
+@media(max-width:480px){
+  .viewport{aspect-ratio:auto!important;min-height:420px;}
+  .phone{width:260px!important;height:480px!important;border-radius:28px!important;}
+  .phone-notch{width:100px!important;}
+}
 </style>
 </head>
 <body>
