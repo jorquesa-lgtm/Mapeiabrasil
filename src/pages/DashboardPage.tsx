@@ -427,7 +427,7 @@ export default function DashboardPage({ user }: { user: User }) {
                     <a href={kit.url} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: kit.color, color: "#04080f", fontFamily: "inherit", fontSize: 14, fontWeight: 700, padding: "10px 20px", borderRadius: 10, textDecoration: "none", border: "none", cursor: "pointer" }}>
                       Ver kit completo →
                     </a>
-                    <a href="/kits/" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "transparent", color: "#6b90b8", fontFamily: "inherit", fontSize: 13, fontWeight: 600, padding: "10px 16px", borderRadius: 10, textDecoration: "none", border: "1px solid #1a3050", cursor: "pointer" }}>
+                    <a href="/kits/index.html" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "transparent", color: "#6b90b8", fontFamily: "inherit", fontSize: 13, fontWeight: 600, padding: "10px 16px", borderRadius: 10, textDecoration: "none", border: "1px solid #1a3050", cursor: "pointer" }}>
                       Ver todos os kits
                     </a>
                   </div>
