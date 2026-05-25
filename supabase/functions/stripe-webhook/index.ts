@@ -84,12 +84,75 @@ Deno.serve(async (req: Request) => {
             email: customerEmail,
             stripe_customer_id: customerId,
             stripe_session_id: sessionId,
-            stripe_subscription_id: subscriptionId,  // critical for cancel/update matching
+            stripe_subscription_id: subscriptionId,
             plan,
             status: "active",
           },
           { onConflict: "stripe_session_id" },
         );
+
+        // Send kit purchase confirmation email via Resend
+        const KIT_INFO: Record<string, { name: string; url: string; emoji: string }> = {
+          kit1:   { name: "Atendente 24h no WhatsApp",     url: "https://mapeaibrasil.com/kits/kit-atendente.html",  emoji: "🤖" },
+          kit2:   { name: "Follow-up Automático de Leads", url: "https://mapeaibrasil.com/kits/kit-followup.html",   emoji: "💬" },
+          kit3:   { name: "Agendamento Anti-No-Show",      url: "https://mapeaibrasil.com/kits/kit-agendamento.html",emoji: "📅" },
+          kit4:   { name: "Cobrança Amigável Automática",  url: "https://mapeaibrasil.com/kits/kit-cobranca.html",   emoji: "💰" },
+          kit5:   { name: "Presença Social Automática",    url: "https://mapeaibrasil.com/kits/kit-presenca.html",   emoji: "📱" },
+          bundle: { name: "Pacote Completo — 5 Kits",      url: "https://mapeaibrasil.com/kits/",                    emoji: "⚡" },
+        };
+        const kit = KIT_INFO[kitId] ?? { name: plan, url: "https://mapeaibrasil.com/kits/", emoji: "📦" };
+        const resendKey = Deno.env.get("RESEND_API_KEY");
+        if (resendKey && customerEmail) {
+          const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f5f5f7;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+    <div style="background:linear-gradient(135deg,#0077cc,#0a8a7a);padding:36px 40px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:12px;">${kit.emoji}</div>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0;">Assinatura confirmada!</h1>
+      <p style="color:rgba(255,255,255,.85);font-size:15px;margin:8px 0 0;">Bem-vindo ao ${kit.name}</p>
+    </div>
+    <div style="padding:36px 40px;">
+      <p style="font-size:15px;color:#1d1d1f;line-height:1.6;margin:0 0 24px;">
+        Sua assinatura está ativa. Você tem acesso ao blueprint, à planilha de configuração e ao <strong>Copiloto de Implementação</strong> no painel — o AI agent que vai te guiar passo a passo na instalação.
+      </p>
+      <div style="background:#f0f7ff;border:1px solid rgba(0,119,204,.2);border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0077cc;margin-bottom:12px;">Próximos passos</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:14px;color:#1d1d1f;padding-left:20px;position:relative;"><span style="position:absolute;left:0;color:#0a8a7a;font-weight:700;">1.</span> Acesse a página do kit e baixe o blueprint</div>
+          <div style="font-size:14px;color:#1d1d1f;padding-left:20px;position:relative;"><span style="position:absolute;left:0;color:#0a8a7a;font-weight:700;">2.</span> Importe o blueprint no Make.com</div>
+          <div style="font-size:14px;color:#1d1d1f;padding-left:20px;position:relative;"><span style="position:absolute;left:0;color:#0a8a7a;font-weight:700;">3.</span> Abra o Copiloto no painel e diga "quero instalar o ${kit.name}"</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-bottom:24px;">
+        <a href="${kit.url}" style="display:inline-block;background:#0077cc;color:#ffffff;padding:14px 32px;border-radius:980px;font-size:15px;font-weight:700;text-decoration:none;">Acessar meu kit →</a>
+      </div>
+      <div style="text-align:center;margin-bottom:8px;">
+        <a href="https://mapeaibrasil.com/painel.html" style="font-size:13px;color:#0077cc;text-decoration:none;font-weight:600;">Abrir painel com Copiloto</a>
+      </div>
+      <hr style="border:none;border-top:1px solid #e8e8ed;margin:24px 0;">
+      <p style="font-size:12px;color:#86868b;text-align:center;line-height:1.6;margin:0;">
+        MapeAI Brasil · <a href="https://mapeaibrasil.com" style="color:#86868b;">mapeaibrasil.com</a><br>
+        Dúvidas? Responda este e-mail ou acesse o Copiloto no painel.
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+          await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              from: "MapeAI Brasil <noreply@mapeaibrasil.com>",
+              to: [customerEmail],
+              subject: `${kit.emoji} Kit confirmado — ${kit.name}`,
+              html,
+            }),
+          }).catch(err => console.error("[webhook] kit email error:", err));
+        }
+
         console.log(`[webhook] kit subscription created: ${plan} for ${customerEmail}`);
         return new Response(JSON.stringify({ ok: true, kit: kitId }), { status: 200 });
       }
