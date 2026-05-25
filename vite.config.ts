@@ -35,6 +35,7 @@ function safeCopyPublicPlugin() {
 
 export default defineConfig({
   plugins: [react(), safeCopyPublicPlugin()],
+  appType: 'mpa',
   optimizeDeps: {
     exclude: ['lucide-react'],
   },

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo — Kit Follow-up de Leads</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#070e1d;--card:#0e1a2e;--border:#1a2744;--text:#e8ecf4;--muted:#7a8baa;--accent:#00e5c8;--m1:#00e5c8;--m2:#1a7ff0;--m3:#f5c842;--wa-green:#25D366;--wa-bg:#0b141a;--wa-in:#1f2c33;--wa-out:#005c4b;--red:#e74c3c;--grey:#5a6577}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;height:100vh;width:100vw;display:flex;flex-direction:column}
+#stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+#scene{width:min(96vw,1152px);aspect-ratio:16/9;position:relative;display:flex;gap:24px;padding:32px;opacity:1;transition:opacity .6s ease}
+
+/* --- SPREADSHEET --- */
+.sheet{flex:1.1;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;opacity:0;transform:translateY(20px);transition:all .6s ease}
+.sheet.show{opacity:1;transform:translateY(0)}
+.sheet-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sheet-title svg{width:18px;height:18px;fill:var(--accent)}
+.sheet table{width:100%;border-collapse:collapse;font-size:12.5px}
+.sheet th{text-align:left;padding:8px 10px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border);font-weight:600}
+.sheet td{padding:9px 10px;border-bottom:1px solid rgba(26,39,68,.5);vertical-align:middle}
+.sheet tr{transition:background .4s}
+.sheet tr.hl{background:rgba(0,229,200,.07)}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.chip-novo{background:rgba(0,229,200,.12);color:var(--accent)}
+.chip-sem{background:rgba(245,200,66,.12);color:var(--m3)}
+.chip-frio{background:rgba(122,139,170,.15);color:var(--muted)}
+.chip-respondeu{background:rgba(0,229,200,.18);color:#00ffdb}
+.chip-agendou{background:rgba(0,229,200,.22);color:#00ffdb}
+.chip-encerrado{background:rgba(90,101,119,.18);color:var(--grey)}
+
+/* --- PHONE --- */
+.phone{flex:0 0 260px;height:480px;background:#0b141a;border-radius:28px;border:2px solid #1e3a30;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateX(30px);transition:all .6s ease;position:relative}
+.phone.show{opacity:1;transform:translateX(0)}
+.phone-header{background:#1f2c33;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600}
+.phone-avatar{width:28px;height:28px;border-radius:50%;background:var(--wa-green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.phone-name{flex:1}
+.phone-chat{flex:1;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;scrollbar-width:none}
+.phone-chat::-webkit-scrollbar{display:none}
+.msg{max-width:88%;padding:7px 10px;border-radius:8px;font-size:11px;line-height:1.5;opacity:0;transform:translateY(8px);transition:all .4s ease}
+.msg.show{opacity:1;transform:translateY(0)}
+.msg-out{background:var(--wa-out);align-self:flex-end;border-bottom-right-radius:2px;color:#e1f5ee}
+.msg-in{background:var(--wa-in);align-self:flex-start;border-bottom-left-radius:2px;color:#d1d7db}
+.msg-time{font-size:9px;color:rgba(255,255,255,.4);text-align:right;margin-top:2px}
+.msg-tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:4px;letter-spacing:.03em}
+.tag-m1{background:rgba(0,229,200,.15);color:var(--m1)}
+.tag-m2{background:rgba(26,127,240,.18);color:var(--m2)}
+.tag-m3{background:rgba(245,200,66,.18);color:var(--m3)}
+
+/* --- ARROW --- */
+.arrow{position:absolute;top:50%;left:calc(55% - 30px);opacity:0;transition:opacity .4s}
+.arrow.show{opacity:1}
+.arrow svg{width:60px;height:24px}
+
+/* --- TIME BADGE --- */
+.time-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(26,127,240,.15);border:1px solid rgba(26,127,240,.3);color:var(--m2);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:5px 16px;border-radius:99px;opacity:0;transition:all .4s;z-index:10;white-space:nowrap}
+.time-badge.show{opacity:1}
+
+/* --- DASHBOARD --- */
+.dashboard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;opacity:0;pointer-events:none;transition:opacity .6s}
+.dashboard.show{opacity:1;pointer-events:auto}
+.dash-title{font-family:'Syne',sans-serif;font-size:clamp(18px,3vw,26px);font-weight:800;margin-bottom:28px;text-align:center}
+.dash-title span{color:var(--accent)}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:680px;width:100%}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;opacity:0;transform:translateY(16px);transition:all .5s ease}
+.dash-card.show{opacity:1;transform:translateY(0)}
+.dash-num{font-family:'JetBrains Mono',monospace;font-size:clamp(24px,4vw,34px);font-weight:700;color:var(--accent);margin-bottom:4px}
+.dash-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.dash-summary{margin-top:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 24px;max-width:680px;width:100%;text-align:center;font-size:13px;color:var(--muted);opacity:0;transform:translateY(10px);transition:all .5s ease .3s}
+.dash-summary.show{opacity:1;transform:translateY(0)}
+.dash-summary strong{color:var(--accent);font-weight:700}
+
+/* --- ARCHIVE NOTICE --- */
+.archive-notice{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(90,101,119,.12);border:1px solid rgba(90,101,119,.25);color:var(--grey);font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 16px;border-radius:8px;white-space:nowrap;opacity:0;transition:opacity .4s}
+.archive-notice.show{opacity:1}
+
+/* --- CONTROLS --- */
+#controls{background:var(--card);border-top:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+#controls button{background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:border-color .2s}
+#controls button:hover{border-color:var(--accent)}
+#controls button.active{border-color:var(--accent);color:var(--accent)}
+.timeline-wrap{flex:1;display:flex;align-items:center;gap:10px}
+#timeline{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;background:var(--border);outline:none;cursor:pointer}
+#timeline::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+#timeline::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+#time-display{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-width:70px;text-align:right}
+#caption-bar{background:rgba(14,26,46,.92);border-top:1px solid var(--border);padding:8px 24px;text-align:center;font-size:12px;color:var(--muted);min-height:34px;flex-shrink:0}
+#caption-bar span{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="scene">
+    <!-- Spreadsheet -->
+    <div class="sheet" id="sheet">
+      <div class="sheet-title">
+        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v4h6V5H5zm8 0v4h6V5h-6zM5 11v4h6v-4H5zm8 0v4h6v-4h-6zM5 17v2h6v-2H5zm8 0v2h6v-2h-6z"/></svg>
+        Planilha de Leads
+      </div>
+      <table>
+        <thead><tr><th>Nome</th><th>WhatsApp</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr id="r1"><td>Ana Lima</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">+55 11 9****-1234</td><td><span class="chip chip-novo" id="s1">novo</span></td></tr>
+          <tr id="r2"><td>Carlos Silva</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">+55 21 9****-5678</td><td><span class="chip chip-sem" id="s2">sem resposta</span></td></tr>
+          <tr id="r3"><td>Julia Martins</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">+55 31 9****-9012</td><td><span class="chip chip-frio" id="s3">frio</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow" id="arrow">
+      <svg viewBox="0 0 60 24" fill="none"><path d="M0 12h52m0 0l-8-7m8 7l-8 7" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <!-- Phone -->
+    <div class="phone" id="phone">
+      <div class="phone-header">
+        <div class="phone-avatar" id="ph-avatar">A</div>
+        <div class="phone-name" id="ph-name">Ana Lima</div>
+        <svg width="16" height="16" fill="var(--wa-green)" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+      </div>
+      <div class="phone-chat" id="chat"></div>
+    </div>
+
+    <!-- Time badge -->
+    <div class="time-badge" id="time-badge"></div>
+    <!-- Archive notice -->
+    <div class="archive-notice" id="archive-notice">3 tentativas — sem resposta — arquivado automaticamente</div>
+  </div>
+
+  <!-- Dashboard overlay -->
+  <div class="dashboard" id="dashboard">
+    <div class="dash-title">Resultados do <span>Follow-up Automatizado</span></div>
+    <div class="dash-grid">
+      <div class="dash-card" id="dc1"><div class="dash-num">3</div><div class="dash-label">Leads processados</div></div>
+      <div class="dash-card" id="dc2"><div class="dash-num">67%</div><div class="dash-label">Recuperados</div></div>
+      <div class="dash-card" id="dc3"><div class="dash-num">1</div><div class="dash-label">Agendamento</div></div>
+      <div class="dash-card" id="dc4"><div class="dash-num">36h</div><div class="dash-label">Tempo m\u00E9d. recupera\u00E7\u00E3o</div></div>
+    </div>
+    <div class="dash-summary" id="dash-sum"><strong>2 de 3</strong> leads recuperados com follow-up autom\u00E1tico em 3 etapas. Sem esfor\u00E7o manual.</div>
+  </div>
+</div>
+
+<div id="caption-bar">&nbsp;</div>
+
+<div id="controls">
+  <button id="btn-play" title="Play / Pause">
+    <svg id="ico-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+    <svg id="ico-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+  </button>
+  <button id="btn-restart" title="Reiniciar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 105.64-11.36L1 10"/></svg>
+  </button>
+  <div class="timeline-wrap">
+    <input type="range" id="timeline" min="0" max="600" value="0">
+    <span id="time-display">0:00 / 1:00</span>
+  </div>
+  <button id="btn-1x" class="active" data-speed="1">1x</button>
+  <button id="btn-2x" data-speed="2">2x</button>
+  <button id="btn-3x" data-speed="3">3x</button>
+</div>
+
+<script>
+const DURATION = 60;
+let t = 0, playing = false, speed = 1, raf = null, lastFrame = 0;
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+const sheet = $('#sheet'), phone = $('#phone'), arrow = $('#arrow');
+const chat = $('#chat'), timeBadge = $('#time-badge'), archNote = $('#archive-notice');
+const dashboard = $('#dashboard'), caption = $('#caption-bar');
+const timeline = $('#timeline'), timeDisp = $('#time-display');
+const btnPlay = $('#btn-play'), icoPlay = $('#ico-play'), icoPause = $('#ico-pause');
+
+/* helpers */
+function fmt(sec){ return Math.floor(sec/60)+':'+String(Math.floor(sec%60)).padStart(2,'0') }
+function setCaption(html){ caption.innerHTML = html || '&nbsp;' }
+function setTimeBadge(txt){ timeBadge.textContent = txt; timeBadge.classList.toggle('show', !!txt) }
+function setPhoneContact(name, initial){
+  $('#ph-name').textContent = name;
+  $('#ph-avatar').textContent = initial;
+}
+function clearChat(){ chat.innerHTML = '' }
+function addMsg(text, type, tagClass, tagLabel){
+  const d = document.createElement('div');
+  d.className = 'msg '+(type==='out'?'msg-out':'msg-in');
+  let h = '';
+  if(tagLabel) h += '<div class="msg-tag '+tagClass+'">'+tagLabel+'</div>';
+  h += '<div>'+text+'</div><div class="msg-time">'+(type==='out'?'Enviada':'Recebida')+'</div>';
+  d.innerHTML = h;
+  chat.appendChild(d);
+  requestAnimationFrame(()=>{d.classList.add('show'); chat.scrollTop=chat.scrollHeight});
+  return d;
+}
+function setStatus(id, cls, text){
+  const el = $(id);
+  el.className = 'chip chip-'+cls;
+  el.textContent = text;
+}
+function hlRow(id, on){ $(id).classList.toggle('hl', on) }
+function resetAll(){
+  sheet.classList.remove('show'); phone.classList.remove('show');
+  arrow.classList.remove('show'); setTimeBadge('');
+  archNote.classList.remove('show'); dashboard.classList.remove('show');
+  $$('.dash-card').forEach(c=>c.classList.remove('show'));
+  $('#dash-sum').classList.remove('show');
+  clearChat();
+  setStatus('#s1','novo','novo'); setStatus('#s2','sem','sem resposta'); setStatus('#s3','frio','frio');
+  hlRow('#r1',false); hlRow('#r2',false); hlRow('#r3',false);
+  setCaption('');
+  document.getElementById('scene').style.opacity='1';
+}
+
+/* ---- SCENE KEYFRAMES ---- */
+const S = []; // sorted events
+function at(sec, fn){ S.push({t:sec,fn,done:false}) }
+
+// Scene 1: Spreadsheet appears (0-5s)
+at(0.3, ()=>{ sheet.classList.add('show'); setCaption('Planilha com <span>3 leads</span> aguardando follow-up') });
+at(1.5, ()=>{ phone.classList.add('show') });
+
+// Scene 2: Ana Lima M1 (5-12s)
+at(5, ()=>{ hlRow('#r1',true); setCaption('Lead <span>Ana Lima</span> selecionada para follow-up') });
+at(6, ()=>{ arrow.classList.add('show'); setPhoneContact('Ana Lima','A') });
+at(7, ()=>{
+  arrow.classList.remove('show');
+  addMsg('Oi Ana! Vi que voc\u00EA se interessou pelo nosso servi\u00E7o de consultoria. Posso te ajudar com alguma d\u00FAvida?','out','tag-m1','Mensagem 1 \u2014 Imediata');
+  setCaption('<span>Mensagem 1</span> enviada — contato imediato com o lead')
+});
+
+// Scene 3: 24h depois, M2 (12-18s)
+at(12, ()=>{ setTimeBadge('24h depois'); setCaption('Sem resposta ap\u00F3s 24h \u2014 segundo follow-up autom\u00E1tico') });
+at(13, ()=>{ setStatus('#s1','sem','sem resposta') });
+at(14, ()=>{
+  addMsg('Ana, passando para lembrar que temos uma condi\u00E7\u00E3o especial para quem agenda esta semana. Posso te mandar os detalhes?','out','tag-m2','Mensagem 2 \u2014 24h');
+  setCaption('<span>Mensagem 2</span> enviada — lembrete com oferta especial')
+});
+
+// Scene 4: Ana replies (18-24s)
+at(18, ()=>{ setTimeBadge('') });
+at(18.5, ()=>{
+  addMsg('Oi! Desculpa, estava correndo. Pode mandar sim!','in');
+  setCaption('Ana <span>respondeu</span>! Lead recuperado com sucesso')
+});
+at(19.5, ()=>{ setStatus('#s1','respondeu','respondeu'); hlRow('#r1',false) });
+
+// Scene 5: Carlos Silva M3 72h (24-32s)
+at(24, ()=>{
+  clearChat(); setPhoneContact('Carlos Silva','C');
+  hlRow('#r2',true);
+  setCaption('Lead <span>Carlos Silva</span> \u2014 sem resposta em 2 tentativas');
+  setTimeBadge('72h depois');
+});
+at(26, ()=>{
+  addMsg('Carlos, \u00FAltima mensagem! Reservei um hor\u00E1rio na minha agenda caso queira conversar. Sem compromisso.\nLink: calendly.com/consultoria','out','tag-m3','Mensagem 3 \u2014 72h');
+  setCaption('<span>Mensagem 3</span> \u2014 \u00FAltima tentativa com link de agendamento')
+});
+
+// Scene 6: Carlos replies (32-38s)
+at(32, ()=>{ setTimeBadge('') });
+at(33, ()=>{
+  addMsg('Vou agendar, obrigado pela persist\u00EAncia!','in');
+  setCaption('Carlos <span>agendou</span>! Recuperado na 3a tentativa')
+});
+at(34.5, ()=>{ setStatus('#s2','agendou','agendou'); hlRow('#r2',false) });
+
+// Scene 7: Julia — no reply (38-45s)
+at(38, ()=>{
+  clearChat(); setPhoneContact('Julia Martins','J');
+  hlRow('#r3',true);
+  setCaption('Lead <span>Julia Martins</span> \u2014 processando 3 tentativas');
+});
+at(39, ()=>{ addMsg('Oi Julia! Vi que voc\u00EA se interessou...','out','tag-m1','M1 \u2014 Imediata') });
+at(40, ()=>{ setTimeBadge('24h depois'); addMsg('Julia, passando para lembrar...','out','tag-m2','M2 \u2014 24h') });
+at(41.5, ()=>{ setTimeBadge('72h depois'); addMsg('Julia, \u00FAltima mensagem...','out','tag-m3','M3 \u2014 72h') });
+at(43, ()=>{
+  setTimeBadge(''); setStatus('#s3','encerrado','encerrado'); hlRow('#r3',false);
+  archNote.classList.add('show');
+  setCaption('<span>3 tentativas</span> sem resposta \u2014 lead arquivado automaticamente')
+});
+
+// Scene 8: Dashboard (45-55s)
+at(45, ()=>{
+  archNote.classList.remove('show');
+  document.getElementById('scene').style.opacity='0';
+  dashboard.classList.add('show');
+  setCaption('Resumo dos <span>resultados</span> do follow-up automatizado');
+});
+at(46, ()=>$('#dc1').classList.add('show'));
+at(46.5, ()=>$('#dc2').classList.add('show'));
+at(47, ()=>$('#dc3').classList.add('show'));
+at(47.5, ()=>$('#dc4').classList.add('show'));
+at(49, ()=>$('#dash-sum').classList.add('show'));
+
+// Scene 9: Summary (55-60s)
+at(55, ()=>{ setCaption('<span>Kit Follow-up de Leads</span> \u2014 recupere at\u00E9 67% dos leads com automa\u00E7\u00E3o em 3 etapas') });
+
+/* ---- ENGINE ---- */
+function runFrame(ts){
+  if(!playing){ raf=null; return }
+  if(!lastFrame) lastFrame = ts;
+  const dt = (ts - lastFrame) / 1000 * speed;
+  lastFrame = ts;
+  t = Math.min(t + dt, DURATION);
+  timeline.value = Math.round(t * 10);
+  timeDisp.textContent = fmt(t)+' / '+fmt(DURATION);
+  S.forEach(e=>{ if(!e.done && t >= e.t){ e.done=true; e.fn() } });
+  if(t >= DURATION){ pause(); setTimeout(()=>{ restart() }, 2000) }
+  else raf = requestAnimationFrame(runFrame);
+}
+function play(){ playing=true; lastFrame=0; icoPlay.style.display='none'; icoPause.style.display=''; raf=requestAnimationFrame(runFrame) }
+function pause(){ playing=false; icoPlay.style.display=''; icoPause.style.display='none'; if(raf){cancelAnimationFrame(raf);raf=null} }
+function restart(){ pause(); t=0; S.forEach(e=>e.done=false); resetAll(); timeline.value=0; timeDisp.textContent='0:00 / '+fmt(DURATION); play() }
+function seekTo(sec){
+  const wasPlaying = playing; pause(); t=0; S.forEach(e=>e.done=false); resetAll();
+  S.forEach(e=>{ if(e.t <= sec){ e.done=true; e.fn() } });
+  t=sec; timeline.value=Math.round(t*10); timeDisp.textContent=fmt(t)+' / '+fmt(DURATION);
+  if(wasPlaying) play();
+}
+
+btnPlay.onclick = ()=> playing ? pause() : play();
+$('#btn-restart').onclick = restart;
+timeline.addEventListener('input', ()=> seekTo(parseFloat(timeline.value)/10));
+$$('[data-speed]').forEach(b=>{
+  b.onclick=()=>{ speed=parseInt(b.dataset.speed); $$('[data-speed]').forEach(x=>x.classList.remove('active')); b.classList.add('active') }
+});
+
+// Auto-play on load
+resetAll();
+setTimeout(play, 400);
+</script>
+</body>
+</html>
