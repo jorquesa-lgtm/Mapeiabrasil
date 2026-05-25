@@ -163,15 +163,15 @@ export default function CopilotDrawer({ context }: CopilotDrawerProps) {
       </button>
 
       {/* ── Drawer ── */}
-      <div style={{
+      <div data-copilot-shell={open ? "open" : undefined} style={{
         position: "fixed", top: 0, right: 0, bottom: 0, zIndex: 950,
         width: open ? 420 : 0, maxWidth: "100vw",
         transition: "width .3s cubic-bezier(.4,0,.2,1)",
         overflow: "hidden",
         boxShadow: open ? "-8px 0 48px rgba(0,0,0,.5)" : "none",
       }}>
-        <div style={{
-          width: 420, height: "100%",
+        <div data-copilot-drawer style={{
+          width: 420, maxWidth: "100vw", height: "100%",
           background: "#060e1c", borderLeft: "1px solid #1a3050",
           display: "flex", flexDirection: "column",
           fontFamily: "'DM Sans', sans-serif",
@@ -391,7 +391,7 @@ export default function CopilotDrawer({ context }: CopilotDrawerProps) {
       <style>{`
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.15)} }
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @media(max-width:480px){ [data-copilot-drawer]{ width:100vw!important; } }
+        @media(max-width:480px){ [data-copilot-drawer]{ width:100vw!important; } [data-copilot-shell]{ width:100vw!important; } }
       `}</style>
     </>
   );

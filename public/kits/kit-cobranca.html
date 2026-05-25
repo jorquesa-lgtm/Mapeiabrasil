@@ -25,7 +25,7 @@
   --shadow-md: 0 4px 12px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04);
 }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; line-height: 1.6; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; line-height: 1.6; overflow-x:hidden; }
 
   nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; border-bottom: 1px solid var(--border); }
   .logo { font-size: 18px; font-weight: 700; color:var(--text); text-decoration: none; }
@@ -132,6 +132,8 @@
   .demo-ts-grid{
     grid-template-columns:repeat(2,1fr)!important; /* 2x2 on very small screens */
   }
+  .pix-table{table-layout:fixed;width:100%;}
+  .pix-table td,.pix-table th{word-break:break-word;overflow-wrap:anywhere;font-size:11px!important;padding:8px 6px!important;}
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">

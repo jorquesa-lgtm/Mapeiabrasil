@@ -70,6 +70,16 @@ export default function DashboardPage({ user }: { user: User }) {
   const [activeTab, setActiveTab] = useState<"relatorios" | "metas" | "playbooks">("relatorios");
   const [viewingReport, setViewingReport] = useState<ReportItem | null>(null);
 
+  // Track mobile viewport so layouts that use fixed two-column grids can stack.
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   async function loadData(showRefresh = false) {
     if (showRefresh) setRefreshing(true);
     else setLoading(true);
@@ -327,7 +337,7 @@ export default function DashboardPage({ user }: { user: User }) {
         ) : reports.length === 0 ? (
           <EmptyState />
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: 20, alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "280px 1fr", gap: 20, alignItems: "start" }}>
             {/* Report list */}
             <div style={{ background: "#0d1d35", border: "1px solid #1e3a5f", borderRadius: 14, overflow: "hidden" }}>
               <div style={{ padding: "16px 20px", borderBottom: "1px solid #1e3a5f", fontSize: 11, fontWeight: 700, color: "#4a6fa0", letterSpacing: ".1em", textTransform: "uppercase" }}>
