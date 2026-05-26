@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — MapeIA Brasil | Automação e IA para PMEs</title>
+<meta name="description" content="Guias práticos de automação e inteligência artificial para pequenas e médias empresas brasileiras. Aprenda a recuperar tempo e dinheiro no seu negócio.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://mapeaibrasil.com/blog/">
+<meta name="theme-color" content="#0077cc">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MapeIA Brasil">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://mapeaibrasil.com/blog/">
+<meta property="og:title" content="Blog — MapeIA Brasil | Automação e IA para PMEs">
+<meta property="og:description" content="Guias práticos de automação e IA para PMEs brasileiras. Recupere tempo e dinheiro no seu negócio.">
+<meta property="og:image" content="https://mapeaibrasil.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog — MapeIA Brasil">
+<meta name="twitter:description" content="Guias práticos de automação e IA para PMEs brasileiras.">
+<meta name="twitter:image" content="https://mapeaibrasil.com/og-image.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#fbfbfd; --surface:#ffffff; --subtle:#f5f5f7;
+  --text:#1d1d1f; --muted:#6e6e73; --border:#e8e8ed;
+  --accent:#0077cc; --accent-dark:#005fa3;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06); --shadow-md:0 8px 32px rgba(0,0,0,.08);
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+
+/* Nav */
+nav{position:sticky;top:0;z-index:100;background:rgba(251,251,253,.85);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 24px;}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px;}
+.nav-logo span.ia{color:var(--accent);}
+.nav-back{font-size:14px;color:var(--muted);transition:color .2s;}
+.nav-back:hover{color:var(--accent);}
+
+/* Header */
+.blog-header{max-width:760px;margin:0 auto;padding:72px 24px 40px;text-align:center;}
+.blog-eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.blog-header h1{font-family:'Instrument Serif',serif;font-size:clamp(34px,6vw,52px);font-weight:400;line-height:1.1;margin-bottom:16px;}
+.blog-header p{font-size:18px;color:var(--muted);max-width:540px;margin:0 auto;}
+
+/* Article grid */
+.posts{max-width:1000px;margin:0 auto;padding:20px 24px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:28px;}
+.post-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;}
+.post-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.post-thumb{height:160px;background:linear-gradient(135deg,#0077cc,#00b8d4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;}
+.post-body{padding:24px;display:flex;flex-direction:column;flex:1;}
+.post-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.post-card h2{font-size:20px;font-weight:700;line-height:1.3;margin-bottom:10px;}
+.post-card p{font-size:14px;color:var(--muted);flex:1;margin-bottom:16px;}
+.post-meta{font-size:13px;color:var(--accent);font-weight:600;}
+
+/* CTA band */
+.blog-cta{max-width:1000px;margin:0 auto 80px;padding:0 24px;}
+.blog-cta-inner{background:linear-gradient(135deg,#0077cc,#005fa3);border-radius:20px;padding:48px 32px;text-align:center;color:#fff;}
+.blog-cta-inner h3{font-family:'Instrument Serif',serif;font-size:30px;font-weight:400;margin-bottom:10px;}
+.blog-cta-inner p{font-size:16px;opacity:.9;margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto;}
+.blog-cta-btn{display:inline-block;background:#fff;color:var(--accent);font-weight:700;padding:14px 32px;border-radius:980px;font-size:16px;transition:transform .2s;}
+.blog-cta-btn:hover{transform:translateY(-2px);}
+
+footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;color:var(--muted);font-size:13px;}
+footer a{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Mape<span class="ia">IA</span></a>
+    <a href="/" class="nav-back">← Voltar ao site</a>
+  </div>
+</nav>
+
+<header class="blog-header">
+  <span class="blog-eyebrow">Blog MapeIA</span>
+  <h1>Automação e IA, em português de negócio.</h1>
+  <p>Guias práticos para donos de PME que querem recuperar tempo e dinheiro — sem jargão técnico.</p>
+</header>
+
+<main class="posts">
+
+  <!-- POST 1 -->
+  <a href="/blog/automatizar-atendimento-whatsapp.html" class="post-card">
+    <div class="post-thumb">💬</div>
+    <div class="post-body">
+      <span class="post-tag">Atendimento</span>
+      <h2>Como automatizar o atendimento no WhatsApp da sua empresa</h2>
+      <p>Você responde a mesma pergunta 20 vezes por dia? Veja como um atendente de IA resolve isso 24h, sem perder o toque humano.</p>
+      <span class="post-meta">Ler artigo →</span>
+    </div>
+  </a>
+
+  <!-- Future posts go here, same structure -->
+
+</main>
+
+<section class="blog-cta">
+  <div class="blog-cta-inner">
+    <h3>Onde sua empresa perde tempo e dinheiro?</h3>
+    <p>Descubra em ~10 minutos com o diagnóstico gratuito de fazer. Score, quick wins e um plano de ação 30/60/90.</p>
+    <a href="/diagnostico.html" class="blog-cta-btn">Fazer diagnóstico gratuito</a>
+  </div>
+</section>
+
+<footer>
+  © MapeIA Brasil · <a href="/">mapeaibrasil.com</a> · <a href="https://www.linkedin.com/company/mapeiabrasil" target="_blank" rel="noopener">LinkedIn</a>
+</footer>
+
+</body>
+</html>
