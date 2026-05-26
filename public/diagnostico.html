@@ -394,7 +394,7 @@
           <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal2);">Diagnóstico completo</div>
           <div style="font-family:'Instrument Serif',serif;font-size:24px;color:var(--heading);line-height:1.2;">Responda 33 perguntas. Receba seu plano de ação.</div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
-            <li style="font-size:13px;color:var(--secondary);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Score de maturidade + radar das 7 áreas</li>
+            <li style="font-size:13px;color:var(--secondary);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Score de maturidade + radar das 6 áreas</li>
             <li style="font-size:13px;color:var(--secondary);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 3 quick wins priorizados por ROI</li>
             <li style="font-size:13px;color:var(--secondary);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Roadmap 30/60/90 executável</li>
             <li style="font-size:13px;color:var(--secondary);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Auditoria do seu processo crítico</li>
@@ -476,7 +476,7 @@
       <div style="background:linear-gradient(145deg,rgba(0,119,204,.04),rgba(10,138,122,.04));border:1px solid rgba(10,138,122,.2);border-radius:16px;padding:26px 24px;text-align:left;box-shadow:var(--shadow-md);max-width:420px;margin:0 auto;">
         <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal2);margin-bottom:6px;">O que você desbloqueia</div>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin:12px 0 18px;">
-          <li style="font-size:13.5px;color:var(--secondary);display:flex;align-items:center;gap:9px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Score de maturidade + radar das 7 áreas</li>
+          <li style="font-size:13.5px;color:var(--secondary);display:flex;align-items:center;gap:9px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Score de maturidade + radar das 6 áreas</li>
           <li style="font-size:13.5px;color:var(--secondary);display:flex;align-items:center;gap:9px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 3 quick wins priorizados por ROI</li>
           <li style="font-size:13.5px;color:var(--secondary);display:flex;align-items:center;gap:9px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Roadmap 30/60/90 executável</li>
           <li style="font-size:13.5px;color:var(--secondary);display:flex;align-items:center;gap:9px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Auditoria do seu processo crítico</li>
@@ -984,7 +984,7 @@ const QUESTIONS = [
       { v: 75,  label: 'Follow-up automatizado por e-mail ou WhatsApp' },
       { v: 100, label: 'Cadência multi-canal automática com IA personalizando mensagens' },
     ]},
-  { id: 'leadership', block: 5, area: 'leadership',
+  { id: 'leadership', block: 5, area: 'ai',
     title: 'Qual é o nível de envolvimento da liderança em decisões de tecnologia e IA?',
     options: [
       { v: 0,   label: 'Não há discussão sobre isso na empresa' },
@@ -1205,7 +1205,6 @@ const AREA_LABELS = {
   data: 'Dados',
   sales: 'Vendas',
   service: 'Atendimento',
-  leadership: 'Liderança',
 };
 
 // Quick wins catalog - pick by weakest area and budget
