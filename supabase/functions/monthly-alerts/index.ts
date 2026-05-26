@@ -199,7 +199,7 @@ function buildRediagEmail(data: {
   <!-- Footer -->
   <div style="text-align:center;font-size:11px;color:#4a6fa0;line-height:2;">
     MapeIA Brasil &mdash; mapeia.com.br<br>
-    Voce recebe este email por ser assinante do plano <strong style="color:#00e5c8;">Evolucao</strong>.<br>
+    Voce recebe este email por ter um <strong style="color:#00e5c8;">kit de automacao ativo</strong> na MapeIA.<br>
     Duvidas? <a href="mailto:contato@mapeia.com.br" style="color:#4a6fa0;text-decoration:underline;">contato@mapeia.com.br</a>
   </div>
 
@@ -242,11 +242,11 @@ Deno.serve(async (req: Request) => {
     const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     const monthLabel = now.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
 
-    // Fetch active Evolucao subscribers
+    // Fetch active kit subscribers (re-diagnostic is included with any kit)
     const { data: subs, error: subsErr } = await supabase
       .from("subscriptions")
       .select("user_id, plan, status")
-      .eq("plan", "subscription")
+      .like("plan", "kit_%")
       .eq("status", "active");
 
     if (subsErr) {

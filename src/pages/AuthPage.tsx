@@ -85,7 +85,7 @@ export default function AuthPage() {
   const modeSub = {
     magic: "Informe seu e-mail e enviaremos um link seguro para acessar seus relatórios.",
     login: "Acesse seus relatórios e histórico de diagnósticos.",
-    register: "Crie sua conta para acessar o painel Evolução.",
+    register: "Crie sua conta para acessar seu painel.",
     forgot: "Informe seu e-mail para receber o link de recuperação.",
   }[mode];
 

@@ -245,7 +245,10 @@ export default function DashboardPage({ user }: { user: User }) {
     if (selectedReport) setViewingReport(selectedReport);
   }
 
-  const isEvolucao = subscription?.plan === "subscription" && subscription?.status === "active";
+  // A kit subscriber gets the re-diagnostic + tracking benefits (Option A:
+  // Evolução was folded into kits). hasKit is true with any active kit.
+  const hasKit = kitSubscriptions.length > 0;
+  const isEvolucao = hasKit || (subscription?.plan === "subscription" && subscription?.status === "active");
   const isPremium = !!subscription && subscription.status === "active";
 
   if (loading) {
@@ -286,7 +289,7 @@ export default function DashboardPage({ user }: { user: User }) {
           {isPremium && (
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: isEvolucao ? "rgba(0,229,200,.1)" : "rgba(26,127,240,.1)", border: `1px solid ${isEvolucao ? "rgba(0,229,200,.25)" : "rgba(26,127,240,.25)"}`, borderRadius: 99, padding: "4px 12px", fontSize: 11, fontWeight: 700, letterSpacing: ".1em", textTransform: "uppercase", color: isEvolucao ? "#00e5c8" : "#4da6ff" }}>
               <Star size={11} />
-              {isEvolucao ? "Evolução" : "Premium"}
+              {hasKit ? "Kit Ativo" : isEvolucao ? "Evolução" : "Premium"}
             </div>
           )}
           <span style={{ fontSize: 13, color: "#7a9ec8" }}>{profile?.name || user.email}</span>
@@ -312,7 +315,7 @@ export default function DashboardPage({ user }: { user: User }) {
 
         {/* Plan card + actions */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: 36 }}>
-          <PlanCard subscription={subscription} isPremium={isPremium} isEvolucao={isEvolucao} />
+          <PlanCard subscription={subscription} isPremium={isPremium} isEvolucao={isEvolucao} hasKit={hasKit} />
           <ActionCard onRefresh={() => loadData(true)} refreshing={refreshing} />
         </div>
 
@@ -520,8 +523,8 @@ export default function DashboardPage({ user }: { user: User }) {
 
 /* ─── Sub-components ─── */
 
-function PlanCard({ subscription, isPremium, isEvolucao }: { subscription: Subscription | null; isPremium: boolean; isEvolucao: boolean }) {
-  const label = isEvolucao ? "Evolução" : isPremium ? "Premium" : "Gratuito";
+function PlanCard({ subscription, isPremium, isEvolucao, hasKit }: { subscription: Subscription | null; isPremium: boolean; isEvolucao: boolean; hasKit: boolean }) {
+  const label = hasKit ? "Kit Ativo" : isEvolucao ? "Evolução" : isPremium ? "Premium" : "Gratuito";
   const color = isEvolucao ? "#00e5c8" : isPremium ? "#4da6ff" : "#7a9ec8";
   const periodEnd = subscription?.current_period_end
     ? new Date(subscription.current_period_end).toLocaleDateString("pt-BR")
@@ -1774,47 +1777,20 @@ function GoalsSection({ userId, latestReport }: { userId: string; latestReport: 
   );
 }
 
-function EvolucaoUpsell({ userEmail }: { userEmail: string }) {
-  const [loading, setLoading] = useState(false);
-
-  async function handleEvolucao() {
-    setLoading(true);
-    try {
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({
-          plan: "subscription",
-          email: userEmail,
-          success_url: `${window.location.origin}/obrigado.html`,
-          cancel_url: window.location.href,
-        }),
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch {
-      alert("Erro ao iniciar checkout. Tente novamente.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
+function EvolucaoUpsell({ userEmail: _userEmail }: { userEmail: string }) {
   return (
     <div style={{ marginTop: 40, background: "linear-gradient(135deg, #0d1d35 0%, #0a1628 100%)", border: "1px solid #1e3a5f", borderRadius: 16, padding: "32px 28px", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 60% at 90% 50%, rgba(0,229,200,.05) 0%, transparent 60%)", pointerEvents: "none" }} />
       <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
         <div>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,229,200,.1)", border: "1px solid rgba(0,229,200,.2)", borderRadius: 99, padding: "4px 12px", fontSize: 11, fontWeight: 700, letterSpacing: ".1em", textTransform: "uppercase", color: "#00e5c8", marginBottom: 12 }}>
-            <Star size={11} /> Plano Evolução
+            <Star size={11} /> Kits de Automação
           </div>
           <h3 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#f4f8ff", fontWeight: 400, marginBottom: 8 }}>
-            Desbloqueie o acompanhamento contínuo
+            Coloque seu plano de ação pra rodar
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 20px", marginBottom: 4 }}>
-            {["Auditoria de processos detalhada", "Gaps críticos identificados", "Histórico de evolução", "Relatórios ilimitados", "Suporte prioritário"].map(f => (
+            {["Automação implementada (não só o plano)", "Copiloto de IA que conhece seu diagnóstico", "Re-diagnóstico mensal incluído", "Acompanhamento de metas", "Cancele quando quiser"].map(f => (
               <div key={f} style={{ fontSize: 13, color: "#7a9ec8", display: "flex", alignItems: "center", gap: 5 }}>
                 <Check size={13} strokeWidth={2} style={{ color: "#00e5c8", flexShrink: 0 }} /> {f}
               </div>
@@ -1822,15 +1798,14 @@ function EvolucaoUpsell({ userEmail }: { userEmail: string }) {
           </div>
         </div>
         <div style={{ textAlign: "center", flexShrink: 0 }}>
-          <button
-            onClick={handleEvolucao}
-            disabled={loading}
+          <a
+            href="/kits/"
             className="btn-hover"
-            style={{ background: "linear-gradient(135deg,#1a7ff0,#00b8d4)", border: "none", borderRadius: 10, padding: "14px 28px", color: "#fff", fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.7 : 1, fontFamily: "inherit", transition: "all .2s", boxShadow: "0 10px 32px rgba(26,127,240,.3)", whiteSpace: "nowrap" }}
+            style={{ display: "inline-block", textDecoration: "none", background: "linear-gradient(135deg,#1a7ff0,#00b8d4)", border: "none", borderRadius: 10, padding: "14px 28px", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", transition: "all .2s", boxShadow: "0 10px 32px rgba(26,127,240,.3)", whiteSpace: "nowrap" }}
           >
-            {loading ? "Aguarde..." : "Assinar Evolução"}
-          </button>
-          <div style={{ fontSize: 12, color: "#4a6fa0", marginTop: 8 }}>Cancele quando quiser</div>
+            Ver os kits
+          </a>
+          <div style={{ fontSize: 12, color: "#4a6fa0", marginTop: 8 }}>a partir de R$199/mês</div>
         </div>
       </div>
     </div>
