@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Private / internal pages — do not index
+Disallow: /admin.html
+Disallow: /dev-test.html
+Disallow: /painel.html
+Disallow: /obrigado.html
+Disallow: /obrigado-premium.html
+
+# AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) are welcome —
+# being cited in AI answers is a growing organic channel.
+
+Sitemap: https://mapeaibrasil.com/sitemap.xml
