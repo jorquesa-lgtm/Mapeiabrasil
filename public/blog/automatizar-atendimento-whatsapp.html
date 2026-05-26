@@ -50,8 +50,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 a{color:var(--accent);}
 nav{position:sticky;top:0;z-index:100;background:rgba(251,251,253,.85);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--border);}
 .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 24px;}
-.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px;color:var(--text);text-decoration:none;}
-.nav-logo span.ia{color:var(--accent);}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.nav-logo img{height:32px;width:auto;display:block;}
 .nav-back{font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s;}
 .nav-back:hover{color:var(--accent);}
 
@@ -84,7 +84,9 @@ footer a{color:var(--accent);}
 
 <nav>
   <div class="nav-inner">
-    <a href="/" class="nav-logo">Mape<span class="ia">IA</span></a>
+    <a href="/" class="nav-logo">
+      <img src="/Gemini_Generated_Image_lbnbxrlbnbxrlbnb.png" alt="MapeIA Brasil">
+    </a>
     <a href="/blog/" class="nav-back">← Todos os artigos</a>
   </div>
 </nav>
