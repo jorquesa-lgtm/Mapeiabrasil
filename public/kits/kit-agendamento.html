@@ -346,6 +346,17 @@ Qualquer imprevisto, avisa aqui! Te esperamos 🙂</div>
         <div class="inc muted">Integração com app de agenda (não incluso)</div>
       </div>
       <a href="https://mapeaibrasil.com/#planos" class="btn-p">Adquirir por R$199</a>
+      <div style="text-align:center;margin:8px 0 4px;">
+        <button type="button" id="kitCodeToggle" style="background:none;border:none;color:#86868b;font-size:12px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-family:'DM Sans',sans-serif;">Tenho um código de acesso</button>
+      </div>
+      <div id="kitCodePanel" style="display:none;background:#f5f5f7;border:1px solid #e8e8ed;border-radius:10px;padding:14px;margin-bottom:8px;">
+        <label style="display:block;font-size:11px;color:#86868b;margin-bottom:6px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;">Código de acesso</label>
+        <div style="display:flex;gap:8px;">
+          <input id="kitCodeInput" type="text" autocomplete="off" spellcheck="false" placeholder="MAPEIA-KIT-XXXXX" style="flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;background:#fff;color:#1d1d1f;border:1px solid #e8e8ed;border-radius:8px;padding:9px 11px;text-transform:uppercase;letter-spacing:.04em;outline:none;">
+          <button type="button" id="kitCodeApply" style="background:linear-gradient(135deg,#0077cc,#0a60c0);color:#fff;border:none;padding:9px 14px;font-size:13px;font-weight:700;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;">Aplicar</button>
+        </div>
+        <p id="kitCodeMsg" style="font-size:12px;color:#86868b;margin-top:7px;min-height:16px;"></p>
+      </div>
       <a href="/kits/kit-cobranca.html" class="btn-s">Ver Kit Cobrança Amigável</a>
       <div class="divider"></div>
       <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;">O que você precisa</div>
@@ -394,6 +405,56 @@ Qualquer imprevisto, avisa aqui! Te esperamos 🙂</div>
         alert('Erro de conexão. Verifique sua internet e tente novamente.');
       }
     });
+  });
+})();
+
+// Access code redemption
+(function(){
+  var SUPABASE = 'https://isfnlejwanzizsrxhpii.supabase.co';
+  var ANON = 'sb_publishable_80fO4pk5-vQIyAh_DJywCQ_F-Y5eLP9';
+  var KIT_ID = 'kit3';
+  var toggle = document.getElementById('kitCodeToggle');
+  var panel  = document.getElementById('kitCodePanel');
+  var input  = document.getElementById('kitCodeInput');
+  var apply  = document.getElementById('kitCodeApply');
+  var msg    = document.getElementById('kitCodeMsg');
+  if(!toggle) return;
+  toggle.addEventListener('click', function(){
+    var open = panel.style.display !== 'none';
+    panel.style.display = open ? 'none' : 'block';
+    if(!open) setTimeout(function(){ input.focus(); }, 50);
+  });
+  input.addEventListener('input', function(){ this.value = this.value.toUpperCase(); });
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter') apply.click(); });
+  apply.addEventListener('click', async function(){
+    var code = (input.value || '').trim().toUpperCase();
+    if(!code) return;
+    apply.disabled = true;
+    msg.style.color = '#86868b';
+    msg.textContent = 'Validando código…';
+    try {
+      var r = await fetch(SUPABASE+'/functions/v1/redeem-kit-access-code', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},
+        body: JSON.stringify({code: code, kit: KIT_ID})
+      });
+      var d = await r.json();
+      if(d && d.ok) {
+        msg.style.color = '#0d9e8c';
+        msg.textContent = 'Código válido! Acessando o kit…';
+        apply.textContent = 'OK';
+        setTimeout(function(){ window.location.href = '/kits/obrigado.html?kit='+KIT_ID+'&via=code'; }, 800);
+      } else {
+        apply.disabled = false;
+        msg.style.color = '#d63031';
+        var errs = {not_found:'Código não encontrado.',inactive:'Código desativado.',expired:'Código expirado.',exhausted:'Código já utilizado.',wrong_scope:'Este código não é válido para kits.',lookup_failed:'Erro ao validar. Tente novamente.',unexpected:'Erro inesperado. Tente novamente.'};
+        msg.textContent = errs[d && d.error] || 'Código inválido.';
+      }
+    } catch(err){
+      apply.disabled = false;
+      msg.style.color = '#d63031';
+      msg.textContent = 'Erro de conexão. Tente novamente.';
+    }
   });
 })();
 </script>
