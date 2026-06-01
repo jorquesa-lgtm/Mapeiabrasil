@@ -269,7 +269,10 @@ Regras:
 - O process_audit deve ter 3 steps.
 - Nao use acentos, cedilhas ou caracteres especiais alem de pontuacao basica.
 - Escreva em portugues brasileiro sem acentos.
-- Retorne APENAS o JSON, nada mais.`;
+- Retorne APENAS o JSON, nada mais.
+- Se company_size estiver nas respostas, calibre todas as recomendacoes ao porte real: para 'solo' ou '2-5 pessoas', priorize ferramentas gratuitas ou de baixo custo; para '51-200' ou '200+', priorize integracao de sistemas e processos escalaveis.
+- Se tools_budget estiver nas respostas, NUNCA recomende ferramentas cujo custo mensal exceda esse orcamento; inclua a faixa de custo no campo tool_cost de quick_wins.
+- Mencione o porte e orcamento da empresa na level_description para mostrar que o diagnostico e personalizado.`;
 }
 
 Deno.serve(async (req: Request) => {
