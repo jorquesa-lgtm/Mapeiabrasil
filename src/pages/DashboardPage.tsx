@@ -476,7 +476,7 @@ export default function DashboardPage({ user }: { user: User }) {
               servicoaocliente@mapeiabrasil.com
             </a>
             <a
-              href="https://wa.me/5512996790859"
+              href="https://wa.me/5511922031943?text=Olá!%20Vim%20pelo%20site%20da%20MapeIA%20Brasil%20e%20gostaria%20de%20saber%20mais."
               target="_blank"
               rel="noopener"
               style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#0d1d35", border: "1px solid #1e3a5f", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 600, color: "#c8daf0", textDecoration: "none", transition: "all .2s" }}
