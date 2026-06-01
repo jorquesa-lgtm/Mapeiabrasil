@@ -67,6 +67,7 @@ export default function DashboardPage({ user }: { user: User }) {
   const [selectedReport, setSelectedReport] = useState<ReportItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [kitSubscriptions, setKitSubscriptions] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<"relatorios" | "metas" | "playbooks">("relatorios");
   const [viewingReport, setViewingReport] = useState<ReportItem | null>(null);
 
