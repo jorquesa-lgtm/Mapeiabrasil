@@ -1,4 +1,6 @@
-// TODO: add auth gate
+// src/pages/AdminAtivar.tsx — auth-gated (requires is_admin())
+// Also benefits from the new Supabase policy: admins now see ALL activations,
+// not just their own (run the admin_fixes_and_indexes migration first).
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -34,12 +36,24 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default function AdminAtivar() {
+  const [authPhase, setAuthPhase] = useState<"loading" | "ok" | "denied">("loading");
   const [tab, setTab] = useState<Tab>("ativacoes");
   const [activations, setActivations] = useState<Activation[]>([]);
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // ── Auth gate ─────────────────────────────────────────────────────────────
   useEffect(() => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session) { setAuthPhase("denied"); return; }
+      const { data: isAdmin } = await supabase.rpc("is_admin");
+      setAuthPhase(isAdmin ? "ok" : "denied");
+    });
+  }, []);
+
+  // ── Data loading (only when authenticated as admin) ───────────────────────
+  useEffect(() => {
+    if (authPhase !== "ok") return;
     async function load() {
       setLoading(true);
       const [actRes, waitRes] = await Promise.all([
@@ -54,7 +68,6 @@ export default function AdminAtivar() {
 
       setActivations((actRes.data as Activation[]) || []);
 
-      // Group waitlist by tool_id
       const grouped: Record<string, WaitlistEntry> = {};
       ((waitRes.data as { tool_id: string; tool_name: string }[]) || []).forEach((row) => {
         if (!grouped[row.tool_id]) {
@@ -63,12 +76,32 @@ export default function AdminAtivar() {
         grouped[row.tool_id].count++;
       });
       setWaitlist(Object.values(grouped).sort((a, b) => b.count - a.count));
-
       setLoading(false);
     }
     load();
-  }, []);
+  }, [authPhase]);
 
+  // ── Auth screens ──────────────────────────────────────────────────────────
+  if (authPhase === "loading") {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#040812" }}>
+        <div style={{ width: 40, height: 40, border: "2px solid #1e3a5f", borderTopColor: "#00e5c8", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      </div>
+    );
+  }
+
+  if (authPhase === "denied") {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#040812", color: "#f4f8ff", fontFamily: "system-ui, sans-serif", gap: 12, textAlign: "center", padding: 24 }}>
+        <div style={{ fontSize: 22, fontWeight: 700 }}>Acesso restrito</div>
+        <div style={{ color: "#7a9ec8", fontSize: 14 }}>Esta área é reservada a administradores.</div>
+        <a href="/" style={{ marginTop: 8, background: "#1a7ff0", color: "#fff", padding: "10px 22px", borderRadius: 980, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>Ir para o login</a>
+      </div>
+    );
+  }
+
+  // ── Admin UI ──────────────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: "100vh", background: "#040812", fontFamily: "'DM Sans', sans-serif", color: "#c8daf0" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}`}</style>
@@ -79,7 +112,15 @@ export default function AdminAtivar() {
           MapeIA <span style={{ color: "#00e5c8" }}>Brasil</span>
           <span style={{ marginLeft: 12, fontSize: 13, color: "#4a6fa0", fontFamily: "DM Sans, sans-serif" }}>/ Admin Ativar</span>
         </div>
-        <a href="/" style={{ fontSize: 13, color: "#4a6fa0", textDecoration: "none" }}>← Voltar ao app</a>
+        <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+          <a href="/admin" style={{ fontSize: 13, color: "#7a9ec8", textDecoration: "none" }}>← Leads & Handoffs</a>
+          <button
+            onClick={() => supabase.auth.signOut().then(() => (window.location.href = "/"))}
+            style={{ background: "none", border: "1px solid #1e3a5f", color: "#7a9ec8", padding: "6px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontFamily: "inherit" }}
+          >
+            Sair
+          </button>
+        </div>
       </nav>
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px 80px" }}>
