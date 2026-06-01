@@ -85,8 +85,19 @@
   .pd.done{background:rgba(0,119,204,.4);}
   .pd.active{background:var(--accent);transform:scaleY(1.4);}
 
-  /* Question card */
-  .qcard{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;box-shadow:var(--shadow-lg);}
+  /* Question card — nav row pinned at bottom, content scrolls inside */
+  .qcard{
+    background:var(--surface);border:1px solid var(--border);border-radius:20px;
+    box-shadow:var(--shadow-lg);
+    display:flex;flex-direction:column;
+    /* Fill remaining viewport after topnav (~65px) + shell top padding (~56px) + progress bar (~90px) + shell bottom padding */
+    max-height:calc(100vh - 65px - 56px - 90px - 40px);
+    min-height:360px;
+  }
+  .qcard-body{flex:1;overflow-y:auto;padding:40px 40px 24px;-webkit-overflow-scrolling:touch;}
+  .qcard-body::-webkit-scrollbar{width:4px;}
+  .qcard-body::-webkit-scrollbar-track{background:transparent;}
+  .qcard-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
   .qtag{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
   .qtitle{font-family:'Instrument Serif',serif;font-size:28px;color:var(--heading);line-height:1.25;margin-bottom:10px;font-weight:400;}
   .qhint{font-size:14px;color:var(--muted);font-style:italic;margin-bottom:24px;line-height:1.5;}
@@ -100,7 +111,7 @@
   .opt.sel .odot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--accent);animation:dotAppear .2s var(--ease-spring);}
   @keyframes dotAppear{from{transform:scale(0)}to{transform:scale(1)}}
 
-  .navbtns{display:flex;gap:12px;margin-top:32px;}
+  .navbtns{display:flex;gap:12px;flex-shrink:0;padding:20px 40px;border-top:1px solid var(--border);background:var(--surface);border-radius:0 0 20px 20px;}
   .nbtn{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:12px 24px;border-radius:980px;border:none;cursor:pointer;transition:transform .15s var(--ease-spring),box-shadow .15s var(--ease-spring),background .15s,color .15s,opacity .15s;}
   .nbtn.back{background:transparent;border:1px solid var(--line);color:var(--secondary);}
   .nbtn.back:hover{border-color:var(--muted);color:var(--heading);transform:translateY(-1px);}
@@ -363,13 +374,17 @@
 
   @media (max-width:1024px) and (min-width:641px){
     .shell{padding:40px 24px 60px;}
-    .qcard{padding:32px 28px;}
+    .qcard{max-height:calc(100vh - 60px - 40px - 85px - 40px);}
+    .qcard-body{padding:32px 28px 20px;}
+    .navbtns{padding:16px 28px;}
     .qtitle{font-size:26px;}
   }
   @media (max-width:640px){
     .topnav{padding:14px 20px;}
     .shell{padding:28px 16px 60px;}
-    .qcard{padding:24px 20px;border-radius:16px;}
+    .qcard{border-radius:16px;max-height:calc(100vh - 56px - 28px - 80px - 28px);}
+    .qcard-body{padding:24px 20px 16px;}
+    .navbtns{padding:14px 20px;border-radius:0 0 16px 16px;}
     .qtitle{font-size:22px;}
     .gate-card{padding:24px 20px;border-radius:16px;}
     .res-hdr{padding:22px;flex-direction:column;text-align:center;gap:16px;}
@@ -453,10 +468,12 @@
       <div class="progress-dots" id="pgDots"></div>
     </div>
     <div class="qcard">
-      <div class="qtag" id="qTag"></div>
-      <h2 class="qtitle" id="qTitle"></h2>
-      <p class="qhint" id="qHint"></p>
-      <div class="opts" id="qOpts"></div>
+      <div class="qcard-body">
+        <div class="qtag" id="qTag"></div>
+        <h2 class="qtitle" id="qTitle"></h2>
+        <p class="qhint" id="qHint"></p>
+        <div class="opts" id="qOpts"></div>
+      </div>
       <div class="navbtns">
         <button type="button" class="nbtn back" id="backBtn">&larr; Voltar</button>
         <button type="button" class="nbtn fwd" id="fwdBtn" disabled>Próxima &rarr;</button>
