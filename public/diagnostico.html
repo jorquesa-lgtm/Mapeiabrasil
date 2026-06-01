@@ -865,6 +865,22 @@ const QUESTIONS = [
       { v: 'consolidacao', label: 'Consolidação — operação madura, focando em eficiência' },
       { v: 'escala', label: 'Escala — múltiplas unidades/produtos, alta complexidade' },
     ]},
+  { id: 'company_size', block: 0, area: null,
+    title: 'Quantas pessoas trabalham na sua empresa hoje (incluindo você)?',
+    hint: 'Calibra benchmarks, recomendações de ferramentas e cálculo de ROI',
+    options: [
+      { v: 'solo', label: 'Só eu (solo)' }, { v: '2-5', label: '2 a 5 pessoas' },
+      { v: '6-20', label: '6 a 20 pessoas' }, { v: '21-50', label: '21 a 50 pessoas' },
+      { v: '51-200', label: '51 a 200 pessoas' }, { v: '200+', label: 'Mais de 200 pessoas' },
+    ]},
+  { id: 'tools_budget', block: 0, area: null,
+    title: 'Quanto a empresa pode investir por mês em novas ferramentas de automação/IA?',
+    hint: 'Define quais ferramentas e qual roadmap cabem no seu orçamento',
+    options: [
+      { v: 'ate_100', label: 'Até R$100/mês' }, { v: '100-300', label: 'R$100 a R$300/mês' },
+      { v: '300-1000', label: 'R$300 a R$1.000/mês' }, { v: '1000+', label: 'Mais de R$1.000/mês' },
+      { v: 'indefinido', label: 'Ainda não sei' },
+    ]},
 
   // Block 1 — Infraestrutura & Ferramentas (3)
   { id: 'finance', block: 1, area: 'infra',
