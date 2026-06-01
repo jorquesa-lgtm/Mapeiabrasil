@@ -475,7 +475,12 @@
         <div class="lstep" id="lstepSite"><div class="ldot"></div> Pesquisando sua empresa na internet</div>
         <div class="lstep"><div class="ldot"></div> Identificando gaps críticos no seu setor</div>
         <div class="lstep"><div class="ldot"></div> Selecionando o quick win de maior impacto</div>
-        <div class="lstep"><div class="ldot"></div> Montando seu relatório personalizado</div>
+        <div class="lstep" id="lstepFinal"><div class="ldot"></div> Montando seu relatório personalizado</div>
+      </div>
+      <p id="lstepWait" style="display:none;margin-top:20px;font-size:13px;color:var(--secondary);text-align:center;opacity:.8;">Quase pronto, finalizando seu relatório…</p>
+      <div id="lstepTimeout" style="display:none;margin-top:24px;text-align:center;">
+        <p style="font-size:14px;color:var(--secondary);margin-bottom:14px;">Isso está demorando mais que o esperado.<br>Pode tentar novamente sem perder suas respostas.</p>
+        <button onclick="location.reload()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;">Tentar novamente</button>
       </div>
     </div>
   </section>
@@ -1764,12 +1769,25 @@ async function submitFinalStep(skip){
   let aiStarted = false;
   let aiPromise;
 
+  const lastIdx = visibleSteps.length - 1;
+
   const advanceStep = () => {
+    // Never mark the last step as done — it stays 'on' until AI returns
+    if (stepIdx >= lastIdx) return;
     visibleSteps[stepIdx].classList.remove('on');
     visibleSteps[stepIdx].classList.add('done');
     stepIdx++;
     if (stepIdx < visibleSteps.length) visibleSteps[stepIdx].classList.add('on');
   };
+
+  const lstepWait = document.getElementById('lstepWait');
+  const lstepTimeout = document.getElementById('lstepTimeout');
+
+  // 45-second hard timeout
+  const timeoutHandle = setTimeout(() => {
+    if (lstepWait) lstepWait.style.display = 'none';
+    if (lstepTimeout) lstepTimeout.style.display = 'block';
+  }, 45000);
 
   const tick = setInterval(async () => {
     // On first site step completion, kick off scrape result
@@ -1781,18 +1799,23 @@ async function submitFinalStep(skip){
       // Wait for scrape, then run AI
       const intel = await scrapePromise;
       state.companyIntel = intel;
-      if (lstepSite && intel) {
-        // mark site step done if visible
-      }
       aiPromise = callAI();
     } else {
       advanceStep();
     }
 
-    if (stepIdx >= visibleSteps.length) {
+    // All steps before the last are done — show reassurance while waiting for AI
+    if (stepIdx >= lastIdx) {
       clearInterval(tick);
       if (!aiPromise) aiPromise = callAI();
+      // Show reassurance message while AI is still running
+      if (lstepWait) lstepWait.style.display = 'block';
       const data = await aiPromise;
+      clearTimeout(timeoutHandle);
+      if (lstepWait) lstepWait.style.display = 'none';
+      // Now mark the last step done
+      visibleSteps[lastIdx].classList.remove('on');
+      visibleSteps[lastIdx].classList.add('done');
       state.aiData = data;
       await saveFullDiagnostic(whatsapp, company);
     }
