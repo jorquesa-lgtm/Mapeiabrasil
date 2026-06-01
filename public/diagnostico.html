@@ -1907,8 +1907,9 @@ async function saveFullDiagnostic(whatsapp, company){
     renderResult();
     showScreen('result');
   } else {
-    // Not paid yet — show the paywall (no score revealed)
-    showPaywall();
+    // Free tier — reveal score + Quick Win #1; detailed sections stay locked + R$499 upsell
+    renderResult();
+    showScreen('result');
   }
 }
 
