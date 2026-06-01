@@ -1384,19 +1384,12 @@ function activePremiumQuestions(){
 // For premium: base 18 + all 15 premium questions always included
 // (triggers evaluated after answers are collected, not at build time)
 function buildActiveQuestions(){
-  const base = QUESTIONS.filter(q => !q.premiumOnly);
-  if (!state.isPremium) return base;
-  const premium = QUESTIONS.filter(q => q.premiumOnly);
-  return [...base, ...premium];
+  return [...QUESTIONS.filter(q => !q.premiumOnly), ...QUESTIONS.filter(q => q.premiumOnly)];
 }
 
-// After completing the 18 base questions, prune premium questions whose
-// triggers are not met. Called once when transitioning from base to premium block.
 function prunePremiumQuestions(){
-  if (!state.isPremium) return;
-  const base = QUESTIONS.filter(q => !q.premiumOnly);
-  const triggered = activePremiumQuestions();
-  ACTIVE_QUESTIONS = [...base, ...triggered];
+  // All-premium: every deep-dive question is always included (no trigger pruning).
+  ACTIVE_QUESTIONS = [...QUESTIONS.filter(q => !q.premiumOnly), ...QUESTIONS.filter(q => q.premiumOnly)];
   rebuildDots();
 }
 
