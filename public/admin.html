@@ -4,110 +4,184 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MapeIA — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-:root {
-  --ink: #040812;
-  --panel: #0d1d35;
-  --card: #102240;
-  --line: #1e3a5f;
-  --muted: #4a6fa0;
-  --soft: #7a9ec8;
-  --text: #c8daf0;
-  --bright: #e8f2ff;
-  --accent: #1a7ff0;
-  --accent2: #4da6ff;
-  --green: #00c896;
-  --red: #ff4055;
-  --gold: #c8a84b;
-}
 html, body { height: 100%; }
 body {
-  background: radial-gradient(circle at 20% 0%, #0a1730 0%, var(--ink) 60%);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   font-size: 15px;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
-.shell { max-width: 1200px; margin: 0 auto; padding: 28px 20px 64px; }
-.top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--bright); letter-spacing: .02em; font-size: 18px; }
-.brand-dot { width: 10px; height: 10px; border-radius: 3px; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
-.brand small { color: var(--muted); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin-left: 6px; }
-.me { font-size: 13px; color: var(--soft); }
-.btn { font-family: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--bright); padding: 9px 14px; border-radius: 10px; font-weight: 600; font-size: 13px; transition: all .2s; }
-.btn:hover { background: #143056; border-color: #2a4e80; }
-.btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: white; }
-.btn.primary:hover { filter: brightness(1.08); }
-.btn.ghost { background: transparent; }
-.btn:disabled { opacity: .55; cursor: not-allowed; }
+.shell { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
 
+/* Nav */
+.top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+  background: #fff;
+  border-bottom: 1px solid #e8e8ed;
+  position: sticky; top: 0; z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-name { font-weight: 700; font-size: 17px; color: #1d1d1f; letter-spacing: -0.01em; }
+.brand-tag { font-weight: 400; font-size: 17px; color: #86868b; }
+.me { font-size: 12px; color: #86868b; display: flex; align-items: center; gap: 14px; }
+
+/* Buttons */
+.btn {
+  font-family: inherit; cursor: pointer;
+  border: 1px solid #d2d2d7; background: #fff; color: #1d1d1f;
+  padding: 8px 18px; border-radius: 980px;
+  font-weight: 500; font-size: 13px;
+  transition: background .15s;
+}
+.btn:hover { background: #f5f5f7; }
+.btn.primary {
+  background: #0071e3; border-color: transparent; color: #fff; font-weight: 600;
+}
+.btn.primary:hover { background: #0077ed; }
+.btn.ghost { background: transparent; border-color: #d2d2d7; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+
+/* Login */
 .login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; }
-.login-card { width: 100%; max-width: 420px; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 32px; box-shadow: 0 30px 80px rgba(0,0,0,.4); }
-.login-card h1 { color: var(--bright); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-.login-card p { color: var(--soft); font-size: 13px; margin-bottom: 22px; }
-.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-.field label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
-.field input { background: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; color: var(--bright); font-family: inherit; font-size: 14px; transition: border-color .2s; }
-.field input:focus { outline: none; border-color: var(--accent); }
-.err { background: rgba(255,64,85,.1); border: 1px solid rgba(255,64,85,.3); color: #ffb3bd; padding: 10px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none; }
+.login-card {
+  width: 100%; max-width: 420px;
+  background: #fff; border: 1px solid #e8e8ed;
+  border-radius: 18px; padding: 36px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.login-card h1 { color: #1d1d1f; font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.login-card p { color: #6e6e73; font-size: 14px; margin-bottom: 24px; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field label { font-size: 11px; color: #86868b; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.field input {
+  background: #fff; border: 1px solid #d2d2d7; border-radius: 10px;
+  padding: 11px 14px; color: #1d1d1f; font-family: inherit; font-size: 14px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus { outline: none; border-color: #0071e3; box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
+.err {
+  background: #fff; border: 1px solid #ff3b30; color: #ff3b30;
+  padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500;
+  margin-bottom: 14px; display: none;
+}
 .err.on { display: block; }
-.login-btn { width: 100%; padding: 12px; font-size: 14px; }
-.mini-hint { margin-top: 14px; font-size: 12px; color: var(--muted); text-align: center; line-height: 1.5; }
+.login-btn { width: 100%; padding: 12px; font-size: 14px; border-radius: 12px; }
+.mini-hint { margin-top: 16px; font-size: 12px; color: #86868b; text-align: center; line-height: 1.5; }
+.mini-hint code { background: #f5f5f7; padding: 2px 5px; border-radius: 4px; font-size: 11px; }
 
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
-.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-.stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
-.stat-val { font-size: 28px; font-weight: 700; color: var(--bright); line-height: 1; }
-.stat-val.gold { color: var(--gold); }
-.stat-val.green { color: var(--green); }
+/* Stat cards */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.stat {
+  background: #fff; border: 1px solid #e8e8ed; border-radius: 18px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.stat-label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: #86868b; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em; margin-top: 6px;
+}
+.stat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.stat-val { font-size: 34px; font-weight: 700; color: #1d1d1f; line-height: 1; letter-spacing: -0.02em; }
 
-.toolbar { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+/* Toolbar */
+.toolbar { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
 .toolbar .left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.search { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; color: var(--bright); font-family: inherit; font-size: 13px; min-width: 240px; }
-.search:focus { outline: none; border-color: var(--accent); }
-.select { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; color: var(--bright); font-family: inherit; font-size: 13px; cursor: pointer; }
+.toolbar .right { display: flex; gap: 10px; align-items: center; }
+.search-wrap { position: relative; }
+.search-icon {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  width: 15px; height: 15px; color: #86868b; pointer-events: none;
+}
+.search {
+  background: #fff; border: 1px solid #d2d2d7; border-radius: 10px;
+  padding: 8px 12px 8px 32px; color: #1d1d1f; font-family: inherit; font-size: 13px;
+  min-width: 220px; transition: border-color .15s, box-shadow .15s;
+}
+.search:focus { outline: none; border-color: #0071e3; box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
+.select {
+  background: #fff; border: 1px solid #d2d2d7; border-radius: 10px;
+  padding: 8px 32px 8px 14px; color: #1d1d1f; font-family: inherit; font-size: 13px;
+  cursor: pointer; appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2386868b'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  transition: border-color .15s, box-shadow .15s;
+}
+.select:focus { outline: none; border-color: #0071e3; box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
 
-.table-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+/* Section heading */
+.section-title { font-size: 17px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px; }
+
+/* Table */
+.table-wrap {
+  background: #fff; border: 1px solid #e8e8ed; border-radius: 18px;
+  overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
 .table-scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 900px; }
-th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
-th { background: #0a1a33; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; position: sticky; top: 0; }
+th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid #e8e8ed; font-size: 13px; }
+th {
+  color: #86868b; font-weight: 600; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .04em;
+  position: sticky; top: 0; background: #fff;
+}
 tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(26,127,240,.04); }
-td.email, td.name { color: var(--bright); font-weight: 500; }
-td.muted { color: var(--muted); }
-.pill { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .03em; }
-.pill.free { background: rgba(0,200,150,.15); color: var(--green); }
-.pill.premium { background: rgba(200,168,75,.15); color: var(--gold); }
+tr:hover td { background: #f5f5f7; }
+td { color: #6e6e73; }
+td.name { color: #1d1d1f; font-weight: 500; }
+td.email { color: #1d1d1f; font-weight: 500; }
+.pill {
+  display: inline-block; padding: 3px 10px; border-radius: 980px;
+  font-size: 11px; font-weight: 600; letter-spacing: .02em;
+}
+.pill.free { background: #e8f5e8; color: #1a7a2e; }
+.pill.premium { background: #fef3e0; color: #9a6e15; }
+.pill.kit { background: #e8f0fe; color: #1a56db; }
 
-.empty { padding: 60px 20px; text-align: center; color: var(--muted); }
-.empty h3 { color: var(--bright); font-size: 16px; margin-bottom: 6px; font-weight: 600; }
-.loading { padding: 60px 20px; text-align: center; color: var(--muted); }
-.count-row { color: var(--muted); font-size: 12px; margin-top: 10px; }
+.empty { padding: 48px 20px; text-align: center; }
+.empty h3 { color: #1d1d1f; font-size: 16px; margin-bottom: 6px; font-weight: 600; }
+.empty p { color: #86868b; font-size: 14px; }
+.loading { padding: 48px 20px; text-align: center; color: #86868b; }
+.count-row { color: #86868b; font-size: 12px; margin-top: 14px; text-align: right; }
+
+/* Spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #e8e8ed; border-top-color: #0071e3;
+  border-radius: 50%; animation: spin 1s linear infinite;
+}
 
 @media (max-width: 640px) {
+  .top { padding: 14px 16px; }
   .shell { padding: 20px 14px 48px; }
-  .top { flex-direction: column; gap: 14px; align-items: flex-start; }
   .search { min-width: 100%; }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .toolbar .left, .toolbar .right { width: 100%; }
 }
 </style>
 </head>
 <body>
-<div class="shell">
-  <div class="top">
-    <div class="brand">
-      <span class="brand-dot"></span>
-      MapeIA
-      <small>Admin</small>
-    </div>
-    <div id="meBox" class="me" style="display:none;">
-      <span id="meEmail"></span>
-      &nbsp;&middot;&nbsp;
-      <button class="btn ghost" id="logoutBtn" style="padding:6px 10px;font-size:12px;">Sair</button>
-    </div>
+
+<!-- Nav -->
+<div class="top">
+  <div class="brand">
+    <span class="brand-name">MapeIA</span>
+    <span class="brand-tag">Admin</span>
   </div>
+  <div id="meBox" class="me" style="display:none;">
+    <span id="meEmail"></span>
+    <button class="btn btn-sm ghost" id="logoutBtn">Sair</button>
+  </div>
+</div>
+
+<div class="shell">
 
   <div id="loginWrap" class="login-wrap" style="display:none;">
     <div class="login-card">
@@ -126,7 +200,7 @@ td.muted { color: var(--muted); }
         <button type="submit" class="btn primary login-btn" id="loginBtn">Entrar</button>
       </form>
       <div class="mini-hint">
-        Precisa de acesso? Crie um usuário no Supabase Auth e adicione seu e-mail na tabela <code>admins</code>.
+        Precisa de acesso? Crie um usuario no Supabase Auth e adicione seu e-mail na tabela <code>admins</code>.
       </div>
     </div>
   </div>
@@ -134,33 +208,39 @@ td.muted { color: var(--muted); }
   <div id="dashWrap" style="display:none;">
     <div class="stats">
       <div class="stat">
-        <div class="stat-label">Total de leads</div>
         <div class="stat-val" id="statTotal">&mdash;</div>
+        <div class="stat-label"><span class="stat-dot" style="background:#34c759"></span> LEADS TOTAL</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Hoje</div>
-        <div class="stat-val green" id="statToday">&mdash;</div>
+        <div class="stat-val" id="statToday">&mdash;</div>
+        <div class="stat-label"><span class="stat-dot" style="background:#0071e3"></span> HOJE</div>
       </div>
       <div class="stat">
-        <div class="stat-label">7 dias</div>
         <div class="stat-val" id="statWeek">&mdash;</div>
+        <div class="stat-label"><span class="stat-dot" style="background:#0071e3"></span> 7 DIAS</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Premium</div>
-        <div class="stat-val gold" id="statPremium">&mdash;</div>
+        <div class="stat-val" id="statPremium">&mdash;</div>
+        <div class="stat-label"><span class="stat-dot" style="background:#ff9500"></span> PREMIUM</div>
       </div>
     </div>
 
+    <h2 class="section-title">Leads recentes</h2>
+
     <div class="toolbar">
       <div class="left">
-        <input type="text" id="search" class="search" placeholder="Buscar por nome, e-mail ou empresa...">
+        <div class="search-wrap">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="search" class="search" placeholder="Buscar por nome, e-mail ou empresa...">
+        </div>
         <select id="planFilter" class="select">
           <option value="all">Todos os planos</option>
           <option value="free">Free</option>
           <option value="premium">Premium</option>
+          <option value="kits">Kits</option>
         </select>
       </div>
-      <div>
+      <div class="right">
         <button class="btn" id="refreshBtn">Atualizar</button>
         <button class="btn primary" id="exportBtn">Exportar CSV</button>
       </div>
@@ -198,6 +278,23 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: { persistSession: true, autoRefreshToken: true },
 });
+
+const KIT_PLANS = new Set([
+  'kit_atendente', 'kit_followup', 'kit_agendamento',
+  'kit_cobranca', 'kit_presenca', 'bundle',
+]);
+
+const PLAN_LABELS = {
+  diagnostico_premium: 'Diagnostico Premium',
+  evolucao: 'Evolucao',
+  kit_atendente: 'Kit Atendente',
+  kit_followup: 'Kit Follow-up',
+  kit_agendamento: 'Kit Agendamento',
+  kit_cobranca: 'Kit Cobranca',
+  kit_presenca: 'Kit Presenca',
+  bundle: 'Pacote Completo',
+  indeciso: 'Indeciso',
+};
 
 const loginWrap = document.getElementById('loginWrap');
 const dashWrap = document.getElementById('dashWrap');
@@ -246,7 +343,7 @@ loginForm.addEventListener('submit', async (e) => {
   const ok = await verifyAdmin(data.user?.email || email);
   if (!ok) {
     await supabase.auth.signOut();
-    showErr('Este usuário não tem acesso de admin.');
+    showErr('Este usuario nao tem acesso de admin.');
     return;
   }
   showDash(data.user.email);
@@ -275,7 +372,7 @@ async function loadLeads() {
     .select('*')
     .order('created_at', { ascending: false });
   if (error) {
-    leadsBody.innerHTML = `<tr><td colspan="7"><div class="empty"><h3>Não foi possível carregar</h3><p>${escape(error.message)}</p></div></td></tr>`;
+    leadsBody.innerHTML = `<tr><td colspan="7"><div class="empty"><h3>Nao foi possivel carregar</h3><p>${esc(error.message)}</p></div></td></tr>`;
     return;
   }
   allLeads = data || [];
@@ -286,7 +383,13 @@ function render() {
   const q = (searchInput.value || '').toLowerCase().trim();
   const plan = planFilter.value;
   const filtered = allLeads.filter(l => {
-    if (plan !== 'all' && l.plan_interest !== plan) return false;
+    if (plan === 'free') {
+      if (l.plan_interest && l.plan_interest !== 'indeciso' && l.plan_interest !== 'evolucao') return false;
+    } else if (plan === 'premium') {
+      if (l.plan_interest !== 'diagnostico_premium') return false;
+    } else if (plan === 'kits') {
+      if (!l.plan_interest || !KIT_PLANS.has(l.plan_interest)) return false;
+    }
     if (!q) return true;
     const hay = [l.name, l.email, l.company, l.whatsapp].filter(Boolean).join(' ').toLowerCase();
     return hay.includes(q);
@@ -295,7 +398,7 @@ function render() {
   updateStats(allLeads);
 
   if (filtered.length === 0) {
-    leadsBody.innerHTML = `<tr><td colspan="7"><div class="empty"><h3>Nenhum lead encontrado</h3><p>${allLeads.length === 0 ? 'Ainda não há leads capturados.' : 'Ajuste a busca ou o filtro.'}</p></div></td></tr>`;
+    leadsBody.innerHTML = `<tr><td colspan="7"><div class="empty"><h3>Nenhum lead encontrado</h3><p>${allLeads.length === 0 ? 'Ainda nao ha leads capturados.' : 'Ajuste a busca ou o filtro.'}</p></div></td></tr>`;
     countRow.textContent = '';
     return;
   }
@@ -303,20 +406,25 @@ function render() {
   leadsBody.innerHTML = filtered.map(l => {
     const d = new Date(l.created_at);
     const date = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    const planPill = l.plan_interest === 'premium'
-      ? '<span class="pill premium">Premium</span>'
-      : '<span class="pill free">Free</span>';
+    const planPill = getPlanPill(l.plan_interest);
     return `<tr>
-      <td class="muted">${escape(date)}</td>
-      <td class="name">${escape(l.name || '')}</td>
-      <td class="email">${escape(l.email || '')}</td>
-      <td>${escape(l.whatsapp || '-')}</td>
-      <td>${escape(l.company || '-')}</td>
-      <td class="muted">${escape(l.source || '-')}</td>
+      <td>${esc(date)}</td>
+      <td class="name">${esc(l.name || '')}</td>
+      <td class="email">${esc(l.email || '')}</td>
+      <td>${esc(l.whatsapp || '\u2014')}</td>
+      <td>${esc(l.company || '\u2014')}</td>
+      <td>${esc(l.source || '\u2014')}</td>
       <td>${planPill}</td>
     </tr>`;
   }).join('');
-  countRow.textContent = `Mostrando ${filtered.length} de ${allLeads.length} leads`;
+  countRow.textContent = `${filtered.length} de ${allLeads.length} leads`;
+}
+
+function getPlanPill(pi) {
+  if (!pi) return '<span class="pill free">Free</span>';
+  if (pi === 'diagnostico_premium') return '<span class="pill premium">Premium</span>';
+  if (KIT_PLANS.has(pi)) return `<span class="pill kit">${esc(PLAN_LABELS[pi] || pi)}</span>`;
+  return '<span class="pill free">Free</span>';
 }
 
 function updateStats(rows) {
@@ -324,14 +432,14 @@ function updateStats(rows) {
   const oneDay = 24 * 60 * 60 * 1000;
   const today = rows.filter(r => (now - new Date(r.created_at).getTime()) < oneDay).length;
   const week = rows.filter(r => (now - new Date(r.created_at).getTime()) < 7 * oneDay).length;
-  const premium = rows.filter(r => r.plan_interest === 'premium').length;
+  const premium = rows.filter(r => r.plan_interest === 'diagnostico_premium').length;
   document.getElementById('statTotal').textContent = rows.length;
   document.getElementById('statToday').textContent = today;
   document.getElementById('statWeek').textContent = week;
   document.getElementById('statPremium').textContent = premium;
 }
 
-function escape(s) {
+function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
