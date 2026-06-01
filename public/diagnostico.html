@@ -1350,6 +1350,24 @@ const state = {
   emailCaptured: false, // true once email step was passed
 };
 
+// --- Google Ads: Purchase conversion (R$499 diagnostic unlock) ---
+const ADS_PURCHASE_SEND_TO = 'AW-18172305016/wn1PCNDzk7ccEPi8ndlD';
+function fireAdsPurchase(){
+  try {
+    if (window.__mapeiaPurchaseFired) return;
+    if (!state.stripeSessionId) return;
+    window.__mapeiaPurchaseFired = true;
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'conversion', {
+        send_to: ADS_PURCHASE_SEND_TO,
+        value: 499,
+        currency: 'BRL',
+        transaction_id: state.stripeSessionId
+      });
+    }
+  } catch (e) {}
+}
+
 // Detect if user is returning from Stripe after purchasing premium.
 // Signal is set in sessionStorage before redirecting to Stripe.
 // URL param ?premium=1 is also checked as fallback (set in success_url).
@@ -1885,6 +1903,7 @@ async function saveFullDiagnostic(whatsapp, company){
   clearProgress(); // quiz is done — clear saved local progress (diag saved server-side + sessionStorage)
   if (state.premiumVerified) {
     // Paid (or valid access code) — show the full report
+    fireAdsPurchase();
     renderResult();
     showScreen('result');
   } else {
@@ -2254,6 +2273,7 @@ async function handlePaidReturn(sessionId, accessCode){
     sessionStorage.removeItem('mapeia_stripe_session_id');
     sessionStorage.removeItem('mapeia_access_code');
     clearProgress();
+    fireAdsPurchase();
     renderResult();
     showScreen('result');
   } else if (state.aiData) {
