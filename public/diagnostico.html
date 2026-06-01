@@ -1486,7 +1486,7 @@ const WA_HIDDEN_SCREENS = new Set(['quiz','emailCapture','finalStep','load','pay
 function showScreen(name){
   Object.values(screens).forEach(s => s.classList.remove('on'));
   screens[name].classList.add('on');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'instant' });
   // Toggle WhatsApp button visibility
   const waBtn = document.getElementById('waBtn');
   if (waBtn) {
@@ -1497,12 +1497,6 @@ function showScreen(name){
   if (name === 'emailCapture') {
     setTimeout(() => {
       const inp = document.getElementById('ecEmail');
-      if (inp && window.innerWidth < 768) inp.focus();
-    }, 400);
-  }
-  if (name === 'finalStep') {
-    setTimeout(() => {
-      const inp = document.getElementById('fsWpp');
       if (inp && window.innerWidth < 768) inp.focus();
     }, 400);
   }
@@ -1979,8 +1973,23 @@ if (pwBuyBtn) pwBuyBtn.addEventListener('click', async () => {
   }
 });
 
-document.getElementById('fsSubmit').addEventListener('click', () => submitFinalStep(false));
-document.getElementById('fsSkip').addEventListener('click', () => submitFinalStep(true));
+// Use pointerdown so the action fires at the start of the tap/click, before any
+// layout shift from the virtual keyboard or smooth-scroll can steal the event.
+(function(){
+  let submitting = false;
+  document.getElementById('fsSubmit').addEventListener('pointerdown', (e) => {
+    e.preventDefault(); // stop focus-shift / scroll on touch
+    if (submitting) return;
+    submitting = true;
+    submitFinalStep(false).finally(() => { submitting = false; });
+  });
+  document.getElementById('fsSkip').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    if (submitting) return;
+    submitting = true;
+    submitFinalStep(true).finally(() => { submitting = false; });
+  });
+})();
 
 // Pre-fill email from auth session so the mid-quiz gate is skipped for logged-in users
 supabase.auth.getSession().then(({ data: { session: s } }) => {
