@@ -364,6 +364,7 @@ Deno.serve(async (req: Request) => {
       email,
       name,
       company,
+      site,
       sector,
       global_score,
       maturity_level,
@@ -390,6 +391,9 @@ Deno.serve(async (req: Request) => {
         stripe_session_id: stripe_session_id || "",
         ai_data,
         pdf_sent: false,
+        respondent_name: name || null,
+        respondent_company: company || null,
+        respondent_site: site || null,
       })
       .select("id")
       .maybeSingle();

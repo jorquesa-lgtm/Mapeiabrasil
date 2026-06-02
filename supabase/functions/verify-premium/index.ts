@@ -235,6 +235,7 @@ Deno.serve(async (req: Request) => {
               email: leadEmail,
               name: leadRow?.name || leadEmail,
               company: leadRow?.company || fullRow.sector || "",
+              site: (fullRow.answers as Record<string, string> | null)?.website_url || "",
               sector: fullRow.sector || "",
               global_score: fullRow.global_score,
               maturity_level: fullRow.maturity_level,

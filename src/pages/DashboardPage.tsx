@@ -24,6 +24,9 @@ interface ReportItem {
   created_at: string;
   stripe_session_id: string;
   pdf_sent: boolean;
+  respondent_name?: string | null;
+  respondent_company?: string | null;
+  respondent_site?: string | null;
   // present when sourced from report_data
   ai_data: {
     level_title?: string;
@@ -86,12 +89,22 @@ export default function DashboardPage({ user }: { user: User }) {
   }, []);
 
   function getRespondent(r: ReportItem) {
+    // Prefer the dedicated respondent fields written directly on report_data.
+    // Fall back to the leads join (older records) then to email.
+    if (r.respondent_name || r.respondent_company) {
+      return {
+        name: r.respondent_name || r.email || '',
+        company: r.respondent_company || '',
+        site: r.respondent_site || '',
+      };
+    }
     const leads = r._fromDiag
       ? (r as any).leads
       : (r as any).diagnostic_responses?.leads;
     return {
       name: leads?.name || r.email || (r as any).diagnostic_responses?.email || '',
       company: leads?.company || '',
+      site: '',
     };
   }
 
@@ -325,7 +338,7 @@ export default function DashboardPage({ user }: { user: User }) {
         {/* Welcome */}
         <div className="fade-in" style={{ marginBottom: 36 }}>
           <h1 style={{ fontFamily: "Georgia, serif", fontSize: "clamp(24px,3vw,36px)", color: "#f4f8ff", fontWeight: 400, marginBottom: 6 }}>
-            Olá, <em style={{ color: "#00e5c8", fontStyle: "italic" }}>{(profile?.name || user.email || "").split(" ")[0]}</em>
+            Olá, <em style={{ color: "#00e5c8", fontStyle: "italic" }}>{(() => { const r = reports[0]; if (r) { const { name } = getRespondent(r); if (name && name !== user.email) return name.split(" ")[0]; } return (profile?.name || user.email || "").split(" ")[0]; })()}</em>
           </h1>
           <p style={{ fontSize: 15, color: "#7a9ec8" }}>
             {reports.length
@@ -1846,7 +1859,7 @@ function EvolucaoUpsell({ userEmail: _userEmail }: { userEmail: string }) {
           >
             Ver os kits
           </a>
-          <div style={{ fontSize: 12, color: "#4a6fa0", marginTop: 8 }}>a partir de R$199/mês</div>
+          <div style={{ fontSize: 12, color: "#4a6fa0", marginTop: 8 }}>a partir de R$199 · pagamento único</div>
         </div>
       </div>
     </div>
