@@ -40,6 +40,8 @@ interface ReportItem {
     maturity_level: number;
     sector: string;
     area_scores: Record<string, number>;
+    email?: string;
+    leads?: { name?: string; company?: string } | null;
   };
   // present when sourced directly from diagnostic_responses
   _fromDiag?: boolean;
@@ -47,6 +49,8 @@ interface ReportItem {
   maturity_level?: number;
   sector?: string;
   area_scores?: Record<string, number>;
+  email?: string;
+  leads?: { name?: string; company?: string } | null;
 }
 
 const AREA_PT: Record<string, string> = {
@@ -81,6 +85,16 @@ export default function DashboardPage({ user }: { user: User }) {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  function getRespondent(r: ReportItem) {
+    const leads = r._fromDiag
+      ? (r as any).leads
+      : (r as any).diagnostic_responses?.leads;
+    return {
+      name: leads?.name || r.email || (r as any).diagnostic_responses?.email || '',
+      company: leads?.company || '',
+    };
+  }
+
   async function loadData(showRefresh = false) {
     if (showRefresh) setRefreshing(true);
     else setLoading(true);
@@ -101,14 +115,14 @@ export default function DashboardPage({ user }: { user: User }) {
       // Primary: report_data linked by user_id (premium reports with full ai_data)
       supabase
         .from("report_data")
-        .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores)")
+        .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores, email, leads(name, company))")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(20),
       // Primary: diagnostic_responses linked by user_id (all diagnostics, free + premium)
       supabase
         .from("diagnostic_responses")
-        .select("id, created_at, global_score, maturity_level, sector, area_scores, ai_data, plan_tier, stripe_session_id")
+        .select("id, created_at, global_score, maturity_level, sector, area_scores, ai_data, plan_tier, stripe_session_id, email, leads(name, company)")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(20),
@@ -125,7 +139,8 @@ export default function DashboardPage({ user }: { user: User }) {
     const diagRows = (diagsByUid.data ?? []) as Array<{
       id: string; created_at: string; global_score: number; maturity_level: number;
       sector: string; area_scores: Record<string, number>; ai_data: ReportItem["ai_data"];
-      plan_tier: string; stripe_session_id: string;
+      plan_tier: string; stripe_session_id: string; email?: string;
+      leads?: { name?: string; company?: string } | null;
     }>;
 
     // Build a set of diag_ids already represented by report_data rows
@@ -152,6 +167,8 @@ export default function DashboardPage({ user }: { user: User }) {
         maturity_level: d.maturity_level,
         sector: d.sector,
         area_scores: d.area_scores,
+        email: d.email,
+        leads: d.leads,
       }));
 
     let merged = [...reportRows, ...diagAsReports].sort(
@@ -165,13 +182,13 @@ export default function DashboardPage({ user }: { user: User }) {
       const [emailReports, emailDiags] = await Promise.all([
         supabase
           .from("report_data")
-          .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores)")
+          .select("*, diagnostic_responses(global_score, maturity_level, sector, area_scores, email, leads(name, company))")
           .eq("email", user.email ?? "")
           .order("created_at", { ascending: false })
           .limit(20),
         supabase
           .from("diagnostic_responses")
-          .select("id, created_at, global_score, maturity_level, sector, area_scores, ai_data, plan_tier, stripe_session_id")
+          .select("id, created_at, global_score, maturity_level, sector, area_scores, ai_data, plan_tier, stripe_session_id, email, leads(name, company)")
           .eq("email", user.email ?? "")
           .order("created_at", { ascending: false })
           .limit(20),
@@ -188,7 +205,8 @@ export default function DashboardPage({ user }: { user: User }) {
         (emailDiags.data as Array<{
           id: string; created_at: string; global_score: number; maturity_level: number;
           sector: string; area_scores: Record<string, number>; ai_data: ReportItem["ai_data"];
-          plan_tier: string; stripe_session_id: string;
+          plan_tier: string; stripe_session_id: string; email?: string;
+          leads?: { name?: string; company?: string } | null;
         }>) || []
       )
         .filter((d) => !coveredByEmail.has(d.id))
@@ -203,6 +221,8 @@ export default function DashboardPage({ user }: { user: User }) {
           maturity_level: d.maturity_level,
           sector: d.sector,
           area_scores: d.area_scores,
+          email: d.email,
+          leads: d.leads,
         }));
 
       merged = [...reportsByEmail, ...diagsByEmail].sort(
@@ -352,6 +372,8 @@ export default function DashboardPage({ user }: { user: User }) {
                 const sectorLabel = r._fromDiag ? (r.sector || "Diagnóstico") : (r.diagnostic_responses?.sector || "Diagnóstico");
                 const scoreColor = score >= 61 ? "#00c896" : score >= 41 ? "#f5c842" : "#ff4055";
                 const isSelected = selectedReport?.id === r.id;
+                const { name: rName, company: rCompany } = getRespondent(r);
+                const rLabel = rCompany || rName;
                 return (
                   <div
                     key={r.id}
@@ -369,11 +391,10 @@ export default function DashboardPage({ user }: { user: User }) {
                   >
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#e8f2ff", marginBottom: 3 }}>
-                        {sectorLabel}
+                        {rLabel ? `${rLabel} · ${sectorLabel}` : sectorLabel}
                       </div>
                       <div style={{ fontSize: 11, color: "#4a6fa0" }}>
                         {new Date(r.created_at).toLocaleDateString("pt-BR")}
-
                       </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -386,7 +407,9 @@ export default function DashboardPage({ user }: { user: User }) {
             </div>
 
             {/* Report detail */}
-            {selectedReport && (
+            {selectedReport && (() => {
+              const { name: respondentName, company: respondentCompany } = getRespondent(selectedReport);
+              return (
               <ReportDetail
                 report={selectedReport}
                 onDownload={handleDownloadPdf}
@@ -397,8 +420,11 @@ export default function DashboardPage({ user }: { user: User }) {
                 userId={user.id}
                 userEmail={user.email ?? ""}
                 clientName={profile?.name ?? ""}
+                respondentName={respondentName}
+                respondentCompany={respondentCompany}
               />
-            )}
+              );
+            })()}
           </div>
         )}
 
@@ -504,8 +530,10 @@ export default function DashboardPage({ user }: { user: User }) {
         const areaScores = (diagD as { area_scores?: Record<string,number> }).area_scores ?? selectedReport?.area_scores ?? {};
         const hasContext = Object.keys(areaScores).length > 0 || quickWins.length > 0;
         if (!hasContext) return null;
+        const { name: respondentName, company: respondentCompany } = getRespondent(selectedReport);
         const copilotCtx = {
-          company: profile?.company || profile?.name || user.email?.split("@")[0] || "sua empresa",
+          company: respondentCompany || respondentName || "sua empresa",
+          name: respondentName,
           sector: (diagD as { sector?: string }).sector ?? selectedReport?.sector ?? "",
           score: (diagD as { global_score?: number }).global_score ?? selectedReport?.global_score ?? 0,
           maturity: MATURITY[(diagD as { maturity_level?: number }).maturity_level ?? selectedReport?.maturity_level ?? 0] ?? "",
@@ -577,7 +605,7 @@ function ActionCard({ onRefresh, refreshing }: { onRefresh: () => void; refreshi
   );
 }
 
-function ReportDetail({ report, onDownload, onView, isEvolucao, isPremium, allReports, userId, userEmail, clientName }: { report: ReportItem; onDownload: () => void; onView: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string }) {
+function ReportDetail({ report, onDownload, onView, isEvolucao, isPremium, allReports, userId, userEmail, clientName, respondentName, respondentCompany }: { report: ReportItem; onDownload: () => void; onView: () => void; isEvolucao: boolean; isPremium?: boolean; allReports: ReportItem[]; userId?: string; userEmail?: string; clientName?: string; respondentName?: string; respondentCompany?: string }) {
   const ai = report.ai_data || {};
   // Normalise: _fromDiag items have score data flat on the item; joined items nest it under diagnostic_responses
   const diag = report._fromDiag
@@ -606,6 +634,18 @@ function ReportDetail({ report, onDownload, onView, isEvolucao, isPremium, allRe
           <div style={{ fontSize: 18, fontWeight: 700, color: "#f4f8ff" }}>
             {(ai as { level_title?: string }).level_title || `Nível ${diag?.maturity_level ?? ""}`}
           </div>
+          {(respondentName || respondentCompany) && (
+            <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+              {respondentCompany && (
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#00e5c8", background: "rgba(0,229,200,.08)", border: "1px solid rgba(0,229,200,.2)", borderRadius: 6, padding: "2px 8px" }}>
+                  {respondentCompany}
+                </span>
+              )}
+              {respondentName && (
+                <span style={{ fontSize: 12, color: "#7a9ec8" }}>{respondentName}</span>
+              )}
+            </div>
+          )}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <div style={{ textAlign: "center" }}>

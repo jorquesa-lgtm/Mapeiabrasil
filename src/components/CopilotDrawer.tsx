@@ -9,6 +9,7 @@ interface Message {
 
 interface DiagnosticContext {
   company: string;
+  name?: string;
   sector: string;
   score: number;
   maturity: string;
@@ -197,7 +198,7 @@ export default function CopilotDrawer({ context }: CopilotDrawerProps) {
                 Copiloto MapeAI
               </div>
               <div style={{ fontSize: 11, color: "#00e5c8", fontWeight: 600 }}>
-                {context.company} · Score {context.score}/100
+                {context.company}{context.name && context.name !== context.company ? ` · ${context.name}` : ""} · Score {context.score}/100
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -251,7 +252,7 @@ export default function CopilotDrawer({ context }: CopilotDrawerProps) {
                 <div style={{ fontSize: 32, marginBottom: 12 }}>🤖</div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: "#e8f4ff", marginBottom: 6 }}>Copiloto de Implementação</div>
                 <div style={{ fontSize: 13, color: "#4a6fa0", lineHeight: 1.6 }}>
-                  Conheço o diagnóstico da {context.company} e estou aqui para te guiar na implementação, passo a passo.
+                  Conheço o diagnóstico de {context.company} e estou aqui para te guiar na implementação, passo a passo.
                 </div>
               </div>
             )}
