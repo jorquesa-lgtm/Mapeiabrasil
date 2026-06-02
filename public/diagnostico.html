@@ -2582,12 +2582,12 @@ function renderKitRecommendations() {
   if (!grid || !container) return;
 
   const KIT_MAP = {
-    service: { id: 'kit1', name: 'Atendente 24h no WhatsApp',       emoji: '🤖', url: '/kits/kit-atendente.html',  price: 'R$250/mês', color: '#1a9ff0', reason: 'Seu atendimento está abaixo da média. Este kit responde clientes 24h automaticamente.' },
-    sales:   { id: 'kit2', name: 'Follow-up Automático de Leads',    emoji: '💬', url: '/kits/kit-followup.html',  price: 'R$199/mês', color: '#0077cc', reason: 'Sua área de vendas precisa de atenção. Este kit recupera leads automaticamente via WhatsApp.' },
-    process: { id: 'kit3', name: 'Agendamento Anti-No-Show',          emoji: '📅', url: '/kits/kit-agendamento.html', price: 'R$199/mês', color: '#7c3aed', reason: 'Seus processos têm gargalos. Este kit elimina no-shows com lembretes automáticos.' },
-    data:    { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199/mês', color: '#d97706', reason: 'Sua gestão financeira precisa de automação. Este kit envia cobranças via WhatsApp com Pix.' },
-    infra:   { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199/mês', color: '#d97706', reason: 'Sua infraestrutura digital tem lacunas. Comece automatizando a cobrança de clientes.' },
-    ai:      { id: 'kit5', name: 'Presença Social Automática',        emoji: '📱', url: '/kits/kit-presenca.html',  price: 'R$199/mês', color: '#db2777', reason: 'Você ainda não usa IA no marketing. Este kit gera conteúdo para redes sociais automaticamente.' },
+    service: { id: 'kit1', name: 'Atendente 24h no WhatsApp',       emoji: '🤖', url: '/kits/kit-atendente.html',  price: 'R$250 · pagamento único', color: '#1a9ff0', reason: 'Seu atendimento está abaixo da média. Este kit responde clientes 24h automaticamente.' },
+    sales:   { id: 'kit2', name: 'Follow-up Automático de Leads',    emoji: '💬', url: '/kits/kit-followup.html',  price: 'R$199 · pagamento único', color: '#0077cc', reason: 'Sua área de vendas precisa de atenção. Este kit recupera leads automaticamente via WhatsApp.' },
+    process: { id: 'kit3', name: 'Agendamento Anti-No-Show',          emoji: '📅', url: '/kits/kit-agendamento.html', price: 'R$199 · pagamento único', color: '#7c3aed', reason: 'Seus processos têm gargalos. Este kit elimina no-shows com lembretes automáticos.' },
+    data:    { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199 · pagamento único', color: '#d97706', reason: 'Sua gestão financeira precisa de automação. Este kit envia cobranças via WhatsApp com Pix.' },
+    infra:   { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199 · pagamento único', color: '#d97706', reason: 'Sua infraestrutura digital tem lacunas. Comece automatizando a cobrança de clientes.' },
+    ai:      { id: 'kit5', name: 'Presença Social Automática',        emoji: '📱', url: '/kits/kit-presenca.html',  price: 'R$199 · pagamento único', color: '#db2777', reason: 'Você ainda não usa IA no marketing. Este kit gera conteúdo para redes sociais automaticamente.' },
   };
 
   // Sort areas by score ascending (weakest first) and pick top 2
@@ -2607,6 +2607,12 @@ function renderKitRecommendations() {
 
   if (recs.length === 0) return;
 
+  function getKitReason(kit) {
+    if (kit.score >= 70) return 'Já tem uma boa base aqui — este kit ajuda a ir ainda mais longe.';
+    if (kit.score >= 50) return 'Há espaço para melhorar nessa área — este kit pode ajudar bastante.';
+    return kit.reason;
+  }
+
   // Show the bridge banner (diagnostic → kits framing)
   const bridge = document.getElementById('kitBridge');
   if (bridge) bridge.style.display = 'block';
@@ -2616,7 +2622,7 @@ function renderKitRecommendations() {
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${kit.color};"></div>
       <div style="font-size:28px;margin-bottom:10px;">${kit.emoji}</div>
       <div style="font-size:15px;font-weight:700;color:#1d1d1f;margin-bottom:6px;">${kit.name}</div>
-      <div style="font-size:12px;color:#86868b;margin-bottom:12px;line-height:1.5;">${kit.reason}</div>
+      <div style="font-size:12px;color:#86868b;margin-bottom:12px;line-height:1.5;">${getKitReason(kit)}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <span style="font-size:13px;font-weight:700;color:${kit.color};">${kit.price}</span>
         <span style="font-size:11px;background:${kit.color}15;color:${kit.color};padding:3px 8px;border-radius:99px;font-weight:600;">Score: ${kit.score}/100</span>
