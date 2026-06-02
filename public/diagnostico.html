@@ -2607,11 +2607,6 @@ function renderKitRecommendations() {
 
   if (recs.length === 0) return;
 
-  function getKitReason(kit) {
-    if (kit.score >= 70) return 'Já tem uma boa base aqui — este kit ajuda a ir ainda mais longe.';
-    if (kit.score >= 50) return 'Há espaço para melhorar nessa área — este kit pode ajudar bastante.';
-    return kit.reason;
-  }
 
   // Show the bridge banner (diagnostic → kits framing)
   const bridge = document.getElementById('kitBridge');
@@ -2622,7 +2617,7 @@ function renderKitRecommendations() {
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${kit.color};"></div>
       <div style="font-size:28px;margin-bottom:10px;">${kit.emoji}</div>
       <div style="font-size:15px;font-weight:700;color:#1d1d1f;margin-bottom:6px;">${kit.name}</div>
-      <div style="font-size:12px;color:#86868b;margin-bottom:12px;line-height:1.5;">${getKitReason(kit)}</div>
+      <div style="font-size:12px;color:#86868b;margin-bottom:12px;line-height:1.5;">${kit.score >= 70 ? 'Ótimo score aqui — este kit vai ajudar a ir ainda mais longe.' : kit.score >= 50 ? 'Há oportunidade de melhoria nessa área — este kit pode ajudar bastante.' : kit.reason}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <span style="font-size:13px;font-weight:700;color:${kit.color};">${kit.price}</span>
         <span style="font-size:11px;background:${kit.color}15;color:${kit.color};padding:3px 8px;border-radius:99px;font-weight:600;">Score: ${kit.score}/100</span>
