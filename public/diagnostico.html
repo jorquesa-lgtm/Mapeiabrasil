@@ -2172,16 +2172,13 @@ if (accessCodeApply) {
       } else {
         accessCodeApply.disabled = false;
         accessCodeMsg.style.color = '#ff6b7a';
-        const map = {
-          not_found: 'Código não encontrado.',
-          inactive: 'Código desativado.',
-          expired: 'Código expirado.',
-          exhausted: 'Código já utilizado.',
-          missing_code: 'Informe um código.',
-          lookup_failed: 'Erro ao validar. Tente novamente.',
-          unexpected: 'Erro inesperado. Tente novamente.',
+        const CODE_ERRORS = {
+          not_found: 'Código não encontrado. Confira a digitação e tente novamente.',
+          exhausted:  'Este código já foi totalmente utilizado. Fale com a MapeIA para obter um novo.',
+          inactive:   'Este código está inativo. Entre em contato com a MapeIA.',
+          expired:    'Este código expirou. Entre em contato com a MapeIA.',
         };
-        accessCodeMsg.textContent = map[d?.error] || 'Código inválido.';
+        accessCodeMsg.textContent = CODE_ERRORS[d?.error] || 'Código inválido. Verifique e tente novamente.';
       }
     } catch (err) {
       console.error('validate-access-code failed', err);
