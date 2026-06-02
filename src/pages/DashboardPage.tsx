@@ -87,7 +87,7 @@ export default function DashboardPage({ user }: { user: User }) {
 
     // Retroactively stamp user_id on rows saved anonymously during the diagnostic.
     // Idempotent — once claimed the UPDATE is a no-op on subsequent loads.
-    await supabase.rpc("claim_my_diagnostics").catch(() => {});
+    await supabase.rpc("claim_my_diagnostics").then(r => r, () => {});
 
     const [profileRes, subRes, reportsByUid, diagsByUid] = await Promise.all([
       supabase.from("user_profiles").select("*").eq("id", user.id).maybeSingle(),
