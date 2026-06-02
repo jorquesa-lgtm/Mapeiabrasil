@@ -1665,7 +1665,7 @@ function startQuiz(premium = false){
 // ---------------------------------------------------------------------------
 function showEmailCapture(){
   const answered = Object.keys(state.answers).length;
-  const total = QUESTIONS.filter(q => !q.premiumOnly).length;
+  const total = QUESTIONS.length; // use full question count so "Faltam X" matches the "de 35 perguntas" label
   const left = total - Math.min(answered, total);
   document.getElementById('ecProgressNum').textContent = Math.min(answered, total);
   document.getElementById('ecProgressLeft').textContent = left;
@@ -2617,7 +2617,7 @@ function renderKitRecommendations() {
       <div style="font-size:12px;color:#86868b;margin-bottom:12px;line-height:1.5;">${kit.score >= 70 ? 'Ótimo score aqui — este kit vai ajudar a ir ainda mais longe.' : kit.score >= 50 ? 'Há oportunidade de melhoria nessa área — este kit pode ajudar bastante.' : kit.reason}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <span style="font-size:13px;font-weight:700;color:${kit.color};">${kit.price}</span>
-        <span style="font-size:11px;background:${kit.color}15;color:${kit.color};padding:3px 8px;border-radius:99px;font-weight:600;">Score: ${kit.score}/100</span>
+        <span style="font-size:11px;background:${kit.color}15;color:${kit.color};padding:3px 8px;border-radius:99px;font-weight:600;">${kit.score > 0 ? `Score: ${kit.score}/100` : 'Área prioritária'}</span>
       </div>
       <a href="${kit.url}" style="display:block;width:100%;padding:10px;background:${kit.color};color:#fff;border-radius:10px;text-align:center;text-decoration:none;font-size:13px;font-weight:700;box-sizing:border-box;">Ver kit →</a>
     </div>`).join('');
