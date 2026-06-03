@@ -1,0 +1,16 @@
+# Always revalidate HTML so new deploys take effect immediately (prevents stale cached pages).
+# Vite content-hashed assets in /assets/ keep a long cache because their filenames change on each build.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/diagnostico
+  Cache-Control: public, max-age=0, must-revalidate
+
+/painel
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
