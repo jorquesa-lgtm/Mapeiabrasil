@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ---- Mobile responsiveness for the React panel (/painel) and auth gate ---- */
+@media (max-width: 640px) {
+  /* 16px inputs everywhere prevent iOS Safari auto-zoom on focus */
+  input, textarea, select { font-size: 16px !important; }
+
+  /* Tighten panel chrome so content gets more room on small screens */
+  .panel-nav { padding: 12px 16px !important; }
+  .panel-main { padding: 24px 16px 56px !important; }
+}

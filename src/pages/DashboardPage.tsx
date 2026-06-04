@@ -315,7 +315,7 @@ export default function DashboardPage({ user }: { user: User }) {
       `}</style>
 
       {/* Topnav */}
-      <nav style={{ padding: "16px 32px", borderBottom: "1px solid #1e3a5f", background: "#060c1a", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 50 }}>
+      <nav className="panel-nav" style={{ padding: "16px 32px", borderBottom: "1px solid #1e3a5f", background: "#060c1a", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 50 }}>
         <a href="/diagnostico.html" style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#f4f8ff", textDecoration: "none" }}>
           MapeIA <span style={{ color: "#00e5c8" }}>Brasil</span>
         </a>
@@ -333,7 +333,7 @@ export default function DashboardPage({ user }: { user: User }) {
         </div>
       </nav>
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px 80px" }}>
+      <div className="panel-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px 80px" }}>
 
         {/* Welcome */}
         <div className="fade-in" style={{ marginBottom: 36 }}>

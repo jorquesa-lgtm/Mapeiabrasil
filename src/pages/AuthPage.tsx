@@ -191,6 +191,6 @@ export default function AuthPage() {
 
 const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: "#7a9ec8", letterSpacing: ".05em", textTransform: "uppercase", display: "block", marginBottom: 6 };
 
-const inputStyle: React.CSSProperties = { width: "100%", background: "#102240", border: "1.5px solid #1e3a5f", borderRadius: 10, padding: "12px 16px", fontSize: 15, color: "#f4f8ff", outline: "none", fontFamily: "inherit", transition: "border-color .15s" };
+const inputStyle: React.CSSProperties = { width: "100%", background: "#102240", border: "1.5px solid #1e3a5f", borderRadius: 10, padding: "12px 16px", fontSize: 16, color: "#f4f8ff", outline: "none", fontFamily: "inherit", transition: "border-color .15s" };
 
 const linkBtnStyle: React.CSSProperties = { background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#7a9ec8", fontFamily: "inherit" };
