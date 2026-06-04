@@ -91,7 +91,8 @@
     box-shadow:var(--shadow-lg);
     display:flex;flex-direction:column;
     /* Fill remaining viewport after topnav (~65px) + shell top padding (~56px) + progress bar (~90px) + shell bottom padding */
-    max-height:calc(100vh - 65px - 56px - 90px - 40px);
+    max-height:calc(100vh - 65px - 56px - 90px - 40px); /* fallback for older browsers */
+    max-height:calc(100dvh - 65px - 56px - 90px - 40px); /* dvh accounts for mobile browser chrome */
     min-height:360px;
   }
   .qcard-body{flex:1;overflow-y:auto;padding:40px 40px 24px;-webkit-overflow-scrolling:touch;}
@@ -261,7 +262,7 @@
   .gap-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;border-left:3px solid var(--red);box-shadow:var(--shadow-sm);}
   .gap-card.important{border-left-color:var(--or);}
   .gap-card.moderate{border-left-color:var(--yl);}
-  .gap-sev{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+  .gap-sev{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
   .gap-sev.critico{color:var(--red);}
   .gap-sev.importante{color:var(--or);}
   .gap-sev.moderado{color:var(--yl);}
@@ -302,7 +303,7 @@
   .proc-metric-lbl{font-size:11px;color:var(--muted);}
   .proc-steps{display:flex;flex-direction:column;gap:8px;}
   .proc-step{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--subtle);border-radius:10px;border:1px solid var(--border);}
-  .proc-step-badge{padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700;text-transform:uppercase;white-space:nowrap;letter-spacing:.05em;}
+  .proc-step-badge{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;text-transform:uppercase;white-space:nowrap;letter-spacing:.05em;}
   .proc-step-badge.manual{background:rgba(214,48,49,.08);color:var(--red);}
   .proc-step-badge.partial{background:rgba(230,126,34,.08);color:var(--or);}
   .proc-step-badge.automated{background:rgba(10,138,122,.08);color:var(--teal);}
@@ -374,7 +375,7 @@
 
   @media (max-width:1024px) and (min-width:641px){
     .shell{padding:40px 24px 60px;}
-    .qcard{max-height:calc(100vh - 60px - 40px - 85px - 40px);}
+    .qcard{max-height:calc(100vh - 60px - 40px - 85px - 40px);max-height:calc(100dvh - 60px - 40px - 85px - 40px);}
     .qcard-body{padding:32px 28px 20px;}
     .navbtns{padding:16px 28px;}
     .qtitle{font-size:26px;}
@@ -382,7 +383,7 @@
   @media (max-width:640px){
     .topnav{padding:14px 20px;}
     .shell{padding:28px 16px 60px;}
-    .qcard{border-radius:16px;max-height:calc(100vh - 56px - 28px - 80px - 28px);}
+    .qcard{border-radius:16px;max-height:calc(100vh - 56px - 28px - 80px - 28px);max-height:calc(100dvh - 56px - 28px - 80px - 28px);}
     .qcard-body{padding:24px 20px 16px;}
     .navbtns{padding:14px 20px;border-radius:0 0 16px 16px;}
     .qtitle{font-size:22px;}
@@ -394,6 +395,10 @@
     .proc-metrics{grid-template-columns:1fr;}
     .intro [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}
     .opt{padding:14px 16px;font-size:14px;}
+    /* Mobile: 16px inputs prevent iOS auto-zoom on focus; larger tap targets for thumbs */
+    input,select,textarea{font-size:16px !important;}
+    .nbtn{min-height:46px;}
+    .start-btn{min-height:48px;}
   }
 </style>
 </head>
@@ -1558,7 +1563,7 @@ function renderQuestion(){
 
   // Premium deep-dive badge
   if (q.premiumOnly) {
-    qTag.innerHTML = `<span style="color:var(--gold);font-size:10px;margin-right:6px;">&#9733; PREMIUM</span>${block.label}`;
+    qTag.innerHTML = `<span style="color:var(--gold);font-size:11px;margin-right:6px;">&#9733; PREMIUM</span>${block.label}`;
   } else {
     qTag.textContent = block.label;
   }
@@ -2337,7 +2342,7 @@ async function handlePaidReturn(sessionId, accessCode){
     // The report is saved in the dashboard — redirect them there.
     const savedEmail = sessionStorage.getItem('mapeia_lead_email') || '';
     const dashUrl = '/painel.html' + (savedEmail ? '?email=' + encodeURIComponent(savedEmail) : '');
-    document.body.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#04080f;font-family:sans-serif;text-align:center;padding:40px">
+    document.body.innerHTML = `<div style="min-height:100dvh;display:flex;align-items:center;justify-content:center;background:#04080f;font-family:sans-serif;text-align:center;padding:40px">
       <div>
         <div style="font-size:48px;margin-bottom:16px">✅</div>
         <h2 style="color:#e8f4ff;font-size:22px;margin-bottom:8px">Pagamento confirmado!</h2>
