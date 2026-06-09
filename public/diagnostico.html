@@ -1392,6 +1392,12 @@ function fireAdsPurchase(){
         transaction_id: state.stripeSessionId
       });
     }
+    // Meta Pixel: mirror the Google Ads purchase conversion (R$499 diagnostic unlock).
+    // The __mapeiaPurchaseFired guard + stripeSessionId check above mean this fires
+    // exactly once, only on a real Stripe purchase. No-op if the base pixel isn't loaded.
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "Purchase", { value: 499, currency: "BRL" });
+    }
   } catch (e) {}
 }
 
