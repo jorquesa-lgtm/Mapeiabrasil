@@ -1379,6 +1379,7 @@ const state = {
 
 // --- Google Ads: Purchase conversion (R$499 diagnostic unlock) ---
 const ADS_PURCHASE_SEND_TO = 'AW-18172305016/wn1PCNDzk7ccEPi8ndlD';
+const ADS_LEAD_SEND_TO     = 'AW-18172305016/Ky6XCM2gx7gcEPi8ndlD';
 function fireAdsPurchase(){
   try {
     if (window.__mapeiaPurchaseFired) return;
@@ -1711,11 +1712,6 @@ document.getElementById('ecContinue').addEventListener('click', () => {
   state.emailCaptured = true;
   saveProgress();
 
-  // Fire conversion event — this is when the user becomes a real lead
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'conversion', { 'send_to': 'AW-18172305016' });
-  }
-
   // Save email to sessionStorage for later use in final step
   sessionStorage.setItem('mapeia_lead_email', email.toLowerCase());
 
@@ -1735,6 +1731,11 @@ document.getElementById('ecContinue').addEventListener('click', () => {
     }),
   }).then(r => r.json()).then(d => {
     if (d && d.lead_id) state.leadId = d.lead_id;
+    // Google Ads — Lead conversion: fires once, only after the lead is actually saved
+    if (!window.__mapeiaLeadFired && typeof window.gtag === 'function') {
+      window.__mapeiaLeadFired = true;
+      window.gtag('event', 'conversion', { send_to: ADS_LEAD_SEND_TO, value: 0, currency: 'BRL' });
+    }
   }).catch(() => {});
 
   // Continue to next question (idx was already incremented before showing email capture)
