@@ -3,7 +3,7 @@
     "name": "Kit 5 — Presença Social Automática",
     "version": "1.0",
     "description": "Claude gera legendas de Instagram prontas para publicar baseadas no seu calendário de conteúdo. Consistência sem agência.",
-    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "by": "MapeIA Brasil — mapeiabrasil.com",
     "requires": {
       "make_plan": "Free ou superior",
       "ai": "Claude API — ANTHROPIC_API_KEY obrigatório",

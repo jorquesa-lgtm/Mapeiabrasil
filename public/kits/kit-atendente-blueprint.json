@@ -3,7 +3,7 @@
     "name": "Kit 1 — Atendente 24h no WhatsApp",
     "version": "1.0",
     "description": "IA responde clientes no seu WhatsApp Business automaticamente, 24 horas por dia. Responde FAQs, agenda, e transfere para humano quando necessário.",
-    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "by": "MapeIA Brasil — mapeiabrasil.com",
     "requires": {
       "make_plan": "Free ou superior",
       "whatsapp": "Z-API (conta própria) — conecta ao WhatsApp Business existente",

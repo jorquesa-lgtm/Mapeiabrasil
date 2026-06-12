@@ -3,7 +3,7 @@
     "name": "Kit 3 — Agendamento + Lembrete Anti-No-Show",
     "version": "1.0",
     "description": "Lembretes automáticos de WhatsApp 24h e 1h antes do compromisso. Elimina no-shows sem esforço.",
-    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "by": "MapeIA Brasil — mapeiabrasil.com",
     "requires": {
       "make_plan": "Free ou superior",
       "whatsapp": "Z-API (conta própria)",

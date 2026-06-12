@@ -17,7 +17,7 @@ interface LeadPayload {
   plan_interest?: string;
 }
 
-const FROM_EMAIL = Deno.env.get("LEAD_FROM_EMAIL") ?? "MapeIA Brasil <no-reply@mapeia.com.br>";
+const FROM_EMAIL = Deno.env.get("LEAD_FROM_EMAIL") ?? "MapeIA Brasil <servicoalcliente@mapeiabrasil.com>";
 const NOTIFY_EMAIL = Deno.env.get("LEAD_NOTIFY_EMAIL") ?? "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 

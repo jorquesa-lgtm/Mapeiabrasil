@@ -3,7 +3,7 @@
     "name": "Kit 2 — Follow-up Automático de Leads",
     "version": "1.0",
     "description": "Sequência automática de 3 mensagens WhatsApp para leads que não responderam. Instale em sua conta Make em menos de 20 minutos.",
-    "by": "MapeAI Brasil — mapeaibrasil.com",
+    "by": "MapeIA Brasil — mapeiabrasil.com",
     "requires": {
       "make_plan": "Free ou superior",
       "whatsapp": "Z-API (conta própria) ou Twilio WhatsApp",
