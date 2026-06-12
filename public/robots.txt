@@ -11,4 +11,4 @@ Disallow: /obrigado-premium.html
 # AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) are welcome —
 # being cited in AI answers is a growing organic channel.
 
-Sitemap: https://mapeaibrasil.com/sitemap.xml
+Sitemap: https://mapeiabrasil.com/sitemap.xml

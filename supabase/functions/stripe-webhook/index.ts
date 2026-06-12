@@ -93,14 +93,14 @@ Deno.serve(async (req: Request) => {
 
         // Send kit purchase confirmation email via Resend
         const KIT_INFO: Record<string, { name: string; url: string; emoji: string }> = {
-          kit1:   { name: "Atendente 24h no WhatsApp",     url: "https://mapeaibrasil.com/kits/kit-atendente.html",  emoji: "🤖" },
-          kit2:   { name: "Follow-up Automático de Leads", url: "https://mapeaibrasil.com/kits/kit-followup.html",   emoji: "💬" },
-          kit3:   { name: "Agendamento Anti-No-Show",      url: "https://mapeaibrasil.com/kits/kit-agendamento.html",emoji: "📅" },
-          kit4:   { name: "Cobrança Amigável Automática",  url: "https://mapeaibrasil.com/kits/kit-cobranca.html",   emoji: "💰" },
-          kit5:   { name: "Presença Social Automática",    url: "https://mapeaibrasil.com/kits/kit-presenca.html",   emoji: "📱" },
-          bundle: { name: "Pacote Completo — 5 Kits",      url: "https://mapeaibrasil.com/kits/",                    emoji: "⚡" },
+          kit1:   { name: "Atendente 24h no WhatsApp",     url: "https://mapeiabrasil.com/kits/kit-atendente.html",  emoji: "🤖" },
+          kit2:   { name: "Follow-up Automático de Leads", url: "https://mapeiabrasil.com/kits/kit-followup.html",   emoji: "💬" },
+          kit3:   { name: "Agendamento Anti-No-Show",      url: "https://mapeiabrasil.com/kits/kit-agendamento.html",emoji: "📅" },
+          kit4:   { name: "Cobrança Amigável Automática",  url: "https://mapeiabrasil.com/kits/kit-cobranca.html",   emoji: "💰" },
+          kit5:   { name: "Presença Social Automática",    url: "https://mapeiabrasil.com/kits/kit-presenca.html",   emoji: "📱" },
+          bundle: { name: "Pacote Completo — 5 Kits",      url: "https://mapeiabrasil.com/kits/",                    emoji: "⚡" },
         };
-        const kit = KIT_INFO[kitId] ?? { name: plan, url: "https://mapeaibrasil.com/kits/", emoji: "📦" };
+        const kit = KIT_INFO[kitId] ?? { name: plan, url: "https://mapeiabrasil.com/kits/", emoji: "📦" };
         const resendKey = Deno.env.get("RESEND_API_KEY");
         if (resendKey && customerEmail) {
           const html = `<!DOCTYPE html>
@@ -129,11 +129,11 @@ Deno.serve(async (req: Request) => {
         <a href="${kit.url}" style="display:inline-block;background:#0077cc;color:#ffffff;padding:14px 32px;border-radius:980px;font-size:15px;font-weight:700;text-decoration:none;">Acessar meu kit →</a>
       </div>
       <div style="text-align:center;margin-bottom:8px;">
-        <a href="https://mapeaibrasil.com/painel.html" style="font-size:13px;color:#0077cc;text-decoration:none;font-weight:600;">Abrir painel com Copiloto</a>
+        <a href="https://mapeiabrasil.com/painel.html" style="font-size:13px;color:#0077cc;text-decoration:none;font-weight:600;">Abrir painel com Copiloto</a>
       </div>
       <hr style="border:none;border-top:1px solid #e8e8ed;margin:24px 0;">
       <p style="font-size:12px;color:#86868b;text-align:center;line-height:1.6;margin:0;">
-        MapeAI Brasil · <a href="https://mapeaibrasil.com" style="color:#86868b;">mapeaibrasil.com</a><br>
+        MapeAI Brasil · <a href="https://mapeiabrasil.com" style="color:#86868b;">mapeiabrasil.com</a><br>
         Dúvidas? Responda este e-mail ou acesse o Copiloto no painel.
       </p>
     </div>
@@ -145,7 +145,7 @@ Deno.serve(async (req: Request) => {
             method: "POST",
             headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              from: "MapeAI Brasil <noreply@mapeaibrasil.com>",
+              from: "MapeAI Brasil <noreply@mapeiabrasil.com>",
               to: [customerEmail],
               subject: `${kit.emoji} Kit confirmado — ${kit.name}`,
               html,

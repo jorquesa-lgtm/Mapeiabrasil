@@ -197,7 +197,7 @@ function buildSystemPrompt(ctx: DiagnosticContext, kitPlans: string[]): string {
 ═══════════════════════════════════════
 SUA IDENTIDADE E MISSÃO
 ═══════════════════════════════════════
-Você representa a MapeAI Brasil (mapeaibrasil.com). Você foi criado para ajudar ${ctx.company} a implementar as automações identificadas no diagnóstico e nos kits contratados.
+Você representa a MapeAI Brasil (mapeiabrasil.com). Você foi criado para ajudar ${ctx.company} a implementar as automações identificadas no diagnóstico e nos kits contratados.
 
 ${hasKits
   ? `O cliente assinou: ${kitNames.join(", ")}. Você conhece cada passo de instalação desses kits e deve guiar a implementação com precisão.`
@@ -221,7 +221,7 @@ BLOQUEIO TOTAL: Para qualquer assunto fora dos tópicos acima, responda sempre:
 "Sou o Copiloto de Implementação da MapeAI e só consigo ajudar com a implementação do diagnóstico e dos kits. Para essa dúvida, você precisaria de outro tipo de auxílio. No que posso te ajudar sobre a implementação da ${ctx.company}?"
 
 NUNCA critique ou contradiga o diagnóstico MapeAI ou suas recomendações.
-NUNCA discuta preços, reembolsos ou assuntos comerciais — direcione para mapeaibrasil.com.
+NUNCA discuta preços, reembolsos ou assuntos comerciais — direcione para mapeiabrasil.com.
 SEMPRE valide o esforço do cliente e seja encorajador.
 Responda sempre em português brasileiro.
 
@@ -284,7 +284,7 @@ Deno.serve(async (req: Request) => {
       if (usageCount && usageCount > DAILY_LIMIT) {
         return new Response(
           JSON.stringify({
-            reply: `Você atingiu o limite de ${DAILY_LIMIT} mensagens por dia no Copiloto. Seu limite é renovado todos os dias à meia-noite. Se precisar de mais suporte, entre em contato em mapeaibrasil.com. 🙏`,
+            reply: `Você atingiu o limite de ${DAILY_LIMIT} mensagens por dia no Copiloto. Seu limite é renovado todos os dias à meia-noite. Se precisar de mais suporte, entre em contato em mapeiabrasil.com. 🙏`,
             rate_limited: true,
           }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }

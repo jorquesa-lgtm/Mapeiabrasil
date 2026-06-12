@@ -55,7 +55,7 @@ function buildWelcomeHtml(name: string, plan: string): string {
     </p>
     <a href="https://wa.me/5511922031943?text=Olá!%20Vim%20pelo%20site%20da%20MapeIA%20Brasil%20e%20gostaria%20de%20saber%20mais." style="display:inline-block;background:linear-gradient(135deg,#35c4a8,#2aa88f);color:#0a0f1a;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:10px;font-size:14px;">Falar no WhatsApp</a>
     <p style="font-size:12px;color:#6b7a8c;margin-top:28px;line-height:1.5;">
-      Voce recebeu este e-mail porque solicitou o diagnostico em mapeaibrasil.com.<br>
+      Voce recebeu este e-mail porque solicitou o diagnostico em mapeiabrasil.com.<br>
       Seus dados estao protegidos segundo a LGPD.
     </p>
   </div>

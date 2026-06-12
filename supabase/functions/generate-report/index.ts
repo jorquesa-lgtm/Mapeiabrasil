@@ -465,14 +465,14 @@ Deno.serve(async (req: Request) => {
               Clique no botao abaixo para acessar — seu e-mail ja estara preenchido.
             </p>
             <div style="text-align:center;margin:28px 0;">
-              <a href="https://mapeaibrasil.com/painel.html?email=${encodeURIComponent(email)}"
+              <a href="https://mapeiabrasil.com/painel.html?email=${encodeURIComponent(email)}"
                  style="background:linear-gradient(135deg,#1a7ff0,#00b8d4);color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;text-decoration:none;font-size:15px;">
                 Acessar Meu Relatorio
               </a>
             </div>
             <p style="font-size:12px;color:#4a6fa0;margin-top:24px;text-align:center;">
-              MapeIA Brasil &mdash; mapeaibrasil.com<br>
-              Duvidas? <a href="mailto:contato@mapeaibrasil.com" style="color:#7a9ec8;">contato@mapeaibrasil.com</a>
+              MapeIA Brasil &mdash; mapeiabrasil.com<br>
+              Duvidas? <a href="mailto:contato@mapeiabrasil.com" style="color:#7a9ec8;">contato@mapeiabrasil.com</a>
             </p>
           </div>`,
       };

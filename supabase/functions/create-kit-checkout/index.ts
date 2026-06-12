@@ -44,8 +44,8 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const kit: string = (body.kit || "").toLowerCase().trim();
     const email: string = (body.email || "").trim();
-    const successUrl: string = body.success_url || `https://mapeaibrasil.com/kits/obrigado.html?kit=${kit}`;
-    const cancelUrl: string = body.cancel_url || `https://mapeaibrasil.com/kits/`;
+    const successUrl: string = body.success_url || `https://mapeiabrasil.com/kits/obrigado.html?kit=${kit}`;
+    const cancelUrl: string = body.cancel_url || `https://mapeiabrasil.com/kits/`;
 
     if (!KIT_PRICE_SECRETS[kit]) {
       return json({ ok: false, error: "invalid_kit", valid: Object.keys(KIT_PRICE_SECRETS) }, 400);
