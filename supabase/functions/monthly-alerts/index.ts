@@ -198,7 +198,7 @@ function buildRediagEmail(data: {
 
   <!-- Footer -->
   <div style="text-align:center;font-size:11px;color:#4a6fa0;line-height:2;">
-    MapeIA Brasil &mdash; mapeia.com.br<br>
+    MapeIA Brasil &mdash; mapeiabrasil.com<br>
     Voce recebe este email por ter um <strong style="color:#00e5c8;">kit de automacao ativo</strong> na MapeIA.<br>
     Duvidas? <a href="mailto:servicoalcliente@mapeiabrasil.com" style="color:#4a6fa0;text-decoration:underline;">servicoalcliente@mapeiabrasil.com</a>
   </div>
@@ -218,7 +218,7 @@ Deno.serve(async (req: Request) => {
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
     const FROM_EMAIL = Deno.env.get("LEAD_FROM_EMAIL") ?? "MapeIA Brasil <servicoalcliente@mapeiabrasil.com>";
-    const APP_URL = Deno.env.get("APP_URL") ?? "https://mapeia.com.br";
+    const APP_URL = Deno.env.get("APP_URL") ?? "https://mapeiabrasil.com";
     const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
 
     // Authorization: accept either cron secret or service role key

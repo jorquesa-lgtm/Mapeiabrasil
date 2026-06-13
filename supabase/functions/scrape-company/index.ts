@@ -25,7 +25,7 @@ async function fetchWebsiteText(url: string): Promise<string> {
   const MAX_CHARS = 18000;
   const res = await fetch(url, {
     headers: {
-      "User-Agent": "Mozilla/5.0 (compatible; MapeIA-Bot/1.0; +https://mapeia.com.br)",
+      "User-Agent": "Mozilla/5.0 (compatible; MapeIA-Bot/1.0; +https://mapeiabrasil.com)",
       "Accept": "text/html,application/xhtml+xml",
       "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
     },

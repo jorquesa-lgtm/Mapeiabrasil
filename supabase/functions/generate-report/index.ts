@@ -329,7 +329,7 @@ function buildReportHtml(data: {
 
   <!-- Footer -->
   <div style="margin-top:40px;padding-top:24px;border-top:1px solid #1e3a5f;text-align:center;font-size:12px;color:#4a6fa0;">
-    <div>Relatorio gerado por MapeIA Brasil &mdash; mapeia.com.br</div>
+    <div>Relatorio gerado por MapeIA Brasil &mdash; mapeiabrasil.com</div>
     <div style="margin-top:4px;">Este relatorio e confidencial e foi gerado exclusivamente para ${name}.</div>
   </div>
 
