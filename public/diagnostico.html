@@ -2089,6 +2089,16 @@ document.getElementById('startBtn').addEventListener('click', () => {
     }),
   }).then(r => r.json()).then(d => {
     if (d && d.lead_id) state.leadId = d.lead_id;
+    // Google Ads — Lead conversion: fires once, at the moment the lead is captured (intro form)
+    if (!window.__mapeiaLeadFired && typeof window.gtag === 'function') {
+      window.__mapeiaLeadFired = true;
+      window.gtag('event', 'conversion', { send_to: ADS_LEAD_SEND_TO, value: 0, currency: 'BRL' });
+    }
+    // Meta Pixel — Lead event: fires once, at the moment the lead is captured (intro form)
+    if (!window.__mapeiaMetaLeadFired && typeof window.fbq === 'function') {
+      window.__mapeiaMetaLeadFired = true;
+      window.fbq('track', 'Lead');
+    }
   }).catch(() => {});
 
   startQuiz(true); // always full 33-question diagnostic
