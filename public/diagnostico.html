@@ -10,6 +10,7 @@
   gtag('config', 'AW-18172305016');
 </script>
 <meta charset="UTF-8">
+<script src="/meta-pixel.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico MapeIA - Sua empresa está pronta para IA?</title>
 <meta name="description" content="Faça o diagnóstico de maturidade digital da MapeIA: 35 perguntas, ~10 minutos. Descubra onde sua PME perde tempo e dinheiro e receba um plano de ação 30/60/90.">
@@ -1735,6 +1736,11 @@ document.getElementById('ecContinue').addEventListener('click', () => {
     if (!window.__mapeiaLeadFired && typeof window.gtag === 'function') {
       window.__mapeiaLeadFired = true;
       window.gtag('event', 'conversion', { send_to: ADS_LEAD_SEND_TO, value: 0, currency: 'BRL' });
+    }
+    // Meta Pixel — Lead event: fires once, only after the lead is actually saved
+    if (!window.__mapeiaMetaLeadFired && typeof window.fbq === 'function') {
+      window.__mapeiaMetaLeadFired = true;
+      window.fbq('track', 'Lead');
     }
   }).catch(() => {});
 
