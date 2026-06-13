@@ -179,6 +179,11 @@ if (kit && KIT_LABELS[kit]) {
       transaction_id: sessionId
     });
   }
+  // Meta Pixel — Purchase para compra de kit confirmada (dispara 1x; eventID = session_id do Stripe).
+  if (kit && !window.__mapeiaMetaKitPurchaseFired && typeof window.fbq === 'function') {
+    window.__mapeiaMetaKitPurchaseFired = true;
+    window.fbq('track', 'Purchase', { value: KIT_VALUES[kit] || 0, currency: 'BRL' }, sessionId ? { eventID: sessionId } : {});
+  }
 })();
 </script>
 <script>
