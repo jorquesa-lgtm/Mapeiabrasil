@@ -151,6 +151,10 @@ const KIT_URLS = {
   kit3: "/kits/kit-agendamento.html", kit4: "/kits/kit-cobranca.html",
   kit5: "/kits/kit-presenca.html", bundle: "/kits/",
 };
+// Valor mensal (R$) por kit — usado como value da conversão de Compra do Google Ads
+const KIT_VALUES = {
+  kit1: 250, kit2: 199, kit3: 199, kit4: 199, kit5: 199, bundle: 699,
+};
 
 const params = new URLSearchParams(window.location.search);
 const kit = params.get('kit') || '';
@@ -159,6 +163,22 @@ if (kit && KIT_LABELS[kit]) {
   document.getElementById('kitName').textContent = KIT_LABELS[kit];
   document.getElementById('kitLink').href = KIT_URLS[kit] || '/kits/';
 }
+
+// Google Ads — conversão de Compra para compra de kit confirmada (dispara 1x).
+// transaction_id = session_id do Stripe (o create-kit-checkout anexa &session_id=...),
+// o que deduplica contra refresh / voltar.
+(function(){
+  var sessionId = params.get('session_id') || '';
+  if (kit && !window.__mapeiaKitPurchaseFired && typeof gtag === 'function') {
+    window.__mapeiaKitPurchaseFired = true;
+    gtag('event', 'conversion', {
+      send_to: 'AW-18172305016/wn1PCNDzk7ccEPi8ndlD',
+      value: KIT_VALUES[kit] || 0,
+      currency: 'BRL',
+      transaction_id: sessionId
+    });
+  }
+})();
 </script>
 <script>
 // Close mobile drawer on link click
