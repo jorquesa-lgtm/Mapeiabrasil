@@ -528,7 +528,7 @@
           <li style="font-size:13.5px;color:var(--secondary);display:flex;align-items:center;gap:9px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copiloto de Implementação no painel</li>
         </ul>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
-          <span style="font-family:'Instrument Serif',serif;font-size:34px;color:var(--heading);">R$ 499</span>
+          <span style="font-family:'Instrument Serif',serif;font-size:34px;color:var(--heading);">R$ 99</span>
           <span style="font-size:13px;color:var(--muted);">pagamento único</span>
         </div>
         <button type="button" id="pwBuyBtn" style="width:100%;margin-top:14px;background:linear-gradient(135deg,var(--accent),var(--teal));color:#fff;border:none;padding:15px 20px;font-size:15px;font-weight:700;border-radius:980px;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,119,204,.25);">Desbloquear meu diagnóstico &rarr;</button>
@@ -822,7 +822,7 @@
           <div class="upsell-feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Roadmap 30/60/90 executável</div>
           <div class="upsell-feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Relatório PDF exportável</div>
         </div>
-        <div class="upsell-price"><span class="old">R$ 899</span>R$ 499</div>
+        <div class="upsell-price"><span class="old">R$ 499</span>R$ 99</div>
         <div class="upsell-price-sub">Pagamento único — complete o quiz e receba o relatório</div>
         <button type="button" class="upsell-btn" id="premiumBtn">Quero o relatório completo &rarr;</button>
       </div>
@@ -1378,7 +1378,7 @@ const state = {
   emailCaptured: false, // true once email step was passed
 };
 
-// --- Google Ads: Purchase conversion (R$499 diagnostic unlock) ---
+// --- Google Ads: Purchase conversion (R$99 diagnostic unlock) ---
 const ADS_PURCHASE_SEND_TO = 'AW-18172305016/wn1PCNDzk7ccEPi8ndlD';
 const ADS_LEAD_SEND_TO     = 'AW-18172305016/Ky6XCM2gx7gcEPi8ndlD';
 function fireAdsPurchase(){
@@ -1389,16 +1389,16 @@ function fireAdsPurchase(){
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'conversion', {
         send_to: ADS_PURCHASE_SEND_TO,
-        value: 499,
+        value: 99,
         currency: 'BRL',
         transaction_id: state.stripeSessionId
       });
     }
-    // Meta Pixel: mirror the Google Ads purchase conversion (R$499 diagnostic unlock).
+    // Meta Pixel: mirror the Google Ads purchase conversion (R$99 diagnostic unlock).
     // The __mapeiaPurchaseFired guard + stripeSessionId check above mean this fires
     // exactly once, only on a real Stripe purchase. No-op if the base pixel isn't loaded.
     if (typeof window !== "undefined" && window.fbq) {
-      window.fbq("track", "Purchase", { value: 499, currency: "BRL" });
+      window.fbq("track", "Purchase", { value: 99, currency: "BRL" });
     }
   } catch (e) {}
 }
@@ -1965,7 +1965,7 @@ async function saveFullDiagnostic(whatsapp, company){
     renderResult();
     showScreen('result');
   } else {
-    // Free tier — reveal score + Quick Win #1; detailed sections stay locked + R$499 upsell
+    // Free tier — reveal score + Quick Win #1; detailed sections stay locked + R$99 upsell
     renderResult();
     showScreen('result');
   }
@@ -2613,12 +2613,12 @@ function renderKitRecommendations() {
   if (!grid || !container) return;
 
   const KIT_MAP = {
-    service: { id: 'kit1', name: 'Atendente 24h no WhatsApp',       emoji: '🤖', url: '/kits/kit-atendente.html',  price: 'R$250 · pagamento único', color: '#1a9ff0', reason: 'Seu atendimento está abaixo da média. Este kit responde clientes 24h automaticamente.' },
-    sales:   { id: 'kit2', name: 'Follow-up Automático de Leads',    emoji: '💬', url: '/kits/kit-followup.html',  price: 'R$199 · pagamento único', color: '#0077cc', reason: 'Sua área de vendas precisa de atenção. Este kit recupera leads automaticamente via WhatsApp.' },
-    process: { id: 'kit3', name: 'Agendamento Anti-No-Show',          emoji: '📅', url: '/kits/kit-agendamento.html', price: 'R$199 · pagamento único', color: '#7c3aed', reason: 'Seus processos têm gargalos. Este kit elimina no-shows com lembretes automáticos.' },
-    data:    { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199 · pagamento único', color: '#d97706', reason: 'Sua gestão financeira precisa de automação. Este kit envia cobranças via WhatsApp com Pix.' },
-    infra:   { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$199 · pagamento único', color: '#d97706', reason: 'Sua infraestrutura digital tem lacunas. Comece automatizando a cobrança de clientes.' },
-    ai:      { id: 'kit5', name: 'Presença Social Automática',        emoji: '📱', url: '/kits/kit-presenca.html',  price: 'R$199 · pagamento único', color: '#db2777', reason: 'Você ainda não usa IA no marketing. Este kit gera conteúdo para redes sociais automaticamente.' },
+    service: { id: 'kit1', name: 'Atendente 24h no WhatsApp',       emoji: '🤖', url: '/kits/kit-atendente.html',  price: 'R$149/mês', color: '#1a9ff0', reason: 'Seu atendimento está abaixo da média. Este kit responde clientes 24h automaticamente.' },
+    sales:   { id: 'kit2', name: 'Follow-up Automático de Leads',    emoji: '💬', url: '/kits/kit-followup.html',  price: 'R$149/mês', color: '#0077cc', reason: 'Sua área de vendas precisa de atenção. Este kit recupera leads automaticamente via WhatsApp.' },
+    process: { id: 'kit3', name: 'Agendamento Anti-No-Show',          emoji: '📅', url: '/kits/kit-agendamento.html', price: 'R$149/mês', color: '#7c3aed', reason: 'Seus processos têm gargalos. Este kit elimina no-shows com lembretes automáticos.' },
+    data:    { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$149/mês', color: '#d97706', reason: 'Sua gestão financeira precisa de automação. Este kit envia cobranças via WhatsApp com Pix.' },
+    infra:   { id: 'kit4', name: 'Cobrança Amigável Automática',      emoji: '💰', url: '/kits/kit-cobranca.html',  price: 'R$149/mês', color: '#d97706', reason: 'Sua infraestrutura digital tem lacunas. Comece automatizando a cobrança de clientes.' },
+    ai:      { id: 'kit5', name: 'Presença Social Automática',        emoji: '📱', url: '/kits/kit-presenca.html',  price: 'R$149/mês', color: '#db2777', reason: 'Você ainda não usa IA no marketing. Este kit gera conteúdo para redes sociais automaticamente.' },
   };
 
   // Sort areas by score ascending (weakest first) and pick top 2

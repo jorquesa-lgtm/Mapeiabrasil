@@ -6,11 +6,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-// Price IDs: read from env first, fallback to live IDs for backwards compat.
-// Set STRIPE_PRICE_PREMIUM and STRIPE_PRICE_SUBSCRIPTION to override (e.g. in test mode).
+// Premium diagnostic one-time price (R$99). The Evolução subscription was retired.
 const PRICE_IDS: Record<string, string> = {
-  premium: Deno.env.get("STRIPE_PRICE_PREMIUM") || "price_1TOMNR3ZopExAYorc5jC5rgK",
-  subscription: Deno.env.get("STRIPE_PRICE_SUBSCRIPTION") || "price_1TOMNy3ZopExAYor1z7ygWa3",
+  premium: "price_1Tj3Ne3ZopExAYorDCra7EEC",
 };
 
 Deno.serve(async (req: Request) => {
@@ -46,7 +44,7 @@ Deno.serve(async (req: Request) => {
 
     const sep = successUrl.includes("?") ? "&" : "?";
     const params: Record<string, unknown> = {
-      mode: plan === "subscription" ? "subscription" : "payment",
+      mode: "payment",
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${successUrl}${sep}session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl,
