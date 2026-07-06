@@ -1222,39 +1222,39 @@ footer {
 
     <!-- LEFT: TEXT CONTENT -->
     <div class="hero-left">
-      <div class="hero-eyebrow reveal" data-i18n="hero-eyebrow">Diagnóstico de IA &amp; Automação para PMEs</div>
+      <div class="hero-eyebrow reveal" data-i18n="hero-eyebrow">Automação no WhatsApp para negócios que vivem de agenda</div>
 
       <h1 class="reveal" data-i18n="hero-title">
-        Descubra em 10 minutos onde sua empresa <em>perde tempo e dinheiro</em> — e o que fazer já na próxima semana.
+        Cada cliente que falta leva <em>R$80 a R$300</em> com ele. Corte as faltas em até 60% — <em>sem trocar de sistema</em>.
       </h1>
 
       <p class="hero-sub reveal reveal-delay-1" data-i18n="hero-subtitle">
-        Faça o diagnóstico gratuito com IA e receba um plano de ação com os 3 ajustes de maior impacto — a ferramenta, o custo e o prazo de cada um. Quando quiser, você coloca tudo pra rodar, sem contratar TI.
+        Lembrete automático no WhatsApp 24h e 1h antes do horário. Seu cliente confirma com um "SIM" — e a vaga não morre. Nós instalamos tudo para você em até 7 dias. Salões, clínicas, estética, pet: se a sua agenda paga as contas, isso é para você.
       </p>
 
       <div class="hero-support-points reveal reveal-delay-1">
         <span class="hero-support-point">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Grátis
+          Instalado para você
         </span>
         <span class="hero-support-sep">&middot;</span>
         <span class="hero-support-point">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="12" y1="11" x2="16" y2="11"/><line x1="12" y1="16" x2="16" y2="16"/><line x1="8" y1="11" x2="8.01" y2="11"/><line x1="8" y1="16" x2="8.01" y2="16"/></svg>
-          ~10 minutos
+          No ar em até 7 dias
         </span>
         <span class="hero-support-sep">&middot;</span>
         <span class="hero-support-point">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-          sem cartão · seu score na hora
+          sem fidelidade · cancele quando quiser
         </span>
       </div>
 
       <div class="hero-actions reveal reveal-delay-2">
-        <a href="/diagnostico.html" class="btn-primary" data-source="hero_cta" style="text-decoration:none;" data-i18n="hero-cta-primary">
-          Fazer diagnóstico grátis &rarr;
+        <a href="https://wa.me/5511922031943?text=Ol%C3%A1!%20Tenho%20um%20neg%C3%B3cio%20com%20agenda%20e%20quero%20cortar%20as%20faltas%20de%20clientes.%20Como%20funciona%20o%20piloto%3F" class="btn-primary" data-source="hero_cta" style="text-decoration:none;" data-i18n="hero-cta-primary">
+          Quero cortar minhas faltas &rarr;
         </a>
-        <a href="#exemplo-relatorio" class="hero-link-secondary" data-i18n="hero-cta-secondary">Ver exemplo de relatório &rarr;</a>
-        <p class="hero-microcopy" data-i18n="hero-subtitle">Faça o diagnóstico gratuito com IA e receba um plano de ação com os 3 ajustes de maior impacto — a ferramenta, o custo e o prazo de cada um. Quando quiser, você coloca tudo pra rodar, sem contratar TI.</p>
+        <a href="/diagnostico.html" class="hero-link-secondary" data-i18n="hero-cta-secondary">Prefere se avaliar antes? Diagnóstico gratuito &rarr;</a>
+        <p class="hero-microcopy" data-i18n="hero-microcopy">Você fala direto com quem instala. Resposta no mesmo dia útil.</p>
       </div>
     </div>
 
@@ -2837,7 +2837,7 @@ form.addEventListener('submit', async (e) => {
     // so it lands on the confirmation page that points to the dashboard.
     const successUrl = currentPlan === 'premium'
       ? 'https://mapeiabrasil.com/diagnostico.html?premium=1'
-      : 'https://mapeiabrasil.com/obrigado-premium';
+      : 'https://mapeiabrasil.com/obrigado-premium.html';
 
     try {
       const checkoutResp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
@@ -2924,11 +2924,11 @@ const translations = {
     'faq': 'FAQ',
     'contato': 'Contato',
     'iniciar-diagnostico': 'Iniciar diagnóstico',
-    'hero-eyebrow': 'Diagnóstico de IA & Automação para PMEs',
-    'hero-title': 'Descubra em 10 minutos onde sua empresa<br><em>perde tempo e dinheiro</em><br>— e o que fazer já na próxima semana.',
-    'hero-subtitle': 'Faça o diagnóstico gratuito com IA e receba um plano de ação com os 3 ajustes de maior impacto — a ferramenta, o custo e o prazo de cada um. Quando quiser, você coloca tudo pra rodar, sem contratar TI.',
-    'hero-cta-primary': 'Fazer diagnóstico grátis &rarr;',
-    'hero-cta-secondary': 'ou veja como funciona',
+    'hero-eyebrow': 'Automação no WhatsApp para negócios que vivem de agenda',
+    'hero-title': 'Cada cliente que falta leva <em>R$80 a R$300</em> com ele.<br>Corte as faltas em até 60% — <em>sem trocar de sistema</em>.',
+    'hero-subtitle': 'Lembrete automático no WhatsApp 24h e 1h antes do horário. Seu cliente confirma com um "SIM" — e a vaga não morre. Nós instalamos tudo para você em até 7 dias. Salões, clínicas, estética, pet: se a sua agenda paga as contas, isso é para você.',
+    'hero-cta-primary': 'Quero cortar minhas faltas &rarr;',
+    'hero-cta-secondary': 'Prefere se avaliar antes? Diagnóstico gratuito &rarr;',
     'stat-blocks': 'Blocos de análise',
     'stat-questions': 'Perguntas estruturadas',
     'stat-areas': 'Áreas diagnosticadas',

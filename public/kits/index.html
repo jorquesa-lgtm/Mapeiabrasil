@@ -269,7 +269,7 @@
         <li>Responde em 2–5 segundos</li>
       </ul>
       <a href="/kits/kit-atendente.html" class="btn-kit" style="background:linear-gradient(135deg,#0a60c0,#1a9ff0);color:#fff;">Ver kit completo →</a>
-      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$149</a>
+      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost" data-kit="kit1">Adquirir por R$149</a>
     </div>
 
     <!-- Kit 2 -->
@@ -292,7 +292,7 @@
         <li>Funciona 24h mesmo sem internet</li>
       </ul>
       <a href="/kits/kit-followup.html" class="btn-kit" style="background:linear-gradient(135deg,#007060,#00e5c8);color:#04080f;">Ver kit completo →</a>
-      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$149</a>
+      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost" data-kit="kit2">Adquirir por R$149</a>
     </div>
 
     <!-- Kit 3 -->
@@ -315,7 +315,7 @@
         <li>Reduz no-show em até 60%</li>
       </ul>
       <a href="/kits/kit-agendamento.html" class="btn-kit" style="background:linear-gradient(135deg,#4c1d95,#a78bfa);color:#fff;">Ver kit completo →</a>
-      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$149</a>
+      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost" data-kit="kit3">Adquirir por R$149</a>
     </div>
 
     <!-- Kit 4 -->
@@ -338,7 +338,7 @@
         <li>Abre negociação automaticamente</li>
       </ul>
       <a href="/kits/kit-cobranca.html" class="btn-kit" style="background:linear-gradient(135deg,#92400e,#f5c842);color:#04080f;">Ver kit completo →</a>
-      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$149</a>
+      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost" data-kit="kit4">Adquirir por R$149</a>
     </div>
 
     <!-- Kit 5 -->
@@ -361,7 +361,7 @@
         <li>Instrução de integração com Buffer</li>
       </ul>
       <a href="/kits/kit-presenca.html" class="btn-kit" style="background:linear-gradient(135deg,#831843,#ec4899);color:#fff;">Ver kit completo →</a>
-      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost">Adquirir por R$149</a>
+      <a href="https://mapeiabrasil.com/#planos" class="btn-kit-ghost" data-kit="kit5">Adquirir por R$149</a>
     </div>
 
     <!-- Bundle card in grid -->
@@ -447,7 +447,7 @@
         const r = await fetch('https://vaekdvwevooqrlubctoj.supabase.co/functions/v1/create-kit-checkout', {
           method:'POST',
           headers:{'Content-Type':'application/json','apikey':'sb_publishable_80fO4pk5-vQIyAh_DJywCQ_F-Y5eLP9'},
-          body: JSON.stringify({kit:'bundle'})
+          body: JSON.stringify({kit: btn.dataset.kit || 'bundle'})
         });
         const d = await r.json();
         if(d.ok && d.url) { window.location.href = d.url; }
