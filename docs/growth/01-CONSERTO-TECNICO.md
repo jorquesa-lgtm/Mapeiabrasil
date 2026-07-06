@@ -66,10 +66,18 @@ cenário Make quando o acesso ao projeto de produção existir nesta sessão.
 
 ## Já corrigido neste branch (IA-EXECUTADO)
 
+- ✅ Passo 1–2: fundador confirmou e colou a `anon key` correta do projeto `vaekdvwevooqrlubctoj`
+  (decodificada e verificada: `ref: vaekdvwevooqrlubctoj`, `role: anon`) — trocada em
+  `diagnostico.html`, `obrigado.html`, `admin.html`, `dev-test.html`. Commit `d764849`.
+- ✅ `sb_publishable_80fO4pk5-...` usada nos kits: fundador confirmou no dashboard do mesmo
+  projeto que é o valor correto — nenhuma troca necessária, os kit pages já estavam certos.
 - `public/kits/index.html`: cada botão "Adquirir por R$149" agora envia seu `kit1..kit5`
   (antes: todos enviavam `bundle` → checkout de R$499/mês).
 - `index.html`: success_url → `/obrigado-premium.html` (antes: caminho sem extensão, 404).
 - Hero da homepage reescrito (ver `02-REESCRITA-LANDING.md`).
+
+**Restam apenas Passos 3–6, todos exigem acesso ao host de deploy / dashboard Supabase que
+esta sessão não tem — ver abaixo.**
 
 ## Leads possivelmente perdidos no projeto antigo
 
