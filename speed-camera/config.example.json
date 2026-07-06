@@ -1,0 +1,17 @@
+{
+  "source": "rtsp://user:password@192.168.1.10:554/stream1",
+  "line_a_x": 150,
+  "line_b_x": 490,
+  "distance_meters": 20.0,
+  "speed_limit_kmh": 30.0,
+  "tolerance_kmh": 2.0,
+  "min_contour_area": 1500,
+  "max_track_distance": 120,
+  "max_disappeared_frames": 15,
+  "min_speed_kmh": 3.0,
+  "output_dir": "captures",
+  "log_csv": "captures/speed_log.csv",
+  "save_all_passes": false,
+  "show_window": false,
+  "record_annotated": ""
+}
