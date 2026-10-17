@@ -254,7 +254,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const { messages, context }: { messages: Message[]; context: DiagnosticContext } = await req.json();
+    const { messages, context, conversation_id }: { messages: Message[]; context: DiagnosticContext; conversation_id?: string } = await req.json();
     if (!messages || !context) {
       return new Response(JSON.stringify({ error: "missing_params" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -282,11 +282,18 @@ Deno.serve(async (req: Request) => {
         .rpc("increment_copilot_usage", { p_email: userEmail, p_date: today });
 
       if (usageCount && usageCount > DAILY_LIMIT) {
+        const limitReply = `Você atingiu o limite de ${DAILY_LIMIT} mensagens por dia no Copiloto. Seu limite é renovado todos os dias à meia-noite. Se precisar de mais suporte, entre em contato em mapeiabrasil.com. 🙏`;
+        if (conversation_id) {
+          const lastUserMsg = [...messages].reverse().find(m => m.role === "user")?.content ?? "";
+          try {
+            await sb.from("copilot_conversations").insert({
+              conversation_id, email: userEmail, company: context.company ?? "", sector: context.sector ?? "",
+              user_message: lastUserMsg, assistant_message: limitReply, rate_limited: true,
+            });
+          } catch (logErr) { console.error("Copilot log error:", logErr); }
+        }
         return new Response(
-          JSON.stringify({
-            reply: `Você atingiu o limite de ${DAILY_LIMIT} mensagens por dia no Copiloto. Seu limite é renovado todos os dias à meia-noite. Se precisar de mais suporte, entre em contato em mapeiabrasil.com. 🙏`,
-            rate_limited: true,
-          }),
+          JSON.stringify({ reply: limitReply, rate_limited: true }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -332,6 +339,25 @@ Deno.serve(async (req: Request) => {
     }
 
     const reply = data.content?.[0]?.text ?? "Desculpe, não consegui gerar uma resposta. Tente novamente.";
+
+    // Persist the turn (best-effort; never blocks the response)
+    if (conversation_id && supabaseUrl && supabaseKey) {
+      const lastUserMsg = [...messages].reverse().find(m => m.role === "user")?.content ?? "";
+      try {
+        const sb = createClient(supabaseUrl, supabaseKey);
+        await sb.from("copilot_conversations").insert({
+          conversation_id,
+          email: userEmail,
+          company: context.company ?? "",
+          sector: context.sector ?? "",
+          user_message: lastUserMsg,
+          assistant_message: reply,
+        });
+      } catch (logErr) {
+        console.error("Copilot log error:", logErr);
+      }
+    }
+
     return new Response(JSON.stringify({ reply }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

@@ -169,6 +169,22 @@
   .handoff .ho-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
   .wa-btn { background: var(--good); color: #fff; padding: 7px 16px; border-radius: 980px; text-decoration: none; font-size: 12px; font-weight: 600; text-align: center; }
 
+  /* Conversations */
+  .conv { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+  .conv > summary { list-style: none; cursor: pointer; padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+  .conv > summary::-webkit-details-marker { display: none; }
+  .conv > summary:hover { background: var(--surface-2); }
+  .conv-top { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+  .conv-email { font-weight: 600; font-size: 14px; color: var(--ink); }
+  .conv-co { font-size: 12px; color: var(--ink-faint); }
+  .conv-meta { font-size: 12px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .thread { display: flex; flex-direction: column; gap: 8px; padding: 6px 18px 18px; border-top: 1px solid var(--border); }
+  .bubble { max-width: 80%; padding: 9px 13px; border-radius: 14px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .bubble .who { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: .65; margin-bottom: 3px; }
+  .bubble.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.bot { align-self: flex-start; background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-bottom-left-radius: 4px; }
+  .bubble.bot.limited { border-color: color-mix(in srgb, var(--warn) 50%, var(--border)); }
+
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 70px auto; }
   @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
@@ -319,6 +335,7 @@ async function loadAll() {
     one('activations','ativar_activations','*'),
     one('handoffs','handoff_requests','id,created_at,whatsapp_number,reason,last_user_message,last_assistant_message,status'),
     one('copilot','copilot_usage','*', null),
+    one('conversations','copilot_conversations','id,conversation_id,email,company,sector,user_message,assistant_message,rate_limited,created_at',null,1000),
   ]);
   renderTabs(); renderActive();
 }
@@ -331,6 +348,7 @@ const TABS = [
   { key: 'diagnosticos',label: 'Diagnósticos' },
   { key: 'pagamentos',  label: 'Pagamentos' },
   { key: 'ativacoes',   label: 'Ativações' },
+  { key: 'conversas',   label: 'Conversas' },
   { key: 'atendimentos',label: 'Atendimentos', badge: () => pendingHandoffs().length },
   { key: 'copiloto',    label: 'Copiloto' },
 ];
@@ -388,7 +406,8 @@ function searchable(key, cols, emptyMsg, filterFn) {
 function renderActive() {
   const fn = {
     overview: renderOverview, leads: renderLeads, clientes: renderClientes, diagnosticos: renderDiagnosticos,
-    pagamentos: renderPagamentos, ativacoes: renderAtivacoes, atendimentos: renderAtendimentos, copiloto: renderCopiloto,
+    pagamentos: renderPagamentos, ativacoes: renderAtivacoes, conversas: renderConversas,
+    atendimentos: renderAtendimentos, copiloto: renderCopiloto,
   }[activeTab];
   tabContent.innerHTML = '';
   const node = fn();
@@ -528,6 +547,59 @@ function renderAtivacoes() {
   return wrap;
 }
 
+function renderConversas() {
+  const rows = data.conversations || [];
+  // Group turns into conversations
+  const groups = {};
+  rows.forEach(r => {
+    const k = r.conversation_id || r.id;
+    (groups[k] = groups[k] || { id: k, email: r.email || '—', company: r.company || '', turns: [] }).turns.push(r);
+  });
+  const convs = Object.values(groups).map(g => {
+    g.turns.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+    g.start = g.turns[0].created_at;
+    g.last = g.turns[g.turns.length-1].created_at;
+    return g;
+  }).sort((a,b) => new Date(b.last) - new Date(a.last));
+
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Conversas</h2><div class="section-sub">Histórico completo das conversas do copiloto, por cliente e sessão.</div></div></div>${errNotice('conversations')}
+    <div class="notice" style="background:color-mix(in srgb, var(--accent) 8%, var(--surface));border-color:color-mix(in srgb, var(--accent) 40%, var(--border))">O registro começa a partir do deploy desta versão — conversas anteriores não foram salvas.</div>
+    <div class="toolbar" style="margin-bottom:16px"><div class="search-wrap">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search" id="convSearch" placeholder="Buscar por cliente, empresa ou mensagem..."></div></div>
+    <div id="convList" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div class="count-row" id="convCount"></div>`;
+
+  const list = wrap.querySelector('#convList');
+  const countEl = wrap.querySelector('#convCount');
+  function draw(q) {
+    q = (q||'').toLowerCase().trim();
+    const filtered = convs.filter(c => !q || c.email.toLowerCase().includes(q) || c.company.toLowerCase().includes(q)
+      || c.turns.some(t => (t.user_message||'').toLowerCase().includes(q) || (t.assistant_message||'').toLowerCase().includes(q)));
+    if (!filtered.length) {
+      list.innerHTML = `<div class="table-wrap"><div class="empty"><h3>Nenhuma conversa</h3><p>${convs.length ? 'Ajuste a busca.' : 'Ainda não há conversas registradas.'}</p></div></div>`;
+      countEl.textContent = ''; return;
+    }
+    list.innerHTML = filtered.map(c => {
+      const thread = c.turns.map(t => `
+        <div class="bubble user"><span class="who">Cliente</span>${esc(t.user_message || '—')}</div>
+        <div class="bubble bot${t.rate_limited?' limited':''}"><span class="who">Copiloto${t.rate_limited?' · limite atingido':''}</span>${esc(t.assistant_message || '—')}</div>`).join('');
+      return `<details class="conv">
+        <summary>
+          <div class="conv-top"><span class="conv-email">${esc(c.email)}</span>${c.company?`<span class="conv-co">${esc(c.company)}</span>`:''}</div>
+          <div class="conv-meta">${c.turns.length} ${c.turns.length===1?'mensagem':'mensagens'} · ${esc(fmtDate(c.last))}</div>
+        </summary>
+        <div class="thread">${thread}</div>
+      </details>`;
+    }).join('');
+    countEl.textContent = `${filtered.length} de ${convs.length} conversas`;
+  }
+  draw('');
+  wrap.querySelector('#convSearch').addEventListener('input', (e) => draw(e.target.value));
+  return wrap;
+}
+
 function renderAtendimentos() {
   const wrap = document.createElement('div');
   const all = data.handoffs || [];
@@ -535,7 +607,7 @@ function renderAtendimentos() {
   wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Atendimentos</h2><div class="section-sub">Pedidos de atendimento humano feitos pelo copiloto — inclui a última mensagem do cliente e do bot.</div></div></div>
     ${errNotice('handoffs')}
     <div class="notice" style="background:color-mix(in srgb, var(--accent) 8%, var(--surface));border-color:color-mix(in srgb, var(--accent) 40%, var(--border))">
-      As conversas completas do copiloto <strong style="color:var(--accent)">não são armazenadas</strong> hoje. O que aparece aqui é o resumo capturado quando o cliente pede atendimento humano. Posso ativar o registro completo das conversas, se quiser.</div>
+      Aqui ficam os pedidos de atendimento humano. Para o histórico completo das conversas do copiloto, veja a aba <strong style="color:var(--accent)">Conversas</strong>.</div>
     <div class="handoffs" id="hoList"></div>`;
   const list = wrap.querySelector('#hoList');
   if (!pend.length) {
@@ -579,7 +651,7 @@ function renderCopiloto() {
   ];
   const wrap = document.createElement('div');
   wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Copiloto</h2><div class="section-sub">Uso do assistente por cliente (contagem de mensagens por dia).</div></div></div>${errNotice('copilot')}
-    <div class="notice" style="background:color-mix(in srgb, var(--accent) 8%, var(--surface));border-color:color-mix(in srgb, var(--accent) 40%, var(--border))">Mostra o volume de uso, não o conteúdo das conversas — o texto das mensagens não é salvo.</div>`;
+    <div class="notice" style="background:color-mix(in srgb, var(--accent) 8%, var(--surface));border-color:color-mix(in srgb, var(--accent) 40%, var(--border))">Mostra o volume de uso por cliente. Para ler o conteúdo das conversas, veja a aba <strong style="color:var(--accent)">Conversas</strong>.</div>`;
   wrap.insertAdjacentHTML('beforeend', tableBlock(cols, agg, 'Nenhum uso do copiloto registrado.'));
   return wrap;
 }
