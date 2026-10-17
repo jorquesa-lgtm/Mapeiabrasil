@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
-type Mode = "magic" | "login" | "register" | "forgot";
+type Mode = "magic" | "login" | "register" | "forgot" | "reset";
 
-export default function AuthPage() {
-  const [mode, setMode] = useState<Mode>("magic");
+type AuthPageProps = {
+  // "reset" is used after the user opens a password-recovery link.
+  initialMode?: Mode;
+  onPasswordReset?: () => void;
+};
+
+export default function AuthPage({ initialMode = "magic", onPasswordReset }: AuthPageProps = {}) {
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -50,9 +56,16 @@ export default function AuthPage() {
           });
         }
         setSuccess("Conta criada! Verifique seu e-mail para confirmar.");
+      } else if (mode === "reset") {
+        const { error: err } = await supabase.auth.updateUser({ password });
+        if (err) throw err;
+        setSuccess("Senha atualizada! Abrindo seu painel...");
+        onPasswordReset?.();
       } else {
+        // Recovery links must come back to the dashboard, which knows how to
+        // set a new password (the home page did not, so resets dead-ended).
         const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/?reset=1`,
+          redirectTo: `${window.location.origin}/painel.html?reset=1`,
         });
         if (err) throw err;
         setSuccess("E-mail de recuperação enviado. Verifique sua caixa de entrada.");
@@ -73,6 +86,7 @@ export default function AuthPage() {
     login: "Entrar com senha",
     register: "Criar conta",
     forgot: "Recuperar senha",
+    reset: "Nova senha",
   }[mode];
 
   const modeTitle = {
@@ -80,6 +94,7 @@ export default function AuthPage() {
     login: "Entrar na sua conta",
     register: "Criar sua conta",
     forgot: "Recuperar acesso",
+    reset: "Defina sua nova senha",
   }[mode];
 
   const modeSub = {
@@ -87,6 +102,7 @@ export default function AuthPage() {
     login: "Acesse seus relatórios e histórico de diagnósticos.",
     register: "Crie sua conta para acessar seu painel.",
     forgot: "Informe seu e-mail para receber o link de recuperação.",
+    reset: "Escolha uma nova senha com pelo menos 6 caracteres.",
   }[mode];
 
   return (
@@ -135,12 +151,14 @@ export default function AuthPage() {
                 </div>
               )}
 
-              <div>
-                <label style={labelStyle}>E-mail</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="voce@empresa.com" style={inputStyle} />
-              </div>
+              {mode !== "reset" && (
+                <div>
+                  <label style={labelStyle}>E-mail</label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="voce@empresa.com" style={inputStyle} />
+                </div>
+              )}
 
-              {(mode === "login" || mode === "register") && (
+              {(mode === "login" || mode === "register" || mode === "reset") && (
                 <div>
                   <label style={labelStyle}>Senha</label>
                   <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} placeholder="••••••••" style={inputStyle} />
@@ -148,7 +166,7 @@ export default function AuthPage() {
               )}
 
               <button type="submit" disabled={loading} style={{ background: "linear-gradient(135deg, #1a7ff0, #00b8d4)", color: "#fff", border: "none", padding: "14px 24px", borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.7 : 1, marginTop: 4, transition: "all .2s", fontFamily: "inherit" }}>
-                {loading ? "Aguarde..." : mode === "magic" ? "Enviar link de acesso →" : mode === "login" ? "Entrar" : mode === "register" ? "Criar conta" : "Enviar link"}
+                {loading ? "Aguarde..." : mode === "magic" ? "Enviar link de acesso →" : mode === "login" ? "Entrar" : mode === "register" ? "Criar conta" : mode === "reset" ? "Salvar nova senha" : "Enviar link"}
               </button>
             </form>
 

@@ -267,12 +267,31 @@ Regras:
 - Se o orcamento e 0, use SOMENTE ferramentas gratuitas.
 - Os gaps devem ser de 2 a 4 items.
 - O process_audit deve ter 3 steps.
-- Nao use acentos, cedilhas ou caracteres especiais alem de pontuacao basica.
-- Escreva em portugues brasileiro sem acentos.
+- Escreva em portugues brasileiro correto, com acentos e cedilhas (o JSON aceita UTF-8). Nunca use aspas duplas dentro dos textos.
+- Seja direto: frases curtas; nenhum campo de texto com mais de 2 frases, exceto level_description (ate 3).
+- Valores de lista fixa (severity, position, status, area) devem ser copiados exatamente como no modelo acima, sem acento.
 - Retorne APENAS o JSON, nada mais.
 - Se company_size estiver nas respostas, calibre todas as recomendacoes ao porte real: para 'solo' ou '2-5 pessoas', priorize ferramentas gratuitas ou de baixo custo; para '51-200' ou '200+', priorize integracao de sistemas e processos escalaveis.
 - Se tools_budget estiver nas respostas, NUNCA recomende ferramentas cujo custo mensal exceda esse orcamento; inclua a faixa de custo no campo tool_cost de quick_wins.
 - Mencione o porte e orcamento da empresa na level_description para mostrar que o diagnostico e personalizado.`;
+}
+
+// The UI and report colour gaps by exact keys ("critico", "importante"...).
+// Strip accents from enum-like fields in case the model writes "crítico".
+function plainKey(v: unknown): unknown {
+  return typeof v === "string"
+    ? v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase()
+    : v;
+}
+function normalizeEnums(d: Record<string, unknown>) {
+  const gaps = d?.gaps as Array<Record<string, unknown>> | undefined;
+  gaps?.forEach((g) => { g.severity = plainKey(g.severity); g.area = plainKey(g.area); });
+  const qws = d?.quick_wins as Array<Record<string, unknown>> | undefined;
+  qws?.forEach((q) => { q.area = plainKey(q.area); });
+  const bench = d?.benchmark as Record<string, unknown> | undefined;
+  if (bench) bench.position = plainKey(bench.position);
+  const steps = (d?.process_audit as Record<string, unknown> | undefined)?.steps as Array<Record<string, unknown>> | undefined;
+  steps?.forEach((st) => { st.status = plainKey(st.status); });
 }
 
 Deno.serve(async (req: Request) => {
@@ -325,10 +344,17 @@ Deno.serve(async (req: Request) => {
           "anthropic-version": "2023-06-01",
           "Content-Type": "application/json",
         },
+        // The full report JSON regularly exceeded 3000 tokens, so the reply
+        // was cut off mid-object and JSON.parse failed for every visitor
+        // (ai_parse_error -> generic fallback). 6000 leaves headroom; the
+        // assistant prefill "{" makes the model start directly with JSON.
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 3000,
-          messages: [{ role: "user", content: prompt }],
+          max_tokens: 6000,
+          messages: [
+            { role: "user", content: prompt },
+            { role: "assistant", content: "{" },
+          ],
         }),
       },
     );
@@ -346,15 +372,22 @@ Deno.serve(async (req: Request) => {
     }
 
     const anthropicData = await anthropicRes.json();
-    const rawText =
-      anthropicData?.content?.[0]?.text ?? "";
+    // Re-attach the prefilled "{" and drop any markdown fences.
+    const rawText = ("{" + (anthropicData?.content?.[0]?.text ?? ""))
+      .replace(/```(?:json)?/g, "")
+      .trim();
 
     let parsed;
     try {
       const jsonMatch = rawText.match(/\{[\s\S]*\}/);
       parsed = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
     } catch {
-      console.error("[generate-diagnostic] JSON parse failed", rawText.slice(0, 500));
+      console.error(
+        "[generate-diagnostic] JSON parse failed",
+        "stop_reason=", anthropicData?.stop_reason,
+        "output_tokens=", anthropicData?.usage?.output_tokens,
+        rawText.slice(0, 300),
+      );
       return new Response(
         JSON.stringify({ error: "ai_parse_error", fallback: true }),
         {
@@ -363,6 +396,8 @@ Deno.serve(async (req: Request) => {
         },
       );
     }
+
+    normalizeEnums(parsed);
 
     return new Response(
       JSON.stringify({ ok: true, data: parsed }),

@@ -8,9 +8,18 @@ import AdminLeads from "./pages/AdminLeads";
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  // Opened from a password-recovery e-mail (?reset=1 is added by AuthPage;
+  // the hash/event covers links issued before that change).
+  const [recovery, setRecovery] = useState(
+    () => new URLSearchParams(window.location.search).get("reset") === "1" ||
+      window.location.hash.includes("type=recovery"),
+  );
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => { setSession(data.session); setLoading(false); });
-    const { data: listener } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    const { data: listener } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === "PASSWORD_RECOVERY") setRecovery(true);
+      setSession(s);
+    });
     return () => listener.subscription.unsubscribe();
   }, []);
   if (loading) {
@@ -22,5 +31,16 @@ export default function App() {
   }
   if (window.location.pathname === "/admin/ativar") return <AdminAtivar />;
   if (window.location.pathname === "/admin") return <AdminLeads />;
+  if (session && recovery) {
+    return (
+      <AuthPage
+        initialMode="reset"
+        onPasswordReset={() => {
+          setRecovery(false);
+          window.history.replaceState(null, "", "/painel.html");
+        }}
+      />
+    );
+  }
   return session ? <DashboardPage user={session.user} /> : <AuthPage />;
 }

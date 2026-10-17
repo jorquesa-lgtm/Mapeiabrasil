@@ -823,7 +823,7 @@
           <div class="upsell-feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Relatório PDF exportável</div>
         </div>
         <div class="upsell-price"><span class="old">R$ 499</span>R$ 99</div>
-        <div class="upsell-price-sub">Pagamento único — complete o quiz e receba o relatório</div>
+        <div class="upsell-price-sub">Pagamento único — seu relatório completo é liberado na hora</div>
         <button type="button" class="upsell-btn" id="premiumBtn">Quero o relatório completo &rarr;</button>
       </div>
     </div>
@@ -1883,12 +1883,22 @@ async function saveFullDiagnostic(whatsapp, company){
     }).catch(() => {});
   }
 
-  // Save diagnostic
+  // Save diagnostic.
+  // The id is generated here and the row is NOT read back: visitors may insert
+  // but not read diagnostics (RLS), and `.insert().select()` made Postgres
+  // reject the whole insert (401), so no diagnostic was being saved at all.
   try {
     const planTier = state.isPremium ? 'premium' : 'free';
-    const { data: diag } = await supabase
+    const newDiagId = (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+          const r = Math.random() * 16 | 0;
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    const { error: diagErr } = await supabase
       .from('diagnostic_responses')
       .insert({
+        id: newDiagId,
         lead_id: state.leadId,
         user_id: authedUserId,
         email: email.toLowerCase(),
@@ -1906,12 +1916,11 @@ async function saveFullDiagnostic(whatsapp, company){
         website_url: state.websiteUrl || '',
         company_intel: state.companyIntel || {},
         ai_data: state.aiData || {},
-      })
-      .select('id')
-      .maybeSingle();
-    state.diagId = diag?.id || null;
+      });
+    if (diagErr) throw diagErr;
+    state.diagId = newDiagId;
     sessionStorage.setItem('mapeia_diag_meta', JSON.stringify({
-      diag_id: diag?.id || null,
+      diag_id: newDiagId,
       user_id: authedUserId,
       sector: state.answers.sector || '',
       global_score: state.globalScore,
@@ -2872,6 +2881,10 @@ if (_premiumBtn) _premiumBtn.addEventListener('click', async () => {
 }
 .wa-btn:hover { transform: scale(1.1); }
 .wa-btn.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+@media (max-width: 640px) {
+  .wa-btn { width: 48px; height: 48px; bottom: 14px; right: 12px; }
+  body { padding-bottom: 72px; }
+}
 </style>
 <a class="wa-btn hidden"
    id="waBtn"
