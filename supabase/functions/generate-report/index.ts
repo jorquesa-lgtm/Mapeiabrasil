@@ -96,7 +96,8 @@ function buildRadarSvg(area_scores: Record<string, number>): string {
 </svg>`;
 }
 
-function buildReportHtml(data: {
+// Kept for a future PDF attachment; not used by the handler today.
+export function buildReportHtml(data: {
   name: string;
   email: string;
   company: string;
@@ -338,141 +339,199 @@ function buildReportHtml(data: {
 </html>`;
 }
 
+// Escape user-controlled text before it goes into an email body.
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function respond(payload: unknown, status = 200) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+// SECURITY MODEL (2026-10-17 audit):
+// This endpoint is callable with the public anon key, so it must not trust
+// anything in the request body except `diag_id`. It only acts on a diagnostic
+// row that verify-premium or stripe-webhook already marked `unlocked = true`
+// after checking the payment server-side, it always emails the address stored
+// on that row, and it never sends the same report twice.
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "method_not_allowed" }), {
-      status: 405,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return respond({ error: "method_not_allowed" }, 405);
   }
 
   try {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-    const FROM_EMAIL = Deno.env.get("LEAD_FROM_EMAIL") ?? "MapeIA Brasil <servicoalcliente@mapeiabrasil.com>";
+    const FROM_EMAIL = Deno.env.get("LEAD_FROM_EMAIL") ?? "MapeIA Brasil <servicoaocliente@mapeiabrasil.com>";
 
     const body = await req.json().catch(() => ({}));
-    const {
-      diag_id,
-      user_id,
-      stripe_session_id,
-      email,
-      name,
-      company,
-      site,
-      sector,
-      global_score,
-      maturity_level,
-      area_scores,
-      ai_data,
-    } = body;
-
-    if (!email || !ai_data) {
-      return new Response(JSON.stringify({ error: "missing_required_fields" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    const diagId = String(body?.diag_id ?? "").trim();
+    if (!UUID_RE.test(diagId)) {
+      return respond({ error: "missing_or_invalid_diag_id" }, 400);
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Store report data
-    const { data: report, error: insertError } = await supabase
-      .from("report_data")
-      .insert({
-        diag_id: diag_id || null,
-        user_id: user_id || null,
-        email,
-        stripe_session_id: stripe_session_id || "",
-        ai_data,
-        pdf_sent: false,
-        respondent_name: name || null,
-        respondent_company: company || null,
-        respondent_site: site || null,
-      })
-      .select("id")
+    // 1. The diagnostic must exist and be unlocked (paid or valid access code).
+    const { data: diag, error: diagErr } = await supabase
+      .from("diagnostic_responses")
+      .select("id, email, user_id, lead_id, sector, global_score, maturity_level, area_scores, ai_data, answers, website_url, stripe_session_id, access_code, unlocked")
+      .eq("id", diagId)
       .maybeSingle();
 
-    if (insertError) {
-      console.error("[generate-report] insert error", insertError);
+    if (diagErr) {
+      console.error("[generate-report] diag lookup error", diagErr);
+      return respond({ error: "lookup_failed" }, 500);
+    }
+    if (!diag || diag.unlocked !== true) {
+      return respond({ error: "not_unlocked" }, 403);
     }
 
-    // Auto-populate user_goals from the 30/60/90 roadmap (if user is authenticated)
-    if (user_id && diag_id && ai_data?.roadmap) {
-      const AREA_MAP: Record<string, string> = {
-        infra: "infra", process: "process", ai: "ai",
-        data: "data", sales: "sales", service: "service",
-      };
-      const phaseMap: Array<{ key: string; prazo: string; source: string }> = [
-        { key: "d30", prazo: "30 dias", source: "roadmap_30" },
-        { key: "d60", prazo: "60 dias", source: "roadmap_60" },
-        { key: "d90", prazo: "90 dias", source: "roadmap_90" },
-      ];
-      const goalsToInsert: Array<Record<string, unknown>> = [];
-      for (const phase of phaseMap) {
-        const ph = (ai_data.roadmap as Record<string, { actions?: Array<{ title: string; area?: string }> }>)[phase.key];
-        if (!ph?.actions) continue;
-        for (const action of ph.actions) {
-          const rawArea = (action.area || "").toLowerCase();
-          const category = AREA_MAP[rawArea] || "geral";
-          goalsToInsert.push({
-            user_id,
-            title: action.title || "",
-            description: `Fase ${phase.prazo} — gerado automaticamente pelo diagnóstico`,
-            category,
-            priority: phase.key === "d30" ? "alta" : phase.key === "d60" ? "media" : "baixa",
-            source: phase.source,
-            source_diag_id: diag_id,
-          });
+    const email = String(diag.email || "").toLowerCase();
+    const aiData = (diag.ai_data && typeof diag.ai_data === "object") ? diag.ai_data as Record<string, unknown> : {};
+    if (!email || Object.keys(aiData).length === 0) {
+      return respond({ error: "diagnostic_incomplete" }, 409);
+    }
+
+    // 2. Idempotency: stripe-webhook and verify-premium can both fire for the
+    //    same purchase. Only the first call creates the report and sends it.
+    const { data: existing } = await supabase
+      .from("report_data")
+      .select("id, pdf_sent")
+      .eq("diag_id", diagId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (existing?.pdf_sent) {
+      return respond({ ok: true, report_id: existing.id, email_sent: false, duplicate: true });
+    }
+
+    // 3. Respondent identity comes from our own lead record, not the request.
+    let leadRow: { name?: string | null; company?: string | null } | null = null;
+    if (diag.lead_id) {
+      const { data } = await supabase.from("leads").select("name, company").eq("id", diag.lead_id).maybeSingle();
+      leadRow = data;
+    }
+    if (!leadRow) {
+      const { data } = await supabase
+        .from("leads")
+        .select("name, company")
+        .eq("email", email)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      leadRow = data;
+    }
+    const name = (leadRow?.name || "").slice(0, 200);
+    const company = (leadRow?.company || "").slice(0, 200);
+    const site = String(diag.website_url || (diag.answers as Record<string, unknown> | null)?.website_url || "").slice(0, 300);
+
+    // 4. Goals may only be attached to the diagnostic's owner. A user_id from
+    //    the request is accepted only when that account's email matches the row.
+    let goalsUserId: string | null = diag.user_id ?? null;
+    const requestedUserId = String(body?.user_id ?? "").trim();
+    if (!goalsUserId && UUID_RE.test(requestedUserId)) {
+      const { data: authUser } = await supabase.auth.admin.getUserById(requestedUserId);
+      if (authUser?.user?.email?.toLowerCase() === email) goalsUserId = requestedUserId;
+    }
+
+    // Store report data (or reuse an unsent row from an earlier failed attempt)
+    let reportId: string | null = existing?.id ?? null;
+    if (!reportId) {
+      const { data: report, error: insertError } = await supabase
+        .from("report_data")
+        .insert({
+          diag_id: diagId,
+          user_id: goalsUserId,
+          email,
+          stripe_session_id: diag.stripe_session_id || "",
+          ai_data: aiData,
+          pdf_sent: false,
+          respondent_name: name || null,
+          respondent_company: company || null,
+          respondent_site: site || null,
+        })
+        .select("id")
+        .maybeSingle();
+      if (insertError) console.error("[generate-report] insert error", insertError);
+      reportId = report?.id ?? null;
+
+      // Auto-populate user_goals from the 30/60/90 roadmap — once per report.
+      if (goalsUserId && reportId && aiData.roadmap) {
+        const AREA_MAP: Record<string, string> = {
+          infra: "infra", process: "process", ai: "ai",
+          data: "data", sales: "sales", service: "service",
+        };
+        const phaseMap: Array<{ key: string; prazo: string; source: string }> = [
+          { key: "d30", prazo: "30 dias", source: "roadmap_30" },
+          { key: "d60", prazo: "60 dias", source: "roadmap_60" },
+          { key: "d90", prazo: "90 dias", source: "roadmap_90" },
+        ];
+        const goalsToInsert: Array<Record<string, unknown>> = [];
+        for (const phase of phaseMap) {
+          const ph = (aiData.roadmap as Record<string, { actions?: Array<{ title: string; area?: string }> }>)[phase.key];
+          if (!ph?.actions) continue;
+          for (const action of ph.actions) {
+            const rawArea = (action.area || "").toLowerCase();
+            goalsToInsert.push({
+              user_id: goalsUserId,
+              title: action.title || "",
+              description: `Fase ${phase.prazo} — gerado automaticamente pelo diagnóstico`,
+              category: AREA_MAP[rawArea] || "geral",
+              priority: phase.key === "d30" ? "alta" : phase.key === "d60" ? "media" : "baixa",
+              source: phase.source,
+              source_diag_id: diagId,
+            });
+          }
+        }
+        if (goalsToInsert.length > 0) {
+          const { error: goalsErr } = await supabase.from("user_goals").insert(goalsToInsert);
+          if (goalsErr) console.error("[generate-report] goals insert error", goalsErr);
         }
       }
-      if (goalsToInsert.length > 0) {
-        const { error: goalsErr } = await supabase.from("user_goals").insert(goalsToInsert);
-        if (goalsErr) console.error("[generate-report] goals insert error", goalsErr);
-      }
     }
 
-    // Build HTML report
-    const reportHtml = buildReportHtml({
-      name: name || email,
-      email,
-      company: company || "",
-      sector: sector || "",
-      global_score: global_score || 0,
-      maturity_level: maturity_level || 1,
-      area_scores: area_scores || {},
-      ai: ai_data,
-    });
-
-    // Send via Resend as HTML email (print-to-PDF quality)
+    // Send via Resend — always to the address stored on the diagnostic row.
     let emailSent = false;
     if (RESEND_API_KEY) {
+      const greetingName = escapeHtml(name);
+      const subjectName = (name || email).replace(/[\r\n]+/g, " ").slice(0, 120);
       const emailPayload = {
         from: FROM_EMAIL,
         to: [email],
-        subject: `Seu Relatorio MapeIA — ${name || email}`,
+        subject: `Seu Relatório MapeIA — ${subjectName}`,
         html: `
           <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#040812;color:#c8daf0;padding:32px 24px;border-radius:12px;">
-            <h1 style="font-size:22px;color:#f4f8ff;margin-bottom:8px;">Seu relatorio esta pronto!</h1>
-            <p style="color:#7a9ec8;margin-bottom:24px;">Ola ${name || ""},</p>
+            <h1 style="font-size:22px;color:#f4f8ff;margin-bottom:8px;">Seu relatório está pronto!</h1>
+            <p style="color:#7a9ec8;margin-bottom:24px;">Olá ${greetingName},</p>
             <p style="color:#c8daf0;margin-bottom:16px;">
-              Seu Relatorio Completo de Maturidade em IA esta disponivel no seu painel.
-              Clique no botao abaixo para acessar — seu e-mail ja estara preenchido.
+              Seu Relatório Completo de Maturidade em IA está disponível no seu painel.
+              Clique no botão abaixo para acessar — seu e-mail já estará preenchido.
             </p>
             <div style="text-align:center;margin:28px 0;">
               <a href="https://mapeiabrasil.com/painel.html?email=${encodeURIComponent(email)}"
                  style="background:linear-gradient(135deg,#1a7ff0,#00b8d4);color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;text-decoration:none;font-size:15px;">
-                Acessar Meu Relatorio
+                Acessar meu relatório
               </a>
             </div>
             <p style="font-size:12px;color:#4a6fa0;margin-top:24px;text-align:center;">
               MapeIA Brasil &mdash; mapeiabrasil.com<br>
-              Duvidas? <a href="mailto:contato@mapeiabrasil.com" style="color:#7a9ec8;">contato@mapeiabrasil.com</a>
+              Dúvidas? <a href="mailto:servicoaocliente@mapeiabrasil.com" style="color:#7a9ec8;">servicoaocliente@mapeiabrasil.com</a>
             </p>
           </div>`,
       };
@@ -487,24 +546,19 @@ Deno.serve(async (req: Request) => {
       });
 
       emailSent = resendRes.ok;
+      if (!emailSent) console.error("[generate-report] resend error", resendRes.status, await resendRes.text());
 
-      if (emailSent && report?.id) {
+      if (emailSent && reportId) {
         await supabase
           .from("report_data")
           .update({ pdf_sent: true, pdf_sent_at: new Date().toISOString() })
-          .eq("id", report.id);
+          .eq("id", reportId);
       }
     }
 
-    return new Response(
-      JSON.stringify({ ok: true, report_id: report?.id, email_sent: emailSent }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    return respond({ ok: true, report_id: reportId, email_sent: emailSent });
   } catch (err) {
     console.error("[generate-report] unexpected", err);
-    return new Response(
-      JSON.stringify({ error: "unexpected" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    return respond({ error: "unexpected" }, 500);
   }
 });

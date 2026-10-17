@@ -34,8 +34,8 @@ Deno.serve(async (req: Request) => {
 
     const body = await req.json().catch(() => ({}));
     const plan: string = body.plan || "premium";
-    const successUrl: string = body.success_url || "https://mapeiabrasil.com/obrigado";
-    const cancelUrl: string = body.cancel_url || "https://mapeiabrasil.com/diagnostico";
+    const successUrl: string = body.success_url || "https://mapeiabrasil.com/diagnostico.html?premium=1";
+    const cancelUrl: string = body.cancel_url || "https://mapeiabrasil.com/diagnostico.html";
     const email: string | undefined = body.email;
     const diagId: string | undefined = body.diag_id;
     const score: number | undefined = body.score;
