@@ -46,6 +46,9 @@ export default function CopilotDrawer({ context }: CopilotDrawerProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasGreeted, setHasGreeted] = useState(false);
+  const conversationId = useRef<string>(
+    typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now())
+  ).current;
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -97,6 +100,7 @@ export default function CopilotDrawer({ context }: CopilotDrawerProps) {
         body: {
           messages: newMessages.filter(m => m.role !== "assistant" || newMessages.indexOf(m) > 0),
           context,
+          conversation_id: conversationId,
         },
       });
 
