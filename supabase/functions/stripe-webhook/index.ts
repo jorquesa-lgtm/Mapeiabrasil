@@ -67,8 +67,18 @@ Deno.serve(async (req: Request) => {
     const event = JSON.parse(payload);
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    if (event.type === "checkout.session.completed") {
+    // `completed` fires when the customer finishes checkout; for asynchronous
+    // methods (boleto, Pix) the money may not have arrived yet. Those sessions
+    // are recorded as `incomplete` and unlocked only when Stripe later sends
+    // `checkout.session.async_payment_succeeded`.
+    if (
+      event.type === "checkout.session.completed" ||
+      event.type === "checkout.session.async_payment_succeeded"
+    ) {
       const session = event.data.object;
+      const paymentOk =
+        session.payment_status === "paid" ||
+        session.payment_status === "no_payment_required";
       const customerEmail: string = session.customer_details?.email || session.customer_email || "";
       const customerId: string = session.customer || "";
       const subscriptionId: string | null = session.subscription || null;
@@ -86,10 +96,15 @@ Deno.serve(async (req: Request) => {
             stripe_session_id: sessionId,
             stripe_subscription_id: subscriptionId,
             plan,
-            status: "active",
+            status: paymentOk ? "active" : "incomplete",
           },
           { onConflict: "stripe_session_id" },
         );
+
+        if (!paymentOk) {
+          console.log(`[webhook] kit checkout awaiting async payment: ${plan}`);
+          return new Response(JSON.stringify({ ok: true, kit: kitId, pending: true }), { status: 200 });
+        }
 
         // Send kit purchase confirmation email via Resend
         const KIT_INFO: Record<string, { name: string; url: string; emoji: string }> = {
@@ -133,7 +148,7 @@ Deno.serve(async (req: Request) => {
       </div>
       <hr style="border:none;border-top:1px solid #e8e8ed;margin:24px 0;">
       <p style="font-size:12px;color:#86868b;text-align:center;line-height:1.6;margin:0;">
-        MapeAI Brasil · <a href="https://mapeiabrasil.com" style="color:#86868b;">mapeiabrasil.com</a><br>
+        MapeIA Brasil · <a href="https://mapeiabrasil.com" style="color:#86868b;">mapeiabrasil.com</a><br>
         Dúvidas? Responda este e-mail ou acesse o Copiloto no painel.
       </p>
     </div>
@@ -145,7 +160,7 @@ Deno.serve(async (req: Request) => {
             method: "POST",
             headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              from: "MapeAI Brasil <noreply@mapeiabrasil.com>",
+              from: "MapeIA Brasil <noreply@mapeiabrasil.com>",
               to: [customerEmail],
               subject: `${kit.emoji} Kit confirmado — ${kit.name}`,
               html,
@@ -165,11 +180,19 @@ Deno.serve(async (req: Request) => {
           stripe_subscription_id: subscriptionId,
           stripe_session_id: sessionId,
           plan,
-          status: "active",
-          current_period_end: subscriptionId ? null : null,
+          status: paymentOk ? "active" : "incomplete",
+          current_period_end: null,
         },
         { onConflict: "stripe_session_id" },
       );
+
+      if (!paymentOk) {
+        // Wait for checkout.session.async_payment_succeeded before unlocking.
+        return new Response(JSON.stringify({ received: true, pending: true }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       // Locate the diagnostic row for this payment. Priority:
       // 1. Match by stripe_session_id (linked by verify-premium or a prior webhook)

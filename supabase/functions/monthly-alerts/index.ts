@@ -200,7 +200,7 @@ function buildRediagEmail(data: {
   <div style="text-align:center;font-size:11px;color:#4a6fa0;line-height:2;">
     MapeIA Brasil &mdash; mapeiabrasil.com<br>
     Voce recebe este email por ter um <strong style="color:#00e5c8;">kit de automacao ativo</strong> na MapeIA.<br>
-    Duvidas? <a href="mailto:servicoalcliente@mapeiabrasil.com" style="color:#4a6fa0;text-decoration:underline;">servicoalcliente@mapeiabrasil.com</a>
+    Duvidas? <a href="mailto:servicoaocliente@mapeiabrasil.com" style="color:#4a6fa0;text-decoration:underline;">servicoaocliente@mapeiabrasil.com</a>
   </div>
 
 </div>
@@ -217,16 +217,20 @@ Deno.serve(async (req: Request) => {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-    const FROM_EMAIL = Deno.env.get("LEAD_FROM_EMAIL") ?? "MapeIA Brasil <servicoalcliente@mapeiabrasil.com>";
+    const FROM_EMAIL = Deno.env.get("LEAD_FROM_EMAIL") ?? "MapeIA Brasil <servicoaocliente@mapeiabrasil.com>";
     const APP_URL = Deno.env.get("APP_URL") ?? "https://mapeiabrasil.com";
     const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
 
-    // Authorization: accept either cron secret or service role key
+    // Authorization: the caller must present the cron secret or the service
+    // role key as a Bearer token. Fails closed: with no CRON_SECRET configured,
+    // only the service role key is accepted (previously anyone could trigger a
+    // mass email send).
     const authHeader = req.headers.get("Authorization") ?? "";
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim();
     const isAuthorized =
-      !CRON_SECRET ||
-      authHeader.includes(CRON_SECRET) ||
-      authHeader.includes(SUPABASE_SERVICE_ROLE_KEY);
+      token.length > 0 &&
+      ((CRON_SECRET.length > 0 && token === CRON_SECRET) ||
+        (SUPABASE_SERVICE_ROLE_KEY.length > 0 && token === SUPABASE_SERVICE_ROLE_KEY));
 
     if (!isAuthorized) {
       return new Response(JSON.stringify({ error: "unauthorized" }), {
@@ -326,7 +330,7 @@ Deno.serve(async (req: Request) => {
           areaScores,
           month: monthLabel,
           diagUrl: `${APP_URL}/diagnostico.html`,
-          dashboardUrl: `${APP_URL}/painel`,
+          dashboardUrl: `${APP_URL}/painel.html`,
         });
 
         let emailOk = false;

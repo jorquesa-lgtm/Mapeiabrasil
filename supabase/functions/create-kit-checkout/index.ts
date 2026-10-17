@@ -30,6 +30,30 @@ const KIT_LABELS: Record<string, string> = {
   bundle: "Pacote Completo — 5 Kits",
 };
 
+// Flatten nested objects/arrays into Stripe's form encoding:
+// { subscription_data: { metadata: { kit: "kit2" } } } -> "subscription_data[metadata][kit]=kit2"
+function flattenParams(obj: Record<string, unknown>, prefix = ""): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === undefined || value === null) continue;
+    const fullKey = prefix ? `${prefix}[${key}]` : key;
+    if (Array.isArray(value)) {
+      value.forEach((item, i) => {
+        if (item !== null && typeof item === "object") {
+          Object.assign(out, flattenParams(item as Record<string, unknown>, `${fullKey}[${i}]`));
+        } else {
+          out[`${fullKey}[${i}]`] = String(item);
+        }
+      });
+    } else if (typeof value === "object") {
+      Object.assign(out, flattenParams(value as Record<string, unknown>, fullKey));
+    } else {
+      out[fullKey] = String(value);
+    }
+  }
+  return out;
+}
+
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -82,20 +106,10 @@ Deno.serve(async (req: Request) => {
         Authorization: `Bearer ${stripeKey}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: new URLSearchParams(
-        Object.entries(sessionPayload).flatMap(([k, v]) => {
-          if (k === "line_items") {
-            const items = v as Array<Record<string, unknown>>;
-            return items.flatMap((item, i) =>
-              Object.entries(item).map(([ik, iv]) => [`line_items[${i}][${ik}]`, String(iv)])
-            );
-          }
-          if (k === "metadata") {
-            return Object.entries(v as Record<string, string>).map(([mk, mv]) => [`metadata[${mk}]`, mv]);
-          }
-          return [[k, String(v)]];
-        })
-      ).toString(),
+      // Encode nested objects in Stripe's bracket notation. The previous
+      // hand-rolled encoder sent `subscription_data=[object Object]`, which
+      // Stripe rejects with "Invalid object" — every kit checkout failed.
+      body: new URLSearchParams(flattenParams(sessionPayload)).toString(),
     });
 
     const session = await stripeRes.json();

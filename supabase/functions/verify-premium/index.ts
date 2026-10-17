@@ -90,10 +90,12 @@ Deno.serve(async (req: Request) => {
       }
 
       const session = await stripeRes.json();
+      // Only money actually received unlocks the report. A session can be
+      // `complete` while `payment_status` is still `unpaid` (boleto/Pix are
+      // settled asynchronously), so `status` alone must not unlock anything.
       const paid =
         session.payment_status === "paid" ||
-        session.status === "complete" ||
-        (session.mode === "subscription" && session.status === "active");
+        session.payment_status === "no_payment_required";
 
       if (!paid) {
         return json({ ok: false, paid: false, status: session.status, payment_status: session.payment_status }, 200);
