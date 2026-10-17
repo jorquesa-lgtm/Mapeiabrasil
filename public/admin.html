@@ -9,6 +9,7 @@
     color-scheme: light;
     --bg: #f5f5f7;
     --surface: #ffffff;
+    --surface-2: #fafafc;
     --border: #e8e8ed;
     --ink: #1d1d1f;
     --ink-soft: #6e6e73;
@@ -25,70 +26,43 @@
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --bg: #000000;
-      --surface: #1c1c1e;
-      --border: #2c2c2e;
-      --ink: #f5f5f7;
-      --ink-soft: #aeaeb2;
-      --ink-faint: #8e8e93;
-      --accent: #0a84ff;
-      --accent-hi: #409cff;
-      --good: #30d158;
-      --warn: #ff9f0a;
-      --crit: #ff453a;
+      --bg: #000000; --surface: #1c1c1e; --surface-2: #161618; --border: #2c2c2e;
+      --ink: #f5f5f7; --ink-soft: #aeaeb2; --ink-faint: #8e8e93;
+      --accent: #0a84ff; --accent-hi: #409cff;
+      --good: #30d158; --warn: #ff9f0a; --crit: #ff453a;
       --shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #000000;
-    --surface: #1c1c1e;
-    --border: #2c2c2e;
-    --ink: #f5f5f7;
-    --ink-soft: #aeaeb2;
-    --ink-faint: #8e8e93;
-    --accent: #0a84ff;
-    --accent-hi: #409cff;
-    --good: #30d158;
-    --warn: #ff9f0a;
-    --crit: #ff453a;
+    --bg: #000000; --surface: #1c1c1e; --surface-2: #161618; --border: #2c2c2e;
+    --ink: #f5f5f7; --ink-soft: #aeaeb2; --ink-faint: #8e8e93;
+    --accent: #0a84ff; --accent-hi: #409cff;
+    --good: #30d158; --warn: #ff9f0a; --crit: #ff453a;
     --shadow: 0 2px 10px rgba(0,0,0,0.5);
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; }
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--font);
-    font-size: 15px;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; -webkit-font-smoothing: antialiased; }
   [hidden] { display: none !important; }
 
-  /* Top bar */
   .top {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
     padding-block: 14px;
     padding-left: max(24px, env(safe-area-inset-left, 0px));
     padding-right: max(24px, env(safe-area-inset-right, 0px));
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    background: var(--surface); border-bottom: 1px solid var(--border);
     position: sticky; top: 0; z-index: 50;
   }
   .brand { display: flex; align-items: baseline; gap: 8px; }
   .brand-name { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
   .brand-tag { font-weight: 400; font-size: 17px; color: var(--ink-faint); }
-  .me { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--ink-faint); }
+  .me { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--ink-faint); }
+  .me .email { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  .btn {
-    font-family: inherit; cursor: pointer;
-    border: 1px solid var(--border); background: var(--surface); color: var(--ink);
-    padding: 8px 18px; border-radius: 980px;
-    font-weight: 500; font-size: 13px;
-    transition: background .15s, border-color .15s;
-  }
+  .btn { font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+    padding: 8px 18px; border-radius: 980px; font-weight: 500; font-size: 13px; transition: background .15s, border-color .15s; }
   .btn:hover { border-color: var(--ink-faint); }
   .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .btn.primary { background: var(--accent); border-color: transparent; color: #fff; font-weight: 600; }
@@ -96,120 +70,123 @@
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn-sm { padding: 6px 14px; font-size: 12px; }
 
-  .shell {
-    max-width: 1180px; margin: 0 auto;
-    padding-block: 32px 64px;
-    padding-left: max(24px, env(safe-area-inset-left, 0px));
-    padding-right: max(24px, env(safe-area-inset-right, 0px));
-  }
+  .shell { max-width: 1240px; margin: 0 auto; padding-block: 24px 64px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
 
   /* Login */
   .login-wrap { min-height: 78vh; display: flex; align-items: center; justify-content: center; }
-  .login-card {
-    width: 100%; max-width: 420px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 36px; box-shadow: var(--shadow);
-  }
+  .login-card { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); }
   .login-card h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; text-wrap: balance; }
   .login-card p { color: var(--ink-soft); font-size: 14px; margin-bottom: 24px; }
   .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
   .field label { font-size: 11px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
-  .field input {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    padding: 11px 14px; color: var(--ink); font-family: inherit; font-size: 14px;
-    transition: border-color .15s, box-shadow .15s;
-  }
+  .field input { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px;
+    color: var(--ink); font-family: inherit; font-size: 14px; transition: border-color .15s, box-shadow .15s; }
   .field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
-  .err {
-    background: color-mix(in srgb, var(--crit) 10%, var(--surface));
-    border: 1px solid var(--crit); color: var(--crit);
-    padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; margin-bottom: 14px;
-  }
+  .err { background: color-mix(in srgb, var(--crit) 10%, var(--surface)); border: 1px solid var(--crit); color: var(--crit);
+    padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; margin-bottom: 14px; }
   .login-btn { width: 100%; padding: 12px; font-size: 14px; border-radius: 12px; }
   .mini-hint { margin-top: 16px; font-size: 12px; color: var(--ink-faint); text-align: center; line-height: 1.5; }
   .mini-hint code { background: var(--bg); padding: 2px 5px; border-radius: 4px; font-size: 11px; }
 
+  /* Tabs */
+  .tabbar { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 24px; padding-bottom: 2px;
+    border-bottom: 1px solid var(--border); scrollbar-width: thin; }
+  .tab { flex: 0 0 auto; background: none; border: none; font-family: inherit; font-size: 14px; font-weight: 500;
+    color: var(--ink-faint); padding: 10px 14px; cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; white-space: nowrap; transition: color .15s; }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab .badge { display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 5px; border-radius: 980px;
+    background: var(--warn); color: #fff; font-size: 11px; font-weight: 700; vertical-align: middle; }
+
   /* Stats */
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 28px; }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); }
-  .stat-val { font-size: 34px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow); }
+  .stat-val { font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .stat-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin-top: 8px; }
   .stat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-  .section-title { font-size: 17px; font-weight: 600; margin: 0 0 16px; display: flex; align-items: center; gap: 8px; }
-  .section-count { font-size: 13px; font-weight: 500; }
-
-  /* Handoffs */
-  .handoffs { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
-  .handoff {
-    background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--warn);
-    border-radius: 14px; padding: 16px 20px; box-shadow: var(--shadow);
-    display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap;
-  }
-  .handoff .ho-main { min-width: 0; flex: 1 1 260px; }
-  .handoff .ho-num { font-size: 14px; font-weight: 600; }
-  .handoff .ho-reason { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
-  .handoff .ho-msg { font-size: 12px; color: var(--ink-faint); margin-top: 6px; font-style: italic; }
-  .handoff .ho-date { font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
-  .handoff .ho-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
-  .wa-btn { background: var(--good); color: #fff; padding: 7px 16px; border-radius: 980px; text-decoration: none; font-size: 12px; font-weight: 600; text-align: center; }
+  .section-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .section-title { font-size: 19px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .section-sub { font-size: 13px; color: var(--ink-faint); margin-top: 2px; }
 
   /* Toolbar */
-  .toolbar { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-  .toolbar .left, .toolbar .right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .search-wrap { position: relative; }
   .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--ink-faint); pointer-events: none; }
-  .search, .select {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    color: var(--ink); font-family: inherit; font-size: 13px;
-    transition: border-color .15s, box-shadow .15s;
-  }
-  .search { padding: 8px 12px 8px 32px; min-width: 220px; }
-  .select { padding: 8px 32px 8px 14px; cursor: pointer; appearance: none; -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2386868b'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 12px center; }
-  .search:focus, .select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+  .search { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--ink);
+    font-family: inherit; font-size: 13px; padding: 8px 12px 8px 32px; min-width: 220px; transition: border-color .15s, box-shadow .15s; }
+  .search:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
 
   /* Table */
   .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
   .table-scroll { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; min-width: 900px; }
-  th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
-  th { color: var(--ink-faint); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; position: sticky; top: 0; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--border); font-size: 13px; white-space: nowrap; }
+  th { color: var(--ink-faint); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+    position: sticky; top: 0; background: var(--surface); }
   tr:last-child td { border-bottom: none; }
-  tbody tr:hover td { background: var(--bg); }
+  tbody tr:hover td { background: var(--surface-2); }
   td { color: var(--ink-soft); }
-  td.name, td.email { color: var(--ink); font-weight: 500; }
+  td.strong { color: var(--ink); font-weight: 500; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
   .pill { display: inline-block; padding: 3px 10px; border-radius: 980px; font-size: 11px; font-weight: 600; letter-spacing: .02em; }
   .pill.free { background: color-mix(in srgb, var(--good) 16%, var(--surface)); color: var(--good); }
   .pill.premium { background: color-mix(in srgb, var(--warn) 16%, var(--surface)); color: var(--warn); }
   .pill.kit { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); color: var(--accent); }
+  .pill.ok { background: color-mix(in srgb, var(--good) 16%, var(--surface)); color: var(--good); }
+  .pill.pend { background: color-mix(in srgb, var(--warn) 16%, var(--surface)); color: var(--warn); }
+  .pill.off { background: color-mix(in srgb, var(--crit) 14%, var(--surface)); color: var(--crit); }
+  .pill.muted { background: var(--surface-2); color: var(--ink-faint); border: 1px solid var(--border); }
 
-  .empty, .loading { padding: 48px 20px; text-align: center; }
-  .empty h3 { font-size: 16px; margin-bottom: 6px; font-weight: 600; }
+  .score { display: inline-flex; align-items: center; gap: 8px; }
+  .score-bar { width: 54px; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; }
+
+  .empty, .loading { padding: 44px 20px; text-align: center; }
+  .empty h3 { font-size: 16px; margin-bottom: 6px; font-weight: 600; color: var(--ink); }
   .empty p, .loading { color: var(--ink-faint); font-size: 14px; }
   .count-row { color: var(--ink-faint); font-size: 12px; margin-top: 14px; text-align: right; }
 
+  .notice { background: color-mix(in srgb, var(--warn) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--warn) 45%, var(--border));
+    color: var(--ink); padding: 14px 16px; border-radius: 14px; font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
+  .notice strong { color: var(--warn); }
+  .notice code { background: var(--bg); padding: 2px 6px; border-radius: 5px; font-size: 12px; }
+
+  /* Handoff cards */
+  .handoffs { display: flex; flex-direction: column; gap: 10px; }
+  .handoff { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--warn);
+    border-radius: 14px; padding: 16px 20px; box-shadow: var(--shadow);
+    display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+  .handoff .ho-main { min-width: 0; flex: 1 1 260px; }
+  .handoff .ho-num { font-size: 14px; font-weight: 600; }
+  .handoff .ho-reason { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+  .handoff .ho-msg { font-size: 12px; color: var(--ink-faint); margin-top: 6px; font-style: italic; line-height: 1.5; }
+  .handoff .ho-date { font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+  .handoff .ho-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+  .wa-btn { background: var(--good); color: #fff; padding: 7px 16px; border-radius: 980px; text-decoration: none; font-size: 12px; font-weight: 600; text-align: center; }
+
   @keyframes spin { to { transform: rotate(360deg); } }
-  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 60px auto; }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 70px auto; }
   @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
 
   @media (max-width: 640px) {
-    .search { min-width: 100%; }
-    .toolbar .left, .toolbar .right { width: 100%; }
-    .toolbar .right .btn { flex: 1; }
+    .search { min-width: 100%; width: 100%; }
+    .toolbar { width: 100%; }
+    .section-head { align-items: stretch; }
   }
 </style>
 </head>
 <body>
 
 <div class="top">
-  <div class="brand">
-    <span class="brand-name">MapeIA</span>
-    <span class="brand-tag">Painel Admin</span>
-  </div>
+  <div class="brand"><span class="brand-name">MapeIA</span><span class="brand-tag">Painel Admin</span></div>
   <div id="meBox" class="me" hidden>
-    <span id="meEmail"></span>
+    <span class="email" id="meEmail"></span>
+    <button class="btn btn-sm" id="refreshBtn">Atualizar</button>
     <button class="btn btn-sm" id="themeBtn" title="Alternar tema">Tema</button>
     <button class="btn btn-sm" id="logoutBtn">Sair</button>
   </div>
@@ -222,75 +199,21 @@
   <div id="loginWrap" class="login-wrap" hidden>
     <div class="login-card">
       <h1>Acesso administrativo</h1>
-      <p>Entre com sua conta autorizada para monitorar leads e atendimentos.</p>
+      <p>Entre com sua conta autorizada para monitorar toda a operação.</p>
       <div id="loginErr" class="err" hidden></div>
       <form id="loginForm">
-        <div class="field">
-          <label for="liEmail">E-mail</label>
-          <input type="email" id="liEmail" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="liPass">Senha</label>
-          <input type="password" id="liPass" autocomplete="current-password" required>
-        </div>
+        <div class="field"><label for="liEmail">E-mail</label><input type="email" id="liEmail" autocomplete="email" required></div>
+        <div class="field"><label for="liPass">Senha</label><input type="password" id="liPass" autocomplete="current-password" required></div>
         <button type="submit" class="btn primary login-btn" id="loginBtn">Entrar</button>
       </form>
-      <div class="mini-hint">
-        Precisa de acesso? Crie o usuário no Supabase Auth e adicione o e-mail na tabela <code>admins</code>.
-      </div>
+      <div class="mini-hint">Precisa de acesso? Crie o usuário no Supabase Auth e adicione o e-mail na tabela <code>admins</code>.</div>
     </div>
   </div>
 
   <!-- Dashboard -->
   <div id="dashWrap" hidden>
-    <div class="stats">
-      <div class="stat"><div class="stat-val" id="statTotal">&mdash;</div><div class="stat-label"><span class="stat-dot" style="background:var(--good)"></span> Leads total</div></div>
-      <div class="stat"><div class="stat-val" id="statToday">&mdash;</div><div class="stat-label"><span class="stat-dot" style="background:var(--accent)"></span> Hoje</div></div>
-      <div class="stat"><div class="stat-val" id="statWeek">&mdash;</div><div class="stat-label"><span class="stat-dot" style="background:var(--accent)"></span> 7 dias</div></div>
-      <div class="stat"><div class="stat-val" id="statPremium">&mdash;</div><div class="stat-label"><span class="stat-dot" style="background:var(--warn)"></span> Premium</div></div>
-      <div class="stat"><div class="stat-val" id="statHandoff">&mdash;</div><div class="stat-label"><span class="stat-dot" id="hoDot" style="background:var(--border)"></span> Atendimentos</div></div>
-    </div>
-
-    <!-- Handoffs -->
-    <div id="handoffSection" hidden>
-      <h2 class="section-title">Atendimentos pendentes <span class="section-count" id="hoCount" style="color:var(--warn)"></span></h2>
-      <div class="handoffs" id="handoffList"></div>
-    </div>
-
-    <!-- Leads -->
-    <h2 class="section-title">Leads recentes</h2>
-    <div class="toolbar">
-      <div class="left">
-        <div class="search-wrap">
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="search" class="search" placeholder="Buscar por nome, e-mail ou empresa...">
-        </div>
-        <select id="planFilter" class="select">
-          <option value="all">Todos os planos</option>
-          <option value="free">Free</option>
-          <option value="premium">Premium</option>
-          <option value="kits">Kits</option>
-        </select>
-      </div>
-      <div class="right">
-        <button class="btn" id="refreshBtn">Atualizar</button>
-        <button class="btn primary" id="exportBtn">Exportar CSV</button>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr><th>Data</th><th>Nome</th><th>E-mail</th><th>WhatsApp</th><th>Empresa</th><th>Setor</th><th>Origem</th><th>Plano</th></tr>
-          </thead>
-          <tbody id="leadsBody">
-            <tr><td colspan="8"><div class="loading">Carregando leads...</div></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="count-row" id="countRow"></div>
+    <div class="tabbar" id="tabbar"></div>
+    <div id="tabContent"></div>
   </div>
 </div>
 
@@ -299,208 +222,374 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 const SUPABASE_URL = 'https://vaekdvwevooqrlubctoj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZWtkdndldm9vcXJsdWJjdG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2OTYzNjMsImV4cCI6MjA5MjI3MjM2M30.nUb-mqkPn0LYBoZqxR4ElFxmJ_MUpKGNaMdrCwkda44';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true },
-});
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
 const KIT_PLANS = new Set(['kit_atendente','kit_followup','kit_agendamento','kit_cobranca','kit_presenca','bundle']);
 const PLAN_LABELS = {
-  diagnostico_premium: 'Diagnóstico Premium', evolucao: 'Evolução',
-  kit_atendente: 'Kit Atendente', kit_followup: 'Kit Follow-up',
-  kit_agendamento: 'Kit Agendamento', kit_cobranca: 'Kit Cobrança',
-  kit_presenca: 'Kit Presença', bundle: 'Pacote Completo', indeciso: 'Indeciso',
+  diagnostico_premium: 'Diagnóstico Premium', premium: 'Premium', evolucao: 'Evolução', free: 'Free', indeciso: 'Indeciso',
+  kit_atendente: 'Kit Atendente', kit_followup: 'Kit Follow-up', kit_agendamento: 'Kit Agendamento',
+  kit_cobranca: 'Kit Cobrança', kit_presenca: 'Kit Presença', bundle: 'Pacote Completo',
 };
 
 const $ = (id) => document.getElementById(id);
-const boot = $('boot'), loginWrap = $('loginWrap'), dashWrap = $('dashWrap');
-const meBox = $('meBox'), meEmail = $('meEmail');
+const boot = $('boot'), loginWrap = $('loginWrap'), dashWrap = $('dashWrap'), meBox = $('meBox');
 const loginForm = $('loginForm'), loginErr = $('loginErr'), loginBtn = $('loginBtn');
-const leadsBody = $('leadsBody'), countRow = $('countRow');
-const searchInput = $('search'), planFilter = $('planFilter');
-const handoffSection = $('handoffSection'), handoffList = $('handoffList'), hoCount = $('hoCount'), hoDot = $('hoDot');
+const tabbar = $('tabbar'), tabContent = $('tabContent');
 
-let allLeads = [];
-let handoffs = [];
 let adminEmail = '';
+let activeTab = 'overview';
+const data = {};        // { key: rows[] }
+const loadErr = {};     // { key: errorMessage }
 
-function esc(s) {
-  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* ---------- helpers ---------- */
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate = (s) => { if (!s) return '—'; const d = new Date(s); return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }); };
+const fmtDay = (s) => { if (!s) return '—'; return new Date(s).toLocaleDateString('pt-BR'); };
+const brl = (n) => (Number(n)||0).toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+const within = (s, days) => s && (Date.now() - new Date(s).getTime()) < days*864e5;
+const planLabel = (p) => p ? (PLAN_LABELS[p] || p) : 'Free';
+function planPill(p) {
+  if (!p || p === 'free' || p === 'indeciso' || p === 'evolucao') return `<span class="pill free">${esc(planLabel(p))}</span>`;
+  if (p === 'diagnostico_premium' || p === 'premium') return `<span class="pill premium">${esc(planLabel(p))}</span>`;
+  if (KIT_PLANS.has(p)) return `<span class="pill kit">${esc(planLabel(p))}</span>`;
+  return `<span class="pill muted">${esc(planLabel(p))}</span>`;
 }
-function fmtDate(s) {
-  const d = new Date(s);
-  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+function statusPill(s) {
+  const v = (s||'').toLowerCase();
+  if (['active','ativo'].includes(v)) return '<span class="pill ok">Ativo</span>';
+  if (['pending','pendente'].includes(v)) return '<span class="pill pend">Pendente</span>';
+  if (['cancelled','canceled','inactive','past_due'].includes(v)) return `<span class="pill off">${esc(s)}</span>`;
+  return `<span class="pill muted">${esc(s||'—')}</span>`;
 }
+function scoreCell(score) {
+  const n = Math.max(0, Math.min(100, Number(score)||0));
+  const color = n >= 60 ? 'var(--good)' : n >= 35 ? 'var(--warn)' : 'var(--crit)';
+  return `<span class="score"><span class="score-bar"><span class="score-fill" style="width:${n}%;background:${color}"></span></span><strong style="color:var(--ink)">${n}</strong></span>`;
+}
+function matchRow(obj, q) { return !q || Object.values(obj).some(v => v != null && typeof v !== 'object' && String(v).toLowerCase().includes(q)); }
 
+/* ---------- auth ---------- */
 function showLogin() { boot.hidden = true; loginWrap.hidden = false; dashWrap.hidden = true; meBox.hidden = true; }
-function showDash(email) {
-  boot.hidden = true; loginWrap.hidden = true; dashWrap.hidden = false; meBox.hidden = false;
-  adminEmail = email; meEmail.textContent = email;
-}
-function showErr(msg) { loginErr.textContent = msg; loginErr.hidden = false; }
+function showDash(email) { boot.hidden = true; loginWrap.hidden = true; dashWrap.hidden = false; meBox.hidden = false; adminEmail = email; $('meEmail').textContent = email; }
+function showErr(m) { loginErr.textContent = m; loginErr.hidden = false; }
 
-// --- Theme toggle (per-browser convenience) ---
-try {
-  const saved = localStorage.getItem('mapeia-admin-theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
-} catch {}
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault(); loginErr.hidden = true;
+  const email = $('liEmail').value.trim(), password = $('liPass').value;
+  loginBtn.disabled = true; loginBtn.textContent = 'Entrando...';
+  const { data: d, error } = await supabase.auth.signInWithPassword({ email, password });
+  loginBtn.disabled = false; loginBtn.textContent = 'Entrar';
+  if (error) return showErr(error.message || 'Falha ao entrar.');
+  if (!await verifyAdmin(d.user?.email || email)) { await supabase.auth.signOut(); return showErr('Este usuário não tem acesso de administrador.'); }
+  showDash(d.user.email); loadAll();
+});
+$('logoutBtn').addEventListener('click', async () => { await supabase.auth.signOut(); showLogin(); });
+
+async function verifyAdmin(email) {
+  const { data: d, error } = await supabase.from('admins').select('email').eq('email', (email||'').toLowerCase()).maybeSingle();
+  if (error) { console.error(error); return false; }
+  return !!d;
+}
+
+/* ---------- theme ---------- */
+try { const t = localStorage.getItem('mapeia-admin-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch {}
 $('themeBtn').addEventListener('click', () => {
   const root = document.documentElement;
-  const isDark = getComputedStyle(root).colorScheme.includes('dark');
-  const next = isDark ? 'light' : 'dark';
+  const next = getComputedStyle(root).colorScheme.includes('dark') ? 'light' : 'dark';
   root.setAttribute('data-theme', next);
   try { localStorage.setItem('mapeia-admin-theme', next); } catch {}
 });
 
-// --- Auth ---
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  loginErr.hidden = true;
-  const email = $('liEmail').value.trim();
-  const password = $('liPass').value;
-  loginBtn.disabled = true; loginBtn.textContent = 'Entrando...';
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  loginBtn.disabled = false; loginBtn.textContent = 'Entrar';
-  if (error) { showErr(error.message || 'Falha ao entrar.'); return; }
-  const ok = await verifyAdmin(data.user?.email || email);
-  if (!ok) { await supabase.auth.signOut(); showErr('Este usuário não tem acesso de administrador.'); return; }
-  showDash(data.user.email);
-  loadData();
-});
-
-$('logoutBtn').addEventListener('click', async () => { await supabase.auth.signOut(); showLogin(); });
-
-async function verifyAdmin(email) {
-  const { data, error } = await supabase
-    .from('admins').select('email').eq('email', (email || '').toLowerCase()).maybeSingle();
-  if (error) { console.error(error); return false; }
-  return !!data;
+/* ---------- data loading ---------- */
+async function one(key, table, columns, order = 'created_at', limit = 500) {
+  let q = supabase.from(table).select(columns).limit(limit);
+  if (order) q = q.order(order, { ascending: false });
+  const { data: rows, error } = await q;
+  if (error) { loadErr[key] = error.message; data[key] = []; }
+  else { delete loadErr[key]; data[key] = rows || []; }
 }
-
-// --- Data ---
-async function loadData() {
-  leadsBody.innerHTML = '<tr><td colspan="8"><div class="loading">Carregando leads...</div></td></tr>';
-  const [leadsRes, hoRes] = await Promise.all([
-    supabase.from('leads').select('*').order('created_at', { ascending: false }).limit(300),
-    supabase.from('handoff_requests')
-      .select('id,created_at,whatsapp_number,reason,last_user_message,status')
-      .eq('status', 'pending').order('created_at', { ascending: false }),
+async function loadAll() {
+  renderTabs(); tabContent.innerHTML = '<div class="spinner"></div>';
+  await Promise.all([
+    one('leads','leads','*'),
+    one('profiles','user_profiles','*'),
+    one('subs','subscriptions','*'),
+    one('diag','diagnostic_responses','id,email,sector,company_size,revenue,global_score,maturity_level,unlocked,plan_tier,created_at'),
+    one('reports','report_data','id,email,stripe_session_id,pdf_sent,pdf_sent_at,created_at'),
+    one('activations','ativar_activations','*'),
+    one('handoffs','handoff_requests','id,created_at,whatsapp_number,reason,last_user_message,last_assistant_message,status'),
+    one('copilot','copilot_usage','*', null),
   ]);
-  if (leadsRes.error) {
-    leadsBody.innerHTML = `<tr><td colspan="8"><div class="empty"><h3>Não foi possível carregar</h3><p>${esc(leadsRes.error.message)}</p></div></td></tr>`;
-  } else {
-    allLeads = leadsRes.data || [];
-  }
-  handoffs = hoRes.error ? [] : (hoRes.data || []);
-  renderHandoffs();
-  render();
+  renderTabs(); renderActive();
 }
 
-function renderHandoffs() {
-  if (!handoffs.length) { handoffSection.hidden = true; return; }
-  handoffSection.hidden = false;
-  hoCount.textContent = `(${handoffs.length})`;
-  handoffList.innerHTML = handoffs.map(h => {
-    const num = (h.whatsapp_number || '').replace(/[^0-9]/g, '');
-    const waBtn = num ? `<a class="wa-btn" href="https://wa.me/${num}" target="_blank" rel="noreferrer">Responder</a>` : '';
-    const msg = h.last_user_message ? `<div class="ho-msg">Cliente: &ldquo;${esc(h.last_user_message)}&rdquo;</div>` : '';
-    return `<div class="handoff">
-      <div class="ho-main">
-        <div class="ho-num">${esc(h.whatsapp_number || '—')}</div>
-        <div class="ho-reason">${esc(h.reason || '')}</div>
-        ${msg}
-        <div class="ho-date">${esc(fmtDate(h.created_at))}</div>
-      </div>
-      <div class="ho-actions">
-        ${waBtn}
-        <button class="btn btn-sm" data-resolve="${esc(h.id)}">Resolver</button>
-      </div>
-    </div>`;
+/* ---------- tabs ---------- */
+const TABS = [
+  { key: 'overview',    label: 'Visão geral' },
+  { key: 'leads',       label: 'Leads' },
+  { key: 'clientes',    label: 'Clientes' },
+  { key: 'diagnosticos',label: 'Diagnósticos' },
+  { key: 'pagamentos',  label: 'Pagamentos' },
+  { key: 'ativacoes',   label: 'Ativações' },
+  { key: 'atendimentos',label: 'Atendimentos', badge: () => pendingHandoffs().length },
+  { key: 'copiloto',    label: 'Copiloto' },
+];
+function pendingHandoffs() { return (data.handoffs||[]).filter(h => (h.status||'pending') === 'pending'); }
+
+function renderTabs() {
+  tabbar.innerHTML = TABS.map(t => {
+    const b = t.badge ? t.badge() : 0;
+    return `<button class="tab${t.key===activeTab?' active':''}" data-tab="${t.key}">${esc(t.label)}${b?`<span class="badge">${b}</span>`:''}</button>`;
   }).join('');
 }
-
-handoffList.addEventListener('click', async (e) => {
-  const btn = e.target.closest('[data-resolve]');
-  if (!btn) return;
-  const id = btn.getAttribute('data-resolve');
-  btn.disabled = true; btn.textContent = '...';
-  const { error } = await supabase.from('handoff_requests')
-    .update({ status: 'resolved', resolved_at: new Date().toISOString(), resolved_by: adminEmail })
-    .eq('id', id);
-  if (error) { btn.disabled = false; btn.textContent = 'Resolver'; alert(error.message); return; }
-  handoffs = handoffs.filter(h => h.id !== id);
-  renderHandoffs();
-  updateStats();
+tabbar.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-tab]'); if (!btn) return;
+  activeTab = btn.getAttribute('data-tab'); renderTabs(); renderActive();
 });
 
-function getPlanPill(pi) {
-  if (!pi) return '<span class="pill free">Free</span>';
-  if (pi === 'diagnostico_premium') return '<span class="pill premium">Premium</span>';
-  if (KIT_PLANS.has(pi)) return `<span class="pill kit">${esc(PLAN_LABELS[pi] || pi)}</span>`;
-  return '<span class="pill free">Free</span>';
+/* ---------- generic table ---------- */
+function errNotice(key) {
+  if (!loadErr[key]) return '';
+  return `<div class="notice"><strong>Sem acesso de leitura.</strong> Aplique a migração <code>20261017000000_admin_read_all_policies.sql</code> no seu banco Supabase para liberar esta seção.<br><span style="color:var(--ink-faint)">Detalhe: ${esc(loadErr[key])}</span></div>`;
+}
+function tableBlock(cols, rows, emptyMsg) {
+  if (!rows.length) return `<div class="table-wrap"><div class="empty"><h3>Nada por aqui</h3><p>${esc(emptyMsg)}</p></div></div>`;
+  const head = cols.map(c => `<th${c.num?' style="text-align:right"':''}>${esc(c.label)}</th>`).join('');
+  const body = rows.map(r => '<tr>' + cols.map(c => {
+    const v = c.render ? c.render(r) : esc(r[c.field] ?? '—');
+    return `<td class="${c.strong?'strong ':''}${c.num?'num ':''}">${v}</td>`;
+  }).join('') + '</tr>').join('');
+  return `<div class="table-wrap"><div class="table-scroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></div>`;
+}
+function searchable(key, cols, emptyMsg, filterFn) {
+  const rows = data[key] || [];
+  const state = { q: '' };
+  const host = document.createElement('div');
+  const draw = () => {
+    const q = state.q.toLowerCase().trim();
+    const filtered = rows.filter(r => matchRow(r, q)).filter(r => filterFn ? filterFn(r) : true);
+    host.querySelector('.tbl').innerHTML = tableBlock(cols, filtered, emptyMsg);
+    host.querySelector('.count-row').textContent = `${filtered.length} de ${rows.length}`;
+  };
+  host.innerHTML = `${errNotice(key)}
+    <div class="toolbar" style="margin-bottom:16px">
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search" placeholder="Buscar...">
+      </div>
+    </div>
+    <div class="tbl"></div><div class="count-row"></div>`;
+  host.querySelector('.search').addEventListener('input', (e) => { state.q = e.target.value; draw(); });
+  draw();
+  return host;
 }
 
-function render() {
-  const q = (searchInput.value || '').toLowerCase().trim();
-  const plan = planFilter.value;
-  const filtered = allLeads.filter(l => {
-    if (plan === 'free') { if (l.plan_interest && l.plan_interest !== 'indeciso' && l.plan_interest !== 'evolucao') return false; }
-    else if (plan === 'premium') { if (l.plan_interest !== 'diagnostico_premium') return false; }
-    else if (plan === 'kits') { if (!l.plan_interest || !KIT_PLANS.has(l.plan_interest)) return false; }
-    if (!q) return true;
-    return [l.name, l.email, l.company, l.whatsapp, l.sector].filter(Boolean).join(' ').toLowerCase().includes(q);
-  });
+/* ---------- per-tab render ---------- */
+function renderActive() {
+  const fn = {
+    overview: renderOverview, leads: renderLeads, clientes: renderClientes, diagnosticos: renderDiagnosticos,
+    pagamentos: renderPagamentos, ativacoes: renderAtivacoes, atendimentos: renderAtendimentos, copiloto: renderCopiloto,
+  }[activeTab];
+  tabContent.innerHTML = '';
+  const node = fn();
+  if (typeof node === 'string') tabContent.innerHTML = node; else tabContent.appendChild(node);
+}
 
-  updateStats();
+function statTile(val, label, dot) {
+  return `<div class="stat"><div class="stat-val">${val}</div><div class="stat-label"><span class="stat-dot" style="background:${dot}"></span> ${esc(label)}</div></div>`;
+}
 
-  if (!filtered.length) {
-    leadsBody.innerHTML = `<tr><td colspan="8"><div class="empty"><h3>Nenhum lead encontrado</h3><p>${allLeads.length === 0 ? 'Ainda não há leads capturados.' : 'Ajuste a busca ou o filtro.'}</p></div></td></tr>`;
-    countRow.textContent = ''; return;
+function renderOverview() {
+  const leads = data.leads||[], subs = data.subs||[], acts = data.activations||[], diag = data.diag||[], profiles = data.profiles||[], copilot = data.copilot||[];
+  const activeSubs = subs.filter(s => (s.status||'').toLowerCase() === 'active');
+  const activeActs = acts.filter(a => (a.status||'').toLowerCase() === 'active');
+  const mrr = activeActs.reduce((sum, a) => sum + (Number(a.price_monthly)||0), 0);
+  const copilotMsgs = copilot.reduce((sum, c) => sum + (Number(c.count)||0), 0);
+  const anyErr = Object.keys(loadErr).length;
+  const tiles = [
+    statTile(leads.length, 'Leads total', 'var(--good)'),
+    statTile(leads.filter(l => within(l.created_at, 7)).length, 'Leads 7 dias', 'var(--accent)'),
+    statTile(profiles.length, 'Clientes', 'var(--accent)'),
+    statTile(activeSubs.length, 'Assinaturas ativas', 'var(--good)'),
+    statTile(acts.length, 'Ativações de kits', 'var(--accent)'),
+    statTile(brl(mrr), 'Receita recorrente (kits)', 'var(--warn)'),
+    statTile(diag.length, 'Diagnósticos', 'var(--accent)'),
+    statTile(pendingHandoffs().length, 'Atendimentos pendentes', pendingHandoffs().length ? 'var(--warn)' : 'var(--border)'),
+    statTile(copilotMsgs, 'Mensagens do copiloto', 'var(--accent)'),
+  ].join('');
+  const banner = anyErr ? `<div class="notice"><strong>Algumas seções estão bloqueadas.</strong> Aplique a migração <code>20261017000000_admin_read_all_policies.sql</code> no Supabase para liberar leitura de leads, clientes, pagamentos, diagnósticos e ativações.</div>` : '';
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Visão geral</h2><div class="section-sub">Panorama da operação em tempo real.</div></div></div>${banner}<div class="stats">${tiles}</div>`;
+  return wrap;
+}
+
+function renderLeads() {
+  const cols = [
+    { label:'Data', render:r => esc(fmtDate(r.created_at)) },
+    { label:'Nome', strong:true, field:'name' },
+    { label:'E-mail', field:'email' },
+    { label:'WhatsApp', render:r => esc(r.whatsapp || '—') },
+    { label:'Empresa', render:r => esc(r.company || '—') },
+    { label:'Setor', render:r => esc(r.sector || '—') },
+    { label:'Origem', render:r => esc(r.source || '—') },
+    { label:'Interesse', render:r => planPill(r.plan_interest) },
+  ];
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Leads</h2><div class="section-sub">Pessoas que deixaram contato no site.</div></div></div>`;
+  wrap.appendChild(searchable('leads', cols, 'Ainda não há leads capturados.'));
+  return wrap;
+}
+
+function renderClientes() {
+  const subs = data.subs || [];
+  const subByEmail = {};
+  subs.forEach(s => { const e = (s.email||'').toLowerCase(); if (e && !subByEmail[e]) subByEmail[e] = s; });
+  const cols = [
+    { label:'Cadastro', render:r => esc(fmtDate(r.created_at)) },
+    { label:'Nome', strong:true, field:'name' },
+    { label:'E-mail', field:'email' },
+    { label:'Empresa', render:r => esc(r.company || '—') },
+    { label:'WhatsApp', render:r => esc(r.whatsapp || '—') },
+    { label:'Plano', render:r => planPill(r.plan_tier) },
+    { label:'Assinatura', render:r => { const s = subByEmail[(r.email||'').toLowerCase()]; return s ? statusPill(s.status) : '<span class="pill muted">Sem assinatura</span>'; } },
+  ];
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Clientes</h2><div class="section-sub">Contas criadas na plataforma e situação da assinatura.</div></div></div>`;
+  wrap.appendChild(searchable('profiles', cols, 'Nenhum cliente cadastrado ainda.'));
+  return wrap;
+}
+
+function renderDiagnosticos() {
+  const reports = data.reports || [];
+  const reportByEmail = {};
+  reports.forEach(r => { const e = (r.email||'').toLowerCase(); if (e) (reportByEmail[e] = reportByEmail[e] || []).push(r); });
+  const cols = [
+    { label:'Data', render:r => esc(fmtDate(r.created_at)) },
+    { label:'E-mail', strong:true, field:'email' },
+    { label:'Setor', render:r => esc(r.sector || '—') },
+    { label:'Score', render:r => scoreCell(r.global_score) },
+    { label:'Maturidade', render:r => `Nível ${esc(r.maturity_level ?? '—')}` },
+    { label:'Plano', render:r => planPill(r.plan_tier) },
+    { label:'Desbloqueado', render:r => r.unlocked ? '<span class="pill ok">Sim</span>' : '<span class="pill muted">Não</span>' },
+    { label:'Relatório', render:r => { const list = reportByEmail[(r.email||'').toLowerCase()]; if (!list) return '<span class="pill muted">—</span>'; const sent = list.some(x => x.pdf_sent); return sent ? '<span class="pill ok">PDF enviado</span>' : '<span class="pill pend">Gerado</span>'; } },
+  ];
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Diagnósticos</h2><div class="section-sub">Resultados dos diagnósticos: score global, maturidade e relatório premium.</div></div></div>`;
+  wrap.appendChild(searchable('diag', cols, 'Nenhum diagnóstico realizado ainda.'));
+  return wrap;
+}
+
+function renderPagamentos() {
+  const subs = data.subs || [], acts = data.activations || [];
+  const subCols = [
+    { label:'Data', render:r => esc(fmtDate(r.created_at)) },
+    { label:'E-mail', strong:true, field:'email' },
+    { label:'Plano', render:r => planPill(r.plan) },
+    { label:'Status', render:r => statusPill(r.status) },
+    { label:'Renova em', render:r => esc(fmtDay(r.current_period_end)) },
+    { label:'Stripe', render:r => `<span style="font-size:11px;color:var(--ink-faint)">${esc(r.stripe_customer_id || r.stripe_session_id || '—')}</span>` },
+  ];
+  const actCols = [
+    { label:'Data', render:r => esc(fmtDate(r.created_at)) },
+    { label:'Cliente', strong:true, render:r => esc(r.client_name || r.client_email || '—') },
+    { label:'E-mail', render:r => esc(r.client_email || '—') },
+    { label:'Ferramenta', render:r => planPill(r.tool_id) },
+    { label:'Área', render:r => esc(r.gap_area || '—') },
+    { label:'Status', render:r => statusPill(r.status) },
+    { label:'Valor/mês', num:true, render:r => esc(brl(r.price_monthly)) },
+  ];
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Pagamentos</h2><div class="section-sub">Assinaturas (Stripe) e ativações de kits com cobrança recorrente.</div></div></div>
+    ${errNotice('subs')}
+    <h3 style="font-size:14px;font-weight:600;margin:4px 0 12px;color:var(--ink-soft)">Assinaturas</h3>
+    <div id="pgSubs"></div>
+    <h3 style="font-size:14px;font-weight:600;margin:28px 0 12px;color:var(--ink-soft)">Ativações de kits</h3>
+    ${errNotice('activations')}
+    <div id="pgActs"></div>`;
+  wrap.querySelector('#pgSubs').innerHTML = tableBlock(subCols, subs, 'Nenhuma assinatura registrada.');
+  wrap.querySelector('#pgActs').innerHTML = tableBlock(actCols, acts, 'Nenhuma ativação de kit registrada.');
+  return wrap;
+}
+
+function renderAtivacoes() {
+  const cols = [
+    { label:'Data', render:r => esc(fmtDate(r.created_at)) },
+    { label:'Cliente', strong:true, render:r => esc(r.client_name || '—') },
+    { label:'E-mail', render:r => esc(r.client_email || '—') },
+    { label:'WhatsApp', render:r => esc(r.client_whatsapp || '—') },
+    { label:'Ferramenta', render:r => planPill(r.tool_id) },
+    { label:'Área', render:r => esc(r.gap_area || '—') },
+    { label:'Status', render:r => statusPill(r.status) },
+    { label:'Valor/mês', num:true, render:r => esc(brl(r.price_monthly)) },
+  ];
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Ativações</h2><div class="section-sub">Ferramentas que cada cliente ativou e configurou.</div></div></div>`;
+  wrap.appendChild(searchable('activations', cols, 'Nenhuma ativação registrada.'));
+  return wrap;
+}
+
+function renderAtendimentos() {
+  const wrap = document.createElement('div');
+  const all = data.handoffs || [];
+  const pend = all.filter(h => (h.status||'pending') === 'pending');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Atendimentos</h2><div class="section-sub">Pedidos de atendimento humano feitos pelo copiloto — inclui a última mensagem do cliente e do bot.</div></div></div>
+    ${errNotice('handoffs')}
+    <div class="notice" style="background:color-mix(in srgb, var(--accent) 8%, var(--surface));border-color:color-mix(in srgb, var(--accent) 40%, var(--border))">
+      As conversas completas do copiloto <strong style="color:var(--accent)">não são armazenadas</strong> hoje. O que aparece aqui é o resumo capturado quando o cliente pede atendimento humano. Posso ativar o registro completo das conversas, se quiser.</div>
+    <div class="handoffs" id="hoList"></div>`;
+  const list = wrap.querySelector('#hoList');
+  if (!pend.length) {
+    list.innerHTML = `<div class="table-wrap"><div class="empty"><h3>Nenhum atendimento pendente</h3><p>Tudo resolvido por aqui.</p></div></div>`;
+    return wrap;
   }
-  leadsBody.innerHTML = filtered.map(l => `<tr>
-    <td>${esc(fmtDate(l.created_at))}</td>
-    <td class="name">${esc(l.name || '')}</td>
-    <td class="email">${esc(l.email || '')}</td>
-    <td>${esc(l.whatsapp || '—')}</td>
-    <td>${esc(l.company || '—')}</td>
-    <td>${esc(l.sector || '—')}</td>
-    <td>${esc(l.source || '—')}</td>
-    <td>${getPlanPill(l.plan_interest)}</td>
-  </tr>`).join('');
-  countRow.textContent = `${filtered.length} de ${allLeads.length} leads`;
+  list.innerHTML = pend.map(h => {
+    const num = (h.whatsapp_number||'').replace(/[^0-9]/g,'');
+    const wa = num ? `<a class="wa-btn" href="https://wa.me/${num}" target="_blank" rel="noreferrer">Responder</a>` : '';
+    const cm = h.last_user_message ? `<div class="ho-msg">Cliente: &ldquo;${esc(h.last_user_message)}&rdquo;</div>` : '';
+    const bm = h.last_assistant_message ? `<div class="ho-msg">Bot: &ldquo;${esc(h.last_assistant_message)}&rdquo;</div>` : '';
+    return `<div class="handoff"><div class="ho-main">
+      <div class="ho-num">${esc(h.whatsapp_number || '—')}</div>
+      <div class="ho-reason">${esc(h.reason || '')}</div>${cm}${bm}
+      <div class="ho-date">${esc(fmtDate(h.created_at))}</div>
+    </div><div class="ho-actions">${wa}<button class="btn btn-sm" data-resolve="${esc(h.id)}">Resolver</button></div></div>`;
+  }).join('');
+  list.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-resolve]'); if (!btn) return;
+    const id = btn.getAttribute('data-resolve'); btn.disabled = true; btn.textContent = '...';
+    const { error } = await supabase.from('handoff_requests').update({ status:'resolved', resolved_at:new Date().toISOString(), resolved_by:adminEmail }).eq('id', id);
+    if (error) { btn.disabled = false; btn.textContent = 'Resolver'; return; }
+    const h = (data.handoffs||[]).find(x => x.id === id); if (h) h.status = 'resolved';
+    renderTabs(); renderActive();
+  });
+  return wrap;
 }
 
-function updateStats() {
-  const now = Date.now(), oneDay = 864e5;
-  $('statTotal').textContent = allLeads.length;
-  $('statToday').textContent = allLeads.filter(r => now - new Date(r.created_at).getTime() < oneDay).length;
-  $('statWeek').textContent = allLeads.filter(r => now - new Date(r.created_at).getTime() < 7 * oneDay).length;
-  $('statPremium').textContent = allLeads.filter(r => r.plan_interest === 'diagnostico_premium').length;
-  $('statHandoff').textContent = handoffs.length;
-  hoDot.style.background = handoffs.length ? 'var(--warn)' : 'var(--border)';
+function renderCopiloto() {
+  const rows = data.copilot || [];
+  const byEmail = {};
+  rows.forEach(r => { const e = (r.email||'—'); byEmail[e] = byEmail[e] || { email:e, total:0, days:0, last:null };
+    byEmail[e].total += Number(r.count)||0; byEmail[e].days += 1;
+    if (!byEmail[e].last || r.date_key > byEmail[e].last) byEmail[e].last = r.date_key; });
+  const agg = Object.values(byEmail).sort((a,b) => b.total - a.total);
+  const cols = [
+    { label:'Cliente', strong:true, field:'email' },
+    { label:'Mensagens', num:true, render:r => String(r.total) },
+    { label:'Dias ativos', num:true, render:r => String(r.days) },
+    { label:'Último uso', render:r => esc(fmtDay(r.last)) },
+  ];
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Copiloto</h2><div class="section-sub">Uso do assistente por cliente (contagem de mensagens por dia).</div></div></div>${errNotice('copilot')}
+    <div class="notice" style="background:color-mix(in srgb, var(--accent) 8%, var(--surface));border-color:color-mix(in srgb, var(--accent) 40%, var(--border))">Mostra o volume de uso, não o conteúdo das conversas — o texto das mensagens não é salvo.</div>`;
+  wrap.insertAdjacentHTML('beforeend', tableBlock(cols, agg, 'Nenhum uso do copiloto registrado.'));
+  return wrap;
 }
 
-searchInput.addEventListener('input', render);
-planFilter.addEventListener('change', render);
-$('refreshBtn').addEventListener('click', loadData);
+$('refreshBtn').addEventListener('click', loadAll);
 
-$('exportBtn').addEventListener('click', () => {
-  if (!allLeads.length) return;
-  const header = ['created_at','name','email','whatsapp','company','sector','source','plan_interest'];
-  const cell = (v) => { if (v == null) return ''; const s = String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
-  const csv = [header.join(',')].concat(allLeads.map(r => header.map(k => cell(r[k])).join(','))).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `leads-mapeia-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click(); URL.revokeObjectURL(url);
-});
-
-// --- Init ---
+/* ---------- init ---------- */
 (async function init() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user?.email && await verifyAdmin(session.user.email)) {
-    showDash(session.user.email); loadData(); return;
-  }
+  if (session?.user?.email && await verifyAdmin(session.user.email)) { showDash(session.user.email); loadAll(); return; }
   if (session) await supabase.auth.signOut();
   showLogin();
 })();
