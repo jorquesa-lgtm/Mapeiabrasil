@@ -250,6 +250,17 @@ ${gapsText}
 ${kitKnowledge}`;
 }
 
+// When the client doesn't send a conversation_id (e.g. an older cached
+// frontend), derive a stable id from the client's email so their turns still
+// group into one conversation. Falls back to a random id when there's no email.
+async function conversationIdFrom(sent: string | undefined, email: string): Promise<string> {
+  if (sent) return sent;
+  const seed = email || crypto.randomUUID();
+  const buf = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("copilot:" + seed)));
+  const h = [...buf.slice(0, 16)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20, 32)}`;
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -283,11 +294,12 @@ Deno.serve(async (req: Request) => {
 
       if (usageCount && usageCount > DAILY_LIMIT) {
         const limitReply = `Você atingiu o limite de ${DAILY_LIMIT} mensagens por dia no Copiloto. Seu limite é renovado todos os dias à meia-noite. Se precisar de mais suporte, entre em contato em mapeiabrasil.com. 🙏`;
-        if (conversation_id) {
+        {
           const lastUserMsg = [...messages].reverse().find(m => m.role === "user")?.content ?? "";
           try {
             await sb.from("copilot_conversations").insert({
-              conversation_id, email: userEmail, company: context.company ?? "", sector: context.sector ?? "",
+              conversation_id: await conversationIdFrom(conversation_id, userEmail),
+              email: userEmail, company: context.company ?? "", sector: context.sector ?? "",
               user_message: lastUserMsg, assistant_message: limitReply, rate_limited: true,
             });
           } catch (logErr) { console.error("Copilot log error:", logErr); }
@@ -341,12 +353,12 @@ Deno.serve(async (req: Request) => {
     const reply = data.content?.[0]?.text ?? "Desculpe, não consegui gerar uma resposta. Tente novamente.";
 
     // Persist the turn (best-effort; never blocks the response)
-    if (conversation_id && supabaseUrl && supabaseKey) {
+    if (supabaseUrl && supabaseKey) {
       const lastUserMsg = [...messages].reverse().find(m => m.role === "user")?.content ?? "";
       try {
         const sb = createClient(supabaseUrl, supabaseKey);
         await sb.from("copilot_conversations").insert({
-          conversation_id,
+          conversation_id: await conversationIdFrom(conversation_id, userEmail),
           email: userEmail,
           company: context.company ?? "",
           sector: context.sector ?? "",
