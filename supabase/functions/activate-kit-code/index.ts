@@ -35,10 +35,12 @@ Deno.serve(async (req) => {
     const { data: existing } = await sb.from("subscriptions").select("id")
       .eq("email", cleanEmail).eq("plan", "kit_all").eq("status", "active").maybeSingle();
     if (!existing) {
+      // stripe_session_id must be unique (used as upsert conflict key), so scope
+      // the synthetic id to this code+email redemption, not just the code.
       await sb.from("subscriptions").insert({
         email: cleanEmail,
         stripe_customer_id: `ff_${cleanCode}`,
-        stripe_session_id:  `ff_${cleanCode}`,
+        stripe_session_id:  `ff_${cleanCode}_${cleanEmail}`,
         plan: "kit_all",
         status: "active",
       });

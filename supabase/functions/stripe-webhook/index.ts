@@ -89,7 +89,7 @@ Deno.serve(async (req: Request) => {
 
       // Kit subscriptions: log with stripe_subscription_id so lifecycle events can match
       if (kitId) {
-        await supabase.from("subscriptions").upsert(
+        const { error: kitSubErr } = await supabase.from("subscriptions").upsert(
           {
             email: customerEmail,
             stripe_customer_id: customerId,
@@ -100,6 +100,13 @@ Deno.serve(async (req: Request) => {
           },
           { onConflict: "stripe_session_id" },
         );
+        // Fail loudly so Stripe retries instead of silently dropping the sale
+        if (kitSubErr) {
+          console.error("[stripe-webhook] kit subscription upsert failed:", kitSubErr);
+          return new Response(JSON.stringify({ error: "db_write_failed", detail: kitSubErr.message }), {
+            status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
 
         if (!paymentOk) {
           console.log(`[webhook] kit checkout awaiting async payment: ${plan}`);
@@ -173,7 +180,7 @@ Deno.serve(async (req: Request) => {
       }
 
       // Upsert subscription record
-      await supabase.from("subscriptions").upsert(
+      const { error: subErr } = await supabase.from("subscriptions").upsert(
         {
           email: customerEmail,
           stripe_customer_id: customerId,
@@ -185,6 +192,13 @@ Deno.serve(async (req: Request) => {
         },
         { onConflict: "stripe_session_id" },
       );
+      // Fail loudly so Stripe retries instead of silently dropping the sale
+      if (subErr) {
+        console.error("[stripe-webhook] subscription upsert failed:", subErr);
+        return new Response(JSON.stringify({ error: "db_write_failed", detail: subErr.message }), {
+          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       if (!paymentOk) {
         // Wait for checkout.session.async_payment_succeeded before unlocking.
