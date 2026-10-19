@@ -184,6 +184,10 @@
   .bubble.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
   .bubble.bot { align-self: flex-start; background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-bottom-left-radius: 4px; }
   .bubble.bot.limited { border-color: color-mix(in srgb, var(--warn) 50%, var(--border)); }
+  .bubble-time { display: block; font-size: 10px; opacity: .6; margin-top: 4px; text-align: right; font-variant-numeric: tabular-nums; }
+  .wa-reply { display: flex; gap: 8px; padding: 10px 18px 16px; border-top: 1px solid var(--border); }
+  .wa-reply-input { flex: 1; min-width: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; color: var(--ink); font-family: inherit; font-size: 13px; }
+  .wa-reply-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
 
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 70px auto; }
@@ -549,6 +553,11 @@ function renderAtivacoes() {
 }
 
 const WA_BOT_NUMBER = '+5511922031943';
+function waTime(d) {
+  if (!d) return '';
+  const x = new Date(d);
+  return x.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) + ' ' + x.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
 function renderWhatsapp() {
   const wrap = document.createElement('div');
   wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">WhatsApp (bot)</h2><div class="section-sub">Conversas reais do bot do WhatsApp (Twilio), agrupadas por número.</div></div>
@@ -567,15 +576,52 @@ function renderWhatsapp() {
     const filtered = convs.filter(c => !q || c.contact.toLowerCase().includes(q) || c.turns.some(t => (t.body||'').toLowerCase().includes(q)));
     if (!filtered.length) { body.innerHTML = `<div class="table-wrap"><div class="empty"><h3>Nenhuma conversa</h3><p>${convs.length ? 'Ajuste a busca.' : 'Nenhuma mensagem no WhatsApp ainda.'}</p></div></div>`; countEl.textContent = ''; return; }
     body.innerHTML = filtered.map(c => {
-      const thread = c.turns.map(t => t.inbound
-        ? `<div class="bubble user"><span class="who">Cliente</span>${esc(t.body)}</div>`
-        : `<div class="bubble bot"><span class="who">Bot</span>${esc(t.body)}</div>`).join('');
+      const thread = c.turns.map(t => {
+        const time = `<span class="bubble-time">${esc(waTime(t.date))}</span>`;
+        return t.inbound
+          ? `<div class="bubble user"><span class="who">Cliente</span>${esc(t.body)}${time}</div>`
+          : `<div class="bubble bot"><span class="who">Bot</span>${esc(t.body)}${time}</div>`;
+      }).join('');
       return `<details class="conv" style="margin-bottom:10px"><summary>
         <div class="conv-top"><span class="conv-email">${esc(c.contact)}</span></div>
-        <div class="conv-meta">${c.turns.length} msgs · ${esc(fmtDate(c.last))}</div>
-      </summary><div class="thread">${thread}</div></details>`;
+        <div class="conv-meta">${c.turns.length} msgs · ${esc(waTime(c.last))}</div>
+      </summary><div class="thread">${thread}</div>
+      <div class="wa-reply">
+        <input type="text" class="wa-reply-input" placeholder="Responder ${esc(c.contact)} como bot...">
+        <button class="btn primary btn-sm wa-reply-send" data-to="${esc(c.contact)}">Enviar</button>
+      </div></details>`;
     }).join('');
     countEl.textContent = `${filtered.length} de ${convs.length} conversas`;
+  }
+
+  async function sendReply(btn) {
+    const to = btn.getAttribute('data-to');
+    const input = btn.parentElement.querySelector('.wa-reply-input');
+    const text = (input.value || '').trim();
+    if (!text) return;
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/whatsapp-send`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session?.access_token || ''}`, apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to, body: text }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) {
+        btn.disabled = false; btn.textContent = orig;
+        const d = (json && json.detail && json.detail.message) || (json && json.error) || JSON.stringify(json);
+        alert('Não foi possível enviar: ' + d + '\n\nObs.: o WhatsApp só permite mensagem livre até 24h após a última mensagem do cliente. Fora disso é preciso um template aprovado.');
+        return;
+      }
+      input.value = '';
+      btn.textContent = 'Enviado ✓';
+      setTimeout(load, 1500);
+    } catch (e) {
+      btn.disabled = false; btn.textContent = orig;
+      alert('Erro de conexão: ' + String(e));
+    }
   }
 
   async function load() {
@@ -609,6 +655,18 @@ function renderWhatsapp() {
       body.innerHTML = `<div class="notice">Erro de conexão: ${esc(String(e))}</div>`;
     }
   }
+
+  body.addEventListener('click', (e) => {
+    const btn = e.target.closest('.wa-reply-send');
+    if (btn) sendReply(btn);
+  });
+  body.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('wa-reply-input')) {
+      e.preventDefault();
+      const btn = e.target.parentElement.querySelector('.wa-reply-send');
+      if (btn) sendReply(btn);
+    }
+  });
 
   wrap.querySelector('#waSearch').addEventListener('input', (e) => draw(e.target.value));
   wrap.querySelector('#waReload').addEventListener('click', load);

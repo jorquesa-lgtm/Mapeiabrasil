@@ -13,7 +13,6 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    // ── Admin gate ────────────────────────────────────────────────────────────
     const authHeader = req.headers.get("Authorization") ?? "";
     const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
@@ -27,14 +26,22 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // ── Twilio fetch ──────────────────────────────────────────────────────────
-    const sid = Deno.env.get("TWILIO_ACCOUNT_SID") ?? "";
-    const token = Deno.env.get("TWILIO_AUTH_TOKEN") ?? "";
+    // Trim guards against trailing spaces/newlines pasted into the secret.
+    const sidRaw = Deno.env.get("TWILIO_ACCOUNT_SID") ?? "";
+    const tokenRaw = Deno.env.get("TWILIO_AUTH_TOKEN") ?? "";
+    const sid = sidRaw.trim();
+    const token = tokenRaw.trim();
     if (!sid || !token) {
       return new Response(JSON.stringify({ error: "twilio_not_configured" }), {
         status: 500, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
+    // Non-sensitive diagnostics (lengths/prefix only) to debug a bad secret.
+    const diag = {
+      sid_len: sid.length, sid_prefix: sid.slice(0, 2),
+      sid_had_space: sidRaw !== sid,
+      token_len: token.length, token_had_space: tokenRaw !== token,
+    };
     const pageSize = Math.min(Number(new URL(req.url).searchParams.get("limit") ?? "300"), 1000);
     const twUrl = `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json?PageSize=${pageSize}`;
     const twRes = await fetch(twUrl, {
@@ -42,14 +49,14 @@ Deno.serve(async (req: Request) => {
     });
     const data = await twRes.json();
     if (!twRes.ok) {
-      return new Response(JSON.stringify({ error: "twilio_error", detail: data }), {
+      return new Response(JSON.stringify({ error: "twilio_error", detail: data, diag }), {
         status: 502, headers: { ...cors, "Content-Type": "application/json" },
       });
     }
 
     const messages = (data.messages ?? []).map((m: Record<string, string>) => ({
       sid: m.sid,
-      direction: m.direction,                                   // inbound | outbound-api | outbound-reply
+      direction: m.direction,
       from: (m.from ?? "").replace("whatsapp:", ""),
       to: (m.to ?? "").replace("whatsapp:", ""),
       body: m.body ?? "",
