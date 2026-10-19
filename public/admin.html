@@ -348,7 +348,8 @@ const TABS = [
   { key: 'diagnosticos',label: 'Diagnósticos' },
   { key: 'pagamentos',  label: 'Pagamentos' },
   { key: 'ativacoes',   label: 'Ativações' },
-  { key: 'conversas',   label: 'Conversas' },
+  { key: 'conversas',   label: 'Conversas (site)' },
+  { key: 'whatsapp',    label: 'WhatsApp (bot)' },
   { key: 'atendimentos',label: 'Atendimentos', badge: () => pendingHandoffs().length },
   { key: 'copiloto',    label: 'Copiloto' },
 ];
@@ -407,7 +408,7 @@ function renderActive() {
   const fn = {
     overview: renderOverview, leads: renderLeads, clientes: renderClientes, diagnosticos: renderDiagnosticos,
     pagamentos: renderPagamentos, ativacoes: renderAtivacoes, conversas: renderConversas,
-    atendimentos: renderAtendimentos, copiloto: renderCopiloto,
+    whatsapp: renderWhatsapp, atendimentos: renderAtendimentos, copiloto: renderCopiloto,
   }[activeTab];
   tabContent.innerHTML = '';
   const node = fn();
@@ -544,6 +545,74 @@ function renderAtivacoes() {
   const wrap = document.createElement('div');
   wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">Ativações</h2><div class="section-sub">Ferramentas que cada cliente ativou e configurou.</div></div></div>`;
   wrap.appendChild(searchable('activations', cols, 'Nenhuma ativação registrada.'));
+  return wrap;
+}
+
+const WA_BOT_NUMBER = '+5511922031943';
+function renderWhatsapp() {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-head"><div><h2 class="section-title">WhatsApp (bot)</h2><div class="section-sub">Conversas reais do bot do WhatsApp (Twilio), agrupadas por número.</div></div>
+    <button class="btn" id="waReload">Atualizar</button></div>
+    <div class="toolbar" style="margin-bottom:16px"><div class="search-wrap">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search" id="waSearch" placeholder="Buscar por número ou mensagem..."></div></div>
+    <div id="waBody"><div class="spinner"></div></div>
+    <div class="count-row" id="waCount"></div>`;
+  const body = wrap.querySelector('#waBody');
+  const countEl = wrap.querySelector('#waCount');
+  let convs = [];
+
+  function draw(q) {
+    q = (q||'').toLowerCase().trim();
+    const filtered = convs.filter(c => !q || c.contact.toLowerCase().includes(q) || c.turns.some(t => (t.body||'').toLowerCase().includes(q)));
+    if (!filtered.length) { body.innerHTML = `<div class="table-wrap"><div class="empty"><h3>Nenhuma conversa</h3><p>${convs.length ? 'Ajuste a busca.' : 'Nenhuma mensagem no WhatsApp ainda.'}</p></div></div>`; countEl.textContent = ''; return; }
+    body.innerHTML = filtered.map(c => {
+      const thread = c.turns.map(t => t.inbound
+        ? `<div class="bubble user"><span class="who">Cliente</span>${esc(t.body)}</div>`
+        : `<div class="bubble bot"><span class="who">Bot</span>${esc(t.body)}</div>`).join('');
+      return `<details class="conv" style="margin-bottom:10px"><summary>
+        <div class="conv-top"><span class="conv-email">${esc(c.contact)}</span></div>
+        <div class="conv-meta">${c.turns.length} msgs · ${esc(fmtDate(c.last))}</div>
+      </summary><div class="thread">${thread}</div></details>`;
+    }).join('');
+    countEl.textContent = `${filtered.length} de ${convs.length} conversas`;
+  }
+
+  async function load() {
+    body.innerHTML = '<div class="spinner"></div>';
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/whatsapp-messages?limit=400`, {
+        headers: { Authorization: `Bearer ${session?.access_token || ''}`, apikey: SUPABASE_ANON_KEY },
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        body.innerHTML = `<div class="notice">${json.error === 'twilio_not_configured'
+          ? 'Faltam os segredos do Twilio. Adicione <code>TWILIO_ACCOUNT_SID</code> e <code>TWILIO_AUTH_TOKEN</code> nos segredos das Edge Functions do Supabase.'
+          : 'Não foi possível carregar o WhatsApp: ' + esc(JSON.stringify(json))}</div>`;
+        return;
+      }
+      const groups = {};
+      (json.messages || []).forEach(m => {
+        const inbound = (m.direction || '').startsWith('inbound');
+        const contact = inbound ? m.from : m.to;
+        if (!contact || contact === WA_BOT_NUMBER) return;
+        (groups[contact] = groups[contact] || { contact, turns: [] }).turns.push({ inbound, body: m.body, date: m.date });
+      });
+      convs = Object.values(groups).map(g => {
+        g.turns.sort((a, b) => new Date(a.date) - new Date(b.date));
+        g.last = g.turns[g.turns.length - 1].date;
+        return g;
+      }).sort((a, b) => new Date(b.last) - new Date(a.last));
+      draw('');
+    } catch (e) {
+      body.innerHTML = `<div class="notice">Erro de conexão: ${esc(String(e))}</div>`;
+    }
+  }
+
+  wrap.querySelector('#waSearch').addEventListener('input', (e) => draw(e.target.value));
+  wrap.querySelector('#waReload').addEventListener('click', load);
+  load();
   return wrap;
 }
 
