@@ -2270,6 +2270,35 @@ if (accessCodeApply) {
     return;
   }
 
+  // Paid, but the quiz was NOT completed in this browser. This covers a customer
+  // who paid and never did the diagnostic (recovery link), paid before taking the
+  // quiz, or came back on a different device. Unlock premium and let them take the
+  // quiz now — saveFullDiagnostic verifies the payment with the server (by
+  // session_id) and unlocks the full report without charging again.
+  if (sessionId || params.get('premium') === '1') {
+    state.isPremium = true;
+    if (sessionId) {
+      state.stripeSessionId = sessionId;
+      sessionStorage.setItem('mapeia_stripe_session_id', sessionId);
+    }
+    sessionStorage.setItem('mapeia_is_premium', '1');
+    const storedEmail = sessionStorage.getItem('mapeia_lead_email') || '';
+    const storedName  = sessionStorage.getItem('mapeia_lead_name')  || '';
+    if (storedEmail) { state.capturedEmail = storedEmail; state.emailCaptured = true; }
+    if (storedName)  { state.capturedName  = storedName; }
+    window.addEventListener('DOMContentLoaded', () => {
+      const ni = document.getElementById('introName');
+      const ei = document.getElementById('introEmail');
+      if (ni && storedName)  ni.value = storedName;
+      if (ei && storedEmail) ei.value = storedEmail;
+    });
+    params.delete('paid'); params.delete('premium'); params.delete('session_id');
+    const qs = params.toString();
+    window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
+    // Stay on intro; quiz starts when they click "Começar" (startQuiz(true)).
+    return;
+  }
+
   // Access code in sessionStorage (from landing page modal) — keep it for quiz
   if (accessCode) {
     state.accessCode = accessCode;
@@ -2456,34 +2485,40 @@ async function callAI(){
     });
   }
 
-  try {
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/generate-diagnostic`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        apikey: SUPABASE_ANON_KEY,
-      },
-      body: JSON.stringify({
-        sector: state.answerLabels.sector || '',
-        role: state.answerLabels.role || '',
-        stage: state.answerLabels.stage || '',
-        answers: state.answers,
-        answer_labels: state.answerLabels,
-        area_scores: state.areaScores,
-        global_score: state.globalScore,
-        maturity_level: state.level.num,
-        website_url: state.websiteUrl || '',
-        company_name: state.companyName || '',
-        company_intel: state.companyIntel || null,
-        is_premium: state.isPremium,
-        premium_answers: premiumAnswers,
-        premium_answer_labels: premiumAnswerLabels,
-      }),
-    });
-    const d = await resp.json().catch(() => ({}));
-    if (d.ok && d.data) return d.data;
-  } catch (err) { console.error('AI call failed', err); }
+  const payload = JSON.stringify({
+    sector: state.answerLabels.sector || '',
+    role: state.answerLabels.role || '',
+    stage: state.answerLabels.stage || '',
+    answers: state.answers,
+    answer_labels: state.answerLabels,
+    area_scores: state.areaScores,
+    global_score: state.globalScore,
+    maturity_level: state.level.num,
+    website_url: state.websiteUrl || '',
+    company_name: state.companyName || '',
+    company_intel: state.companyIntel || null,
+    is_premium: state.isPremium,
+    premium_answers: premiumAnswers,
+    premium_answer_labels: premiumAnswerLabels,
+  });
+
+  // Try up to twice: a transient AI failure must not leave a paying customer
+  // with an empty report (ai_data is what unlocks the server-side generation).
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const resp = await fetch(`${SUPABASE_URL}/functions/v1/generate-diagnostic`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          apikey: SUPABASE_ANON_KEY,
+        },
+        body: payload,
+      });
+      const d = await resp.json().catch(() => ({}));
+      if (d.ok && d.data) return d.data;
+    } catch (err) { console.error(`AI call failed (attempt ${attempt + 1})`, err); }
+  }
   return null;
 }
 
